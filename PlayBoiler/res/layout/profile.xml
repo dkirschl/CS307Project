@@ -129,5 +129,12 @@
         android:text="Volleyball : 8\nUltimate : 6\nBasketball : 2"
         android:textSize="18sp"
         android:padding="10sp" />
+    
+    <Button
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/skills_list"
+        android:text="Edit Profile" />
 
 </RelativeLayout>

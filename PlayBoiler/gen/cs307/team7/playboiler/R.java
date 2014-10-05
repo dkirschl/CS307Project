@@ -37,13 +37,14 @@ public final class R {
     }
     public static final class id {
         public static final int about=0x7f08000e;
-        public static final int action_example=0x7f080013;
-        public static final int action_settings=0x7f080012;
+        public static final int action_example=0x7f080014;
+        public static final int action_settings=0x7f080013;
         public static final int age=0x7f08000c;
         public static final int alias=0x7f08000b;
         public static final int bio=0x7f08000f;
         public static final int container=0x7f080001;
         public static final int drawer_layout=0x7f080000;
+        public static final int edit=0x7f080012;
         public static final int frontPageImage=0x7f080004;
         public static final int gender=0x7f08000d;
         public static final int main=0x7f080007;
