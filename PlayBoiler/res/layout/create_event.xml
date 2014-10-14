@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/createTitle"
+        android:textSize="30sp"
+        android:text="Create New Game"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:layout_below="@id/createTitle"
+        android:background="@android:color/holo_blue_dark"
+        android:id="@+id/buf"/>
+    
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5sp"
+        android:layout_below="@id/buf"
+        android:textSize="30sp"
+        android:hint="Title Your Event"
+        android:id="@+id/setEventTitle"/>
+    
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/selectDate"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/setEventTitle"
+        android:layout_toLeftOf="@+id/selectDate"
+        android:layout_margin="5sp"
+        android:textSize="30sp"
+        android:hint="Select A Date" />
+
+    <Button
+        android:id="@+id/selectDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5sp"
+        android:layout_below="@id/setEventTitle"
+        android:text="Select Date" />
+    <TextView
+        android:id="@+id/eventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/selectTime"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/eventDate"
+        android:layout_toLeftOf="@+id/selectTIme"
+        android:layout_margin="5sp"
+        android:textSize="30sp"
+        android:hint="Select A Date" />
+    <Button
+        android:id="@+id/selectTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5sp"
+        android:layout_below="@id/selectDate"
+        android:text="Select Time" />
+    
+        
+    
+
+</RelativeLayout>

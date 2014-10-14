@@ -67,7 +67,8 @@
         android:gravity="center"
         android:padding="6sp"
         android:text="20"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:id="@+id/ageCurrent" />
     
     <TextView
         android:id="@+id/gender"
@@ -81,6 +82,7 @@
         android:textSize="18sp" />
     
     <TextView
+        android:id="@+id/genderCurrent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/profileTitle"
@@ -89,7 +91,8 @@
         android:gravity="center"
         android:padding="6sp"
         android:text="Male"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+         />
     
     <TextView
         android:id="@+id/about"
@@ -136,5 +139,7 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/skills_list"
         android:text="Edit Profile" />
+    
+    
 
 </RelativeLayout>
