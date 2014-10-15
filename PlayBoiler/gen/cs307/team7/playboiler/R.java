@@ -77,8 +77,8 @@ public final class R {
         public static final int profileTitle=0x7f080023;
         public static final int section_label=0x7f080018;
         public static final int selectDate=0x7f080007;
-        public static final int selectTIme=0x7f080009;
-        public static final int selectTime=0x7f08000a;
+        public static final int selectTIme=0x7f08000a;
+        public static final int selectTime=0x7f080009;
         public static final int setEventTitle=0x7f080005;
         public static final int skills=0x7f08002d;
         public static final int skills_list=0x7f08002e;
