@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class MySqlLiteHelper extends SQLiteOpenHelper
 {
@@ -22,9 +23,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
+		Log.d("Database", "Database being initialized in onCreate()");
 		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " + 
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
-				"proficiencies TEXT";
+				"proficiencies TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
 		db.execSQL(CREATE_GAMES_TABLE);
@@ -102,30 +104,37 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	
 	public User getUser()
 	{
+		Log.d("Database", "Getting User Info");
 		SQLiteDatabase db = this.getReadableDatabase();
 		
 		String query = "SELECT * FROM " + USER_TABLE;
 		Cursor cursor = db.rawQuery(query, null);
 		
 		User return_user = new User();
-
+		if (!cursor.moveToFirst()) {
+			Log.d("Database", "User info does not exist currently");
+			return return_user;
+			
+		}
+		/*
 		if(cursor != null)
 		{
 			cursor.moveToFirst();
 		}
 		else
 		{
+			Log.d("Database", "User info does not exist currently");
 			return return_user;
 		}
-		
+		*/
 		return_user.setKey(Integer.parseInt(cursor.getString(0)));
 		return_user.setName(cursor.getString(1));
 		return_user.setAlias(cursor.getString(2));
+		return_user.setAge(Integer.parseInt(cursor.getString(4))); //switched age and gender. May have to switch back
 		return_user.setGender(cursor.getString(3));
-		return_user.setAge(Integer.parseInt(cursor.getString(4)));
 		return_user.setDescription(cursor.getString(5));
 		return_user.setProficiencies(cursor.getString(6));
-		
+		Log.d("Database", "Name : " + return_user.getName());
 		return return_user;
 	}
 	

@@ -33,7 +33,6 @@
         android:id="@+id/name"
         android:gravity="center_vertical"
         android:padding="6sp"
-        android:text="Craig Brentz"
         android:textSize="18sp" />
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +43,6 @@
         android:id="@+id/alias"
         android:gravity="center_vertical"
         android:padding="6sp"
-        android:text="&quot;Krieg_01&quot;"
         android:textSize="18sp" />
     
     <TextView
@@ -66,7 +64,6 @@
         android:layout_toRightOf="@id/age"
         android:gravity="center"
         android:padding="6sp"
-        android:text="20"
         android:textSize="18sp"
         android:id="@+id/ageCurrent" />
     
@@ -90,7 +87,6 @@
         android:layout_toRightOf="@id/gender"
         android:gravity="center"
         android:padding="6sp"
-        android:text="Male"
         android:textSize="18sp"
          />
     
@@ -112,8 +108,7 @@
         android:scrollbars="vertical"
         android:textSize="18sp"
         android:background="@drawable/back"
-        android:padding="10sp"
-        android:text="This is a test to see how long a profile can afford to be.\nThis is a test to see how long a profile can afford to be.\nThis is a test to see how long a profile can afford to be.\nThis is a test to see how long a profile can afford to be.\nThis is a test to see how long a profile can afford to be.\nThis is a test to see how long a profile can afford to be.\n"/>
+        android:padding="10sp"/>
     
     <TextView
         android:id="@+id/skills"

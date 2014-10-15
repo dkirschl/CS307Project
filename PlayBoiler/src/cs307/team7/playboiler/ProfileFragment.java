@@ -45,6 +45,14 @@ public class ProfileFragment extends Fragment {
         final TextView currAlias = (TextView) rootView.findViewById(R.id.alias);
         final TextView currAge = (TextView) rootView.findViewById(R.id.ageCurrent);
         final TextView currGender = (TextView) rootView.findViewById(R.id.genderCurrent);
+        User user = Global.current_user;
+        if (user.getKey() != -1) {
+        	currName.setText(user.getName());
+        	currAlias.setText(user.getAlias());
+        	currAge.setText(user.getAge());
+        	currGender.setText(user.getGender());
+        	bio.setText(user.getDescription());
+        }
         Button edit = (Button) rootView.findViewById(R.id.edit);
         edit.setOnClickListener(new OnClickListener() {
 
@@ -101,6 +109,9 @@ public class ProfileFragment extends Fragment {
 						} else {
 							currGender.setText("Female");
 						}
+						User temp = new User(1, etName.getText().toString(), etAlias.getText().toString(), currGender.getText().toString(), Integer.parseInt(etAge.getText().toString()), etBio.getText().toString(), "");
+						Global.userDatabase.addUser(temp);
+						Global.current_user = temp;
 						d.cancel();
 					}
 				});
