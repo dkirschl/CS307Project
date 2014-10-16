@@ -137,7 +137,44 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		Log.d("Database", "Name : " + return_user.getName());
 		return return_user;
 	}
-	
+	public User updateUser(User user)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(USER_KEY, user.getKey());
+		values.put(USER_NAME, user.getName());
+		values.put(USER_ALIAS, user.getAlias());
+		values.put(USER_GENDER, user.getGender());
+		values.put(USER_AGE, user.getAge());
+		values.put(USER_DESCRIPTION, user.getDescription());
+		values.put(USER_PROFICIENCIES, user.getProficiencies());
+		
+		db.update(USER_TABLE, values, "key = ?", new String[]{String.valueOf(user.getKey())});
+		db.close();
+		return user;
+	}
+	public Event updateEvent(Event event)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		//String query = "SELECT * FROM "+ GAMES_TABLE + "WHERE " + GAMES_KEY + "=" + event.getKey();
+		//Cursor cursor = db.rawQuery(query, null);
+		
+		ContentValues values = new ContentValues();
+		values.put(GAMES_KEY, event.getKey());
+		values.put(GAMES_SPORT, event.getSport());
+		values.put(GAMES_LOCATION, event.getLocation());
+		values.put(GAMES_DATE, event.getDate());
+		values.put(GAMES_TIME, event.getTime());
+		values.put(GAMES_TITLE, event.getTitle());
+		values.put(GAMES_CREATING_USER, event.getCreating_user());
+		values.put(GAMES_ATTENDING_IND, event.getAttending_ind());
+		
+		db.update(GAMES_TABLE, values, "key = ?", new String[]{String.valueOf(event.getKey())});
+		db.close();
+		return event;
+	}
 	public List<Event> getPreviousEvents()
 	{
 		List<Event> events = new LinkedList<Event>();
