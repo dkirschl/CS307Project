@@ -98,7 +98,7 @@ public class CreateEventFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				event = new Event(1, sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), 0);
+				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), 2);
 				Global.userDatabase.addEvent(event);
 				sportEdit.setText("");
 				locEdit.setText("");

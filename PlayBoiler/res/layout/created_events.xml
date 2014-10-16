@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView 
+        android:id="@+id/createdEventsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="My Created Events"
+        android:gravity="center_horizontal"/>
+    
+    <LinearLayout
+        android:id="@+id/createdEventsContainer"
+        android:layout_below="@id/createdEventsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5">
+        
+        <LinearLayout 
+            android:id="@+id/e1"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_margin="5sp"
+            android:paddingLeft="5sp"
+            android:background="@drawable/border">
+            
+            <TextView
+                android:id="@+id/e1Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Title 1"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e1Date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Date 1"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e1Sport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Sport 1"
+                android:textSize="20sp"/>
+            
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/e2"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_margin="5sp"
+            android:paddingLeft="5sp"
+            android:background="@drawable/border">
+            
+            <TextView
+                android:id="@+id/e2Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Title 2"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e2Date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Date 2"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e2Sport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Sport 2"
+                android:textSize="20sp"/>
+            
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/e3"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_margin="5sp"
+            android:paddingLeft="5sp"
+            android:background="@drawable/border">
+            
+            <TextView
+                android:id="@+id/e3Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Title 3"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e3Date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Date 3"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e3Sport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Sport 3"
+                android:textSize="20sp"/>
+            
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/e4"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_margin="5sp"
+            android:paddingLeft="5sp"
+            android:background="@drawable/border">
+            
+            <TextView
+                android:id="@+id/e4Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Title 4"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e4Date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Date 4"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e4Sport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Sport 4"
+                android:textSize="20sp"/>
+            
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/e5"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_margin="5sp"
+            android:paddingLeft="5sp"
+            android:background="@drawable/border">
+            
+            <TextView
+                android:id="@+id/e5Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Title 5"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e5Date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Date 5"
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/e5Sport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Placeholder Sport 5"
+                android:textSize="20sp"/>
+            
+        </LinearLayout>
+        
+        
+        
+    </LinearLayout>
+
+</RelativeLayout>

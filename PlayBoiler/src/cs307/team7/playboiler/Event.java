@@ -22,9 +22,9 @@ public class Event {
 		creating_user = "";
 		attending_ind = 0;
 	}
-	public Event(int k, String s, String l, String d, String t1, String t2, String cu, int a)
+	public Event(String s, String l, String d, String t1, String t2, String cu, int a)
 	{
-		key = k;
+		//key = k;
 		sport = s;
 		location = l;
 		date = d;

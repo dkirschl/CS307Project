@@ -92,6 +92,11 @@ public class MainActivity extends Activity
         		.replace(R.id.container, CreateEventFragment.newInstance(position+1))
         		.commit();
         		break;
+        	case 4:
+        		fragmentManager.beginTransaction()
+        		.replace(R.id.container, CreatedEventsFragment.newInstance(position+1))
+        		.commit();
+        		break;
         
         }
     	
@@ -112,6 +117,9 @@ public class MainActivity extends Activity
                 break;
             case 4:
             	mTitle = getString(R.string.title_section4);
+            	break;
+            case 5:
+            	mTitle = getString(R.string.title_section5);
             	break;
         }
     }

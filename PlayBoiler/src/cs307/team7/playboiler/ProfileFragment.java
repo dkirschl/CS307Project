@@ -110,7 +110,12 @@ public class ProfileFragment extends Fragment {
 							currGender.setText("Female");
 						}
 						User temp = new User(1, etName.getText().toString(), etAlias.getText().toString(), currGender.getText().toString(), Integer.parseInt(etAge.getText().toString()), etBio.getText().toString(), "");
-						Global.userDatabase.addUser(temp);
+						if (Global.current_user.getKey() != -1) {
+							Global.userDatabase.updateUser(temp);
+						} else {
+							Global.userDatabase.addUser(temp);
+							
+						}
 						Global.current_user = temp;
 						d.cancel();
 					}

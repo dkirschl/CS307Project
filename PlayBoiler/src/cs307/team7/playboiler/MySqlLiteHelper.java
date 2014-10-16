@@ -73,7 +73,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		
-		values.put(GAMES_KEY, event.getKey());
+		//values.put(GAMES_KEY, event.getKey());
 		values.put(GAMES_SPORT, event.getSport());
 		values.put(GAMES_DATE, event.getDate());
 		values.put(GAMES_LOCATION, event.getLocation());
@@ -212,6 +212,36 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		List<Event> events = new LinkedList<Event>();
 		
 		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=1";
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		Cursor cursor = db.rawQuery(query, null);
+		Event event = null;
+		
+		if(cursor.moveToFirst())
+		{
+			int x = 0;
+			do
+			{
+				event = new Event();
+				event.setKey(Integer.parseInt(cursor.getString(0)));
+				event.setSport(cursor.getString(1));
+				event.setLocation(cursor.getString(2));
+				event.setDate(cursor.getString(3));
+				event.setTime(cursor.getString(4));
+				event.setTitle(cursor.getString(5));
+				event.setCreating_user(cursor.getString(6));
+				event.setAttending_ind(Integer.parseInt(cursor.getString(7)));
+				events.add(event);
+				x++;
+			}while(x < 5 && cursor.moveToNext());
+		}
+		return events;
+	}
+	public List<Event> getCreatedEvents()
+	{
+		List<Event> events = new LinkedList<Event>();
+		
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=2";
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
