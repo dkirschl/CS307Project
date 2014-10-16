@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
         if (user.getKey() != -1) {
         	currName.setText(user.getName());
         	currAlias.setText(user.getAlias());
-        	currAge.setText(user.getAge());
+        	currAge.setText("" +user.getAge());
         	currGender.setText(user.getGender());
         	bio.setText(user.getDescription());
         }

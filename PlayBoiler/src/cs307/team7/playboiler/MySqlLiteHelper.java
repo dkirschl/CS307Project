@@ -130,8 +130,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		return_user.setKey(Integer.parseInt(cursor.getString(0)));
 		return_user.setName(cursor.getString(1));
 		return_user.setAlias(cursor.getString(2));
-		return_user.setAge(Integer.parseInt(cursor.getString(4))); //switched age and gender. May have to switch back
-		return_user.setGender(cursor.getString(3));
+		return_user.setGender(cursor.getString(4));
+		return_user.setAge(Integer.parseInt(cursor.getString(3))); //switched age and gender. May have to switch back
 		return_user.setDescription(cursor.getString(5));
 		return_user.setProficiencies(cursor.getString(6));
 		Log.d("Database", "Name : " + return_user.getName());
