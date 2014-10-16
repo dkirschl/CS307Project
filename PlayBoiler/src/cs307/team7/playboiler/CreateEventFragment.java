@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.TimePicker.OnTimeChangedListener;
 
 public class CreateEventFragment extends Fragment {
@@ -45,7 +46,7 @@ public class CreateEventFragment extends Fragment {
             Bundle savedInstanceState) {
     	
     	final View rootView = inflater.inflate(R.layout.create_event, container, false);
-    	final EditText titleEdit = (EditText) rootView.findViewById(R.id.createTitle);
+    	final EditText titleEdit = (EditText) rootView.findViewById(R.id.setEventTitle);
     	final TextView tvDate = (TextView) rootView.findViewById(R.id.eventDate);
     	final TextView tvTime = (TextView) rootView.findViewById(R.id.eventTime);
     	final EditText sportEdit = (EditText) rootView.findViewById(R.id.selectSport);
@@ -104,6 +105,7 @@ public class CreateEventFragment extends Fragment {
 				tvDate.setText("");
 				tvTime.setText("");
 				titleEdit.setText("");
+				Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
 			}
     		
     	});

@@ -69,6 +69,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	
 	public void addEvent(Event event)
 	{
+		Log.d("Add Event", "Adding event : " + event.getTitle());
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		
@@ -83,6 +84,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		db.insert(GAMES_TABLE, null, values);
 		db.close();
+		Log.d("Add Event", "Event Add Complete");
 	}
 	
 	public void addUser(User user)
