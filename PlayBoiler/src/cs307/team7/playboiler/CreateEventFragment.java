@@ -100,6 +100,9 @@ public class CreateEventFragment extends Fragment {
 			public void onClick(View v) {
 				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), 2);
 				Global.userDatabase.addEvent(event);
+				String m = "/crev/"+event.getSport()+"/"+event.getLocation()+"/"+event.getDate()+"/"+event.getTime()+"/"+event.getTitle()+"/"+event.getCreating_user()+"/0/ HTTP/1.0\n\r";
+				NetworkHandler nw = new NetworkHandler();
+				nw.execute(m);
 				sportEdit.setText("");
 				locEdit.setText("");
 				tvDate.setText("");
