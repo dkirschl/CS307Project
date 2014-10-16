@@ -36,7 +36,7 @@
         android:layout_toLeftOf="@+id/selectDate"
         android:layout_margin="5sp"
         android:textSize="30sp"
-        android:hint="Select A Date" />
+        android:hint="Date" />
 
     <Button
         android:id="@+id/selectDate"
@@ -53,10 +53,10 @@
         android:layout_alignBottom="@+id/selectTime"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/eventDate"
-        android:layout_toLeftOf="@+id/selectTIme"
+        android:layout_toLeftOf="@+id/selectTime"
         android:layout_margin="5sp"
         android:textSize="30sp"
-        android:hint="Select A Date" />
+        android:hint="Time" />
     <Button
         android:id="@+id/selectTime"
         android:layout_width="wrap_content"
@@ -66,7 +66,30 @@
         android:layout_below="@id/selectDate"
         android:text="Select Time" />
     
-        
+    <EditText 
+        android:id="@+id/selectLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectTime"
+        android:hint="Set Location"
+        android:textSize="30sp"
+        android:padding="5sp"/>
+    <EditText
+        android:id="@+id/selectSport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectLocation"
+        android:hint="Set Sport"
+        android:textSize="30sp"
+        android:padding="5sp"/>
+    
+    <Button
+        android:id="@+id/createEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectSport"
+        android:text="Create Event"
+        android:textSize="30sp"/>
     
 
 </RelativeLayout>

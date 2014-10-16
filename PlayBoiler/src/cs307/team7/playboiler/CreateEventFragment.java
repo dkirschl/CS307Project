@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +14,19 @@ import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.TimePicker.OnTimeChangedListener;
 
 public class CreateEventFragment extends Fragment {
 	
-	private int year;
-	private int month;
-	private int day;
-	Button dateSelect;
+	
+	Button dateSelect, timeSelect;
+	Event event;
+	Button createEvent;
+	int h;
+	int m;
 
 	public static CreateEventFragment newInstance(int sectionNumber) {
         CreateEventFragment fragment = new CreateEventFragment();
@@ -30,6 +36,8 @@ public class CreateEventFragment extends Fragment {
     }
 
     public CreateEventFragment() {
+    	h=0;
+    	m=0;
     }
     
     @Override
@@ -37,7 +45,11 @@ public class CreateEventFragment extends Fragment {
             Bundle savedInstanceState) {
     	
     	final View rootView = inflater.inflate(R.layout.create_event, container, false);
+    	final EditText titleEdit = (EditText) rootView.findViewById(R.id.createTitle);
     	final TextView tvDate = (TextView) rootView.findViewById(R.id.eventDate);
+    	final TextView tvTime = (TextView) rootView.findViewById(R.id.eventTime);
+    	final EditText sportEdit = (EditText) rootView.findViewById(R.id.selectSport);
+    	final EditText locEdit = (EditText) rootView.findViewById(R.id.selectLocation);
     	dateSelect = (Button) rootView.findViewById(R.id.selectDate);
     	dateSelect.setOnClickListener(new OnClickListener() {
 
@@ -48,7 +60,6 @@ public class CreateEventFragment extends Fragment {
 				d.setTitle("Pick a Date");
 				
 				final DatePicker dp = (DatePicker) d.findViewById(R.id.datePicker);
-				TimePicker tp = (TimePicker) d.findViewById(R.id.timePicker);
 				Button done = (Button) d.findViewById(R.id.dateDone);
 				done.setOnClickListener(new OnClickListener() {
 					
@@ -61,20 +72,52 @@ public class CreateEventFragment extends Fragment {
 				});
 				d.show();
 			}
+    	});
+    	final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+			
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				h = hourOfDay;
+				m = minute;
+				tvTime.setText(new StringBuilder().append(timeFix(h)).append(":").append(timeFix(m)));
+			}
+		};
+    	timeSelect = (Button) rootView.findViewById(R.id.selectTime);
+    	timeSelect.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				TimePickerDialog tpd = new TimePickerDialog(v.getContext(), timePickerListener, h, m, false);
+				tpd.show();
+			}
+		});
+    		
+    	createEvent = (Button) rootView.findViewById(R.id.createEvent);
+    	createEvent.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				event = new Event(1, sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), 0);
+				Global.userDatabase.addEvent(event);
+				sportEdit.setText("");
+				locEdit.setText("");
+				tvDate.setText("");
+				tvTime.setText("");
+				titleEdit.setText("");
+			}
     		
     	});
-    	/*
-    	DatePicker dp = (DatePicker) rootView.findViewById(R.id.datePicker);
-    	final Calendar c = Calendar.getInstance();
-    	year = c.get(Calendar.YEAR);
-    	month = c.get(Calendar.MONTH);
-    	day = c.get(Calendar.DAY_OF_MONTH);
-    	
-    	dp.init(year, month, day, null);
-		*/		
     	
     	return rootView;
     	
     
     }
+    private static String timeFix(int c) {
+    	if (c >= 10) {
+    		return String.valueOf(c);
+    	} else {
+    		return "0" + String.valueOf(c);
+    	}
+    }
+    
 }
