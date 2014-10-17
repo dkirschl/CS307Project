@@ -5,8 +5,39 @@
     
     <TextView 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Search"/>
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="30sp"
+        android:id="@+id/searchTitle"
+        android:text="Find a Game"/>
     
+    <EditText
+        android:id="@+id/searchField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/searchTitle"
+        android:layout_toLeftOf="@+id/searchButton"
+        android:textSize="25sp"
+        android:hint="Enter a keyword" />
 
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/searchField"
+        android:textSize="25sp"
+        android:text="Search" />
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchButton">
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </LinearLayout>
+</ScrollView>
 </RelativeLayout>

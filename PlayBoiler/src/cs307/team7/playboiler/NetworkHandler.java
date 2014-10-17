@@ -19,7 +19,7 @@ public class NetworkHandler extends AsyncTask<String, Void, String> {
 	protected String doInBackground(String... params) {
 		String message = params[0];
 		String message1 = "/simple.html";
-		String url="http://____.cs.purdue.edu:_____"+message;
+		String url="http://sac01.cs.purdue.edu:39001"+message;
 		URL obj = null;
 		try {
 			obj = new URL(url);

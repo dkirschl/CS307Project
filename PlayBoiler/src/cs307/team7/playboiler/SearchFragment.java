@@ -5,7 +5,11 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class SearchFragment extends Fragment {
 	public static SearchFragment newInstance(int sectionNumber) {
@@ -19,11 +23,36 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
             Bundle savedInstanceState) {
     	
     	
         View rootView = inflater.inflate(R.layout.search, container, false);
+        final LinearLayout contain = (LinearLayout) rootView.findViewById(R.id.searchContainer);
+        Button search = (Button) rootView.findViewById(R.id.searchButton);
+        search.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				
+				
+				int j = 20;
+		        for (int i= 0; i < j; i++) {
+		        	View ll = inflater.inflate(R.layout.event_view, container, false);
+		        	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
+		        	TextView tv2 = (TextView) ll.findViewById(R.id.searchEventDate);
+		        	tv.setText("Title : " + i);
+		        	tv2.setText("Date : " + i);
+		        	contain.addView(ll);
+		        	
+		        }
+			}
+		});
+        
+        
+        
+        
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
         return rootView;

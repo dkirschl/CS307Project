@@ -53,6 +53,16 @@ public class ProfileFragment extends Fragment {
         	currGender.setText(user.getGender());
         	bio.setText(user.getDescription());
         }
+        Button def = (Button) rootView.findViewById(R.id.createDefaultUser);
+        def.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				NetworkHandler nh = new NetworkHandler();
+				nh.execute("/crus/Password            /User                                              /Alias               /Ag/M/ \r\n");
+			}
+        	
+        });
         Button edit = (Button) rootView.findViewById(R.id.edit);
         edit.setOnClickListener(new OnClickListener() {
 
@@ -95,6 +105,7 @@ public class ProfileFragment extends Fragment {
 					}
 				});
 				
+				
 				Button done = (Button) d.findViewById(R.id.editDone);
 				done.setOnClickListener(new OnClickListener() {
 					
@@ -114,7 +125,9 @@ public class ProfileFragment extends Fragment {
 							Global.userDatabase.updateUser(temp);
 						} else {
 							Global.userDatabase.addUser(temp);
-							
+							String m = "/crus/"+temp.getName()+"/"+temp.getAlias()+"/"+temp.getAge()+"/"+temp.getGender()+"/"+"password/ HTTP/1.0\r\n";
+							NetworkHandler nh = new NetworkHandler();
+							nh.execute(m);
 						}
 						Global.current_user = temp;
 						d.cancel();
