@@ -1,5 +1,8 @@
 package cs307.team7.playboiler;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -27,6 +30,7 @@ public class SearchFragment extends Fragment {
 	
 	Button dateSelect, timeSelect;
 	int m,h;
+	ArrayList<String> titles, dates;
 
     public SearchFragment() {
     }
@@ -40,6 +44,8 @@ public class SearchFragment extends Fragment {
         final LinearLayout contain = (LinearLayout) rootView.findViewById(R.id.searchContainer);
         final TextView tvDate = (TextView) rootView.findViewById(R.id.searchEventDate);
         final TextView tvTime = (TextView) rootView.findViewById(R.id.searchEventTime);
+        titles = new ArrayList<String>();
+    	dates  = new ArrayList<String>();
         
         dateSelect = (Button) rootView.findViewById(R.id.searchSelectDate);
     	dateSelect.setOnClickListener(new OnClickListener() {
@@ -103,16 +109,34 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				str.append("\r\n");
 				Log.d("Message", str.toString());
 				NetworkHandler nh = new NetworkHandler();
-				nh.execute(str.toString());
+				String result = null;
+				try {
+					result = nh.execute(str.toString()).get();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					e1.printStackTrace();
+				}
+				Log.d("Search Event", result);
+				//DenverAlgorithm(result);
+				String[][] s = split(result);
+				for (int i = 0; i < s.length; i++) {
+					for (int j = 0; j < s[i].length; j++) {
+						Log.d("PART", "" + i + "," + j + ":" +s[i][j] +":");
+					}
+				}
+				
+				for (int i = 0; i < s.length; i++) {
+					View ll = inflater.inflate(R.layout.event_view, container, false);
+		        	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
+		        	TextView tv2 = (TextView) ll.findViewById(R.id.searchEventDate);
+		        	tv.setText("Title : " + s[i][0]);
+		        	tv2.setText("Date : " + s[i][1]);
+		        	contain.addView(ll);
+				}
+				
 				
 				/*
-				try {
-					container.getContext().wait(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				*/
 				int j = 20;
 		        for (int i= 0; i < j; i++) {
 		        	View ll = inflater.inflate(R.layout.event_view, container, false);
@@ -123,6 +147,7 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 		        	contain.addView(ll);
 		        	
 		        }
+		        */
 			}
 		});
         
@@ -157,4 +182,84 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
     		return "0" + String.valueOf(c);
     	}
     }
+    
+    public String[][] split(String result) {
+    	//int pipe = result.indexOf('|');
+    	//int tilde = result.indexOf('~');
+    	String[] parts = result.split("\\|");
+    	String[][] allParts = new String[parts.length-1][];
+    	for (int i = 1; i < parts.length; i++) {
+    		allParts[i-1] = parts[i].split("~");
+    	}
+    	
+    	String[] tempString;
+    	String tempString2;
+    	for (int i = 0; i < allParts.length; i++) {
+    		for (int j = 0; j < allParts[i].length; j++) {
+    			tempString = allParts[i][j].split(" ");
+    			tempString2 = "";
+    			for (int k = 0; k < tempString.length; k++){
+    				if(k != 0){
+    					tempString2 = tempString2 + " ";
+    				}
+    				tempString2 = tempString2 + tempString[k];
+    			}
+    			allParts[i][j] = tempString2;
+    		}
+    	}
+    	
+    	
+    	
+    	return allParts;
+    	
+    	
+    }
+    
+    public void DenverAlgorithm(String total_message) {
+    	int counter = 0;
+    	int overall_counter = 0;
+
+    	
+    	// if strlen(total_message) == 1 nothing returned
+    	while (overall_counter < total_message.length())
+    	{
+    	        if(total_message.indexOf(overall_counter) == '|')
+    	        {
+    	                for(counter= overall_counter+1; total_message.indexOf(counter) !='|'; counter++)
+    	                {
+    	                        if(total_message.indexOf(counter)== ' ')
+    	                        {
+    	                                overall_counter = checkAll(overall_counter+1, counter, total_message);
+    	                        }
+    	                        else
+    	                        {
+    	                                overall_counter++;
+    	                        }
+    	                        counter = overall_counter;
+    	                }
+    	        }
+    	        overall_counter++;
+    	}
+    	
+    }
+    
+    public int checkAll(int overall_counter, int c, String total_message)
+	{
+	        int checker = c;
+	        while(total_message.indexOf(checker) == ' ')
+	        {
+	                checker++;
+	        }
+	        if(total_message.indexOf(checker) == '~')
+	        {
+	                titles.add(total_message.substring(overall_counter, c));
+	                return checker;
+	        }
+	        if(total_message.indexOf(checker) == '|')
+	        {
+	                dates.add(total_message.substring(overall_counter, c));
+	                return checker;
+	        }
+	        return checker;
+	}
 }
