@@ -42,7 +42,7 @@ void work(int slaveSocket)
 	
 	//Current:
 		crev: (create event)
-	GET<sp>/crev/sport/location/date/time/summary/user/wantedskill/<sp>HTTP/1.0 <crlf>
+	GET<sp>/crev/password/user/sport/location/date/time/summary/wantedskill/<sp>HTTP/1.0 <crlf>
 	
 		crus: (create user)
 	GET<sp>/crus/NAME/ALLIAS/AGE/GENDER/PASSWORD/<sp>HTTP/1.0 <crlf>

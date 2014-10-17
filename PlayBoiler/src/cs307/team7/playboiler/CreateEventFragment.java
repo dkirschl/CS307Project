@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -100,9 +101,42 @@ public class CreateEventFragment extends Fragment {
 			public void onClick(View v) {
 				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), 2);
 				Global.userDatabase.addEvent(event);
-				String m = "/crev/"+event.getSport()+"/"+event.getLocation()+"/"+event.getDate()+"/"+event.getTime()+"/"+event.getTitle()+"/"+event.getCreating_user()+"/0/ HTTP/1.0\n\r";
-				NetworkHandler nw = new NetworkHandler();
-				nw.execute(m);
+				int sportLen = 30;
+				int locLen = 30;
+				int dateLen = 10;
+				int timeLen = 5;
+				int titleLen = 100;
+				int passLen = 20;
+				StringBuilder str = new StringBuilder();
+				str.append("/crev/");
+				str.append(Global.current_user.getKey());
+				addSpaces(str, 4-(String.valueOf(Global.current_user.getKey()).length()));
+				str.append("/");
+				str.append("password");
+				addSpaces(str, 12);
+				str.append("/");
+				str.append(event.getSport());
+				addSpaces(str, sportLen - event.getSport().length());
+				str.append("/");
+				str.append(event.getLocation());
+				addSpaces(str, locLen - event.getLocation().length());
+				str.append("/");
+				str.append(event.getDate());
+				addSpaces(str, dateLen - event.getDate().length());
+				str.append("/");
+				str.append(event.getTime());
+				addSpaces(str, timeLen-event.getTime().length());
+				str.append("/");
+				str.append(event.getTitle());
+				addSpaces(str, titleLen - event.getTitle().length());
+				str.append("/");
+				str.append(1);
+				str.append("/");
+				str.append("\r\n");
+				Log.d("The Message", str.toString());
+				//String m = "/crev/"+event.getSport()+"/"+event.getLocation()+"/"+event.getDate()+"/"+event.getTime()+"/"+event.getTitle()+"/"+event.getCreating_user()+"/0/ HTTP/1.0\n\r";
+				//new NetworkHandler().execute(m);
+				new NetworkHandler().execute(str.toString());
 				sportEdit.setText("");
 				locEdit.setText("");
 				tvDate.setText("");
@@ -117,6 +151,14 @@ public class CreateEventFragment extends Fragment {
     	
     
     }
+    public static StringBuilder addSpaces(StringBuilder sb, int numSpaces) {
+		for(int i=0; i < numSpaces; i++) {
+			sb.append(" ");
+		}
+    	return sb;
+    	
+    }
+    
     private static String timeFix(int c) {
     	if (c >= 10) {
     		return String.valueOf(c);

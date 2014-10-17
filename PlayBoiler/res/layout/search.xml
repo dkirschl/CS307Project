@@ -12,21 +12,69 @@
         android:text="Find a Game"/>
     
     <EditText
-        android:id="@+id/searchField"
+        android:id="@+id/searchSport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/searchTitle"
-        android:layout_toLeftOf="@+id/searchButton"
         android:textSize="25sp"
-        android:hint="Enter a keyword" />
+        android:hint="Enter sport" />
+    
+    <EditText
+        android:id="@+id/searchLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/searchSport"
+        android:textSize="25sp"
+        android:hint="Enter Location" />
+    
+    <TextView
+        android:id="@+id/searchEventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/searchSelectDate"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/searchLocation"
+        android:layout_toLeftOf="@+id/searchSelectDate"
+        android:layout_margin="5sp"
+        android:textSize="30sp"
+        android:hint="Date" />
 
     <Button
-        android:id="@+id/searchButton"
+        android:id="@+id/searchSelectDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/searchField"
+        android:layout_margin="5sp"
+        android:layout_below="@id/searchLocation"
+        android:text="Select Date" />
+    <TextView
+        android:id="@+id/searchEventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/searchSelectTime"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/searchEventDate"
+        android:layout_toLeftOf="@+id/searchSelectTime"
+        android:layout_margin="5sp"
+        android:textSize="30sp"
+        android:hint="Time" />
+    <Button
+        android:id="@+id/searchSelectTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5sp"
+        android:layout_below="@id/searchSelectDate"
+        android:text="Select Time" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/searchSelectTime"
         android:textSize="25sp"
         android:text="Search" />
     <ScrollView 

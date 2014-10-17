@@ -27,6 +27,8 @@ public class NetworkHandler extends AsyncTask<String, Void, String> {
 			mue.printStackTrace();
 		}
 		HttpURLConnection con = null;
+		
+		
 		try {
 			con = (HttpURLConnection) obj.openConnection();
 		} catch (IOException ioe) {
@@ -72,7 +74,7 @@ public class NetworkHandler extends AsyncTask<String, Void, String> {
 		//Print result
 		Log.d("HTTP", response.toString());
 		
-		return null;
+		return response.toString();
 	}
 
 }

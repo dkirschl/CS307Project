@@ -58,8 +58,7 @@ public class ProfileFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				NetworkHandler nh = new NetworkHandler();
-				nh.execute("/crus/Password            /User                                              /Alias               /Ag/M/ \r\n");
+				new NetworkHandler().execute("/crus/Password            /User                                              /Alias               /Ag/M/ \r\n");
 			}
         	
         });

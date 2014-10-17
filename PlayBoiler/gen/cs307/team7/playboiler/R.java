@@ -38,8 +38,8 @@ public final class R {
     }
     public static final class id {
         public static final int about=0x7f080045;
-        public static final int action_example=0x7f080050;
-        public static final int action_settings=0x7f08004f;
+        public static final int action_example=0x7f080054;
+        public static final int action_settings=0x7f080053;
         public static final int age=0x7f080041;
         public static final int ageCurrent=0x7f080042;
         public static final int ageEditBox=0x7f080029;
@@ -100,11 +100,15 @@ public final class R {
         public static final int profileImage=0x7f08003e;
         public static final int profileSummary=0x7f080035;
         public static final int profileTitle=0x7f08003d;
-        public static final int searchButton=0x7f08004d;
-        public static final int searchContainer=0x7f08004e;
+        public static final int searchButton=0x7f080051;
+        public static final int searchContainer=0x7f080052;
         public static final int searchEventDate=0x7f080031;
+        public static final int searchEventTime=0x7f08004f;
         public static final int searchEventTitle=0x7f080030;
-        public static final int searchField=0x7f08004c;
+        public static final int searchLocation=0x7f08004d;
+        public static final int searchSelectDate=0x7f08004e;
+        public static final int searchSelectTime=0x7f080050;
+        public static final int searchSport=0x7f08004c;
         public static final int searchTitle=0x7f08004b;
         public static final int section_label=0x7f080032;
         public static final int selectDate=0x7f080007;
