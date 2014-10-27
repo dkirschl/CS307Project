@@ -49,7 +49,7 @@ public class CreatedEventsFragment extends Fragment {
 			View ll = inflater.inflate(R.layout.event_view, container, false);
         	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
         	TextView tv2 = (TextView) ll.findViewById(R.id.searchEventDate);
-        	View page = fillEventPage(createdEventsList.get(i), inflater, container);
+        	View page = Global.fillEventPage(createdEventsList.get(i), inflater, container);
         	ll.setOnClickListener(new eventClickListener(createdEventsList.get(i).getTitle(), page));
         	tv.setText("Title : " + createdEventsList.get(i).getTitle());
         	tv2.setText("Date : " + createdEventsList.get(i).getDate());
@@ -93,19 +93,4 @@ public class CreatedEventsFragment extends Fragment {
     	
     }
     
-    public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
-		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
-		//TextView title = (TextView) v.findViewById(R.id.epnjTitle);
-		TextView date = (TextView) v.findViewById(R.id.epnjDate);
-		TextView time = (TextView) v.findViewById(R.id.epnjTime);
-		TextView loc = (TextView) v.findViewById(R.id.epnjLoc);
-		TextView sport = (TextView) v.findViewById(R.id.epnjSport);
-		//title.setText(e.getTitle());
-		date.setText(e.getDate());
-		time.setText(e.getTime());
-		loc.setText(e.getLocation());
-		sport.setText(e.getSport());
-		
-    	return v;
-    }
 }

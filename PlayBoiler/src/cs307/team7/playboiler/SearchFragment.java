@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.graphics.Path.FillType;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -144,15 +149,13 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 					View ll = inflater.inflate(R.layout.event_view, container, false);
 		        	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
 		        	TextView tv2 = (TextView) ll.findViewById(R.id.searchEventDate);
-		        	ll.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View arg0) {
-							Toast.makeText(c, "Event clicked", Toast.LENGTH_LONG).show();
-						}
-					});
-		        	tv.setText("Title : " + s[i][0]);
-		        	tv2.setText("Date : " + s[i][1]);
+		        	Event e = new Event();
+		        	//Log.d("Info", s[i][0] + s[i][1] + s[i][2] + s[i][3] + s[i][4]);
+		        	e.setTitle(s[i][4]); e.setDate(s[i][2]); e.setTime(s[i][3]); e.setLocation(s[i][0]); e.setSport(s[i][1]);
+		        	View page = Global.fillEventPage(e, inflater, container);
+		        	ll.setOnClickListener(new eventClickListener(s[i][0], page));
+		        	tv.setText("Title : " + s[i][4]);
+		        	tv2.setText("Date : " + s[i][2]);
 		        	contain.addView(ll);
 				}
 				
@@ -245,4 +248,44 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 	        }
 	        return checker;
 	}
+    
+    public class eventClickListener implements OnClickListener {
+    	private String t;
+    	private View page;
+    	
+    	public eventClickListener(String title, View page) {
+    		super();
+    		t = title;
+    		this.page = page;
+    	}
+
+		@Override
+		public void onClick(View v) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setView(page);
+			final TextView et = new TextView(getActivity());
+			et.setText(t);
+			et.setGravity(Gravity.CENTER);
+			et.setTextSize(35);
+			builder.setCustomTitle(et);
+			builder.setPositiveButton("Join Event", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					//Code to join event
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					((ViewGroup)page.getParent()).removeView(page);
+					
+				}
+			});
+			builder.show();
+		}
+    	
+    	
+    }
 }
