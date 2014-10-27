@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class SearchFragment extends Fragment {
 	public static SearchFragment newInstance(int sectionNumber) {
@@ -42,6 +44,7 @@ public class SearchFragment extends Fragment {
     	
     	
         View rootView = inflater.inflate(R.layout.search, container, false);
+        final Context c = rootView.getContext();
         final LinearLayout contain = (LinearLayout) rootView.findViewById(R.id.searchContainer);
         final EditText searchSport = (EditText) rootView.findViewById(R.id.searchSport);
         final EditText searchLocation = (EditText) rootView.findViewById(R.id.searchLocation);
@@ -141,6 +144,13 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 					View ll = inflater.inflate(R.layout.event_view, container, false);
 		        	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
 		        	TextView tv2 = (TextView) ll.findViewById(R.id.searchEventDate);
+		        	ll.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							Toast.makeText(c, "Event clicked", Toast.LENGTH_LONG).show();
+						}
+					});
 		        	tv.setText("Title : " + s[i][0]);
 		        	tv2.setText("Date : " + s[i][1]);
 		        	contain.addView(ll);
@@ -215,33 +225,6 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
     	
     }
     
-    public void DenverAlgorithm(String total_message) {
-    	int counter = 0;
-    	int overall_counter = 0;
-
-    	
-    	// if strlen(total_message) == 1 nothing returned
-    	while (overall_counter < total_message.length())
-    	{
-    	        if(total_message.indexOf(overall_counter) == '|')
-    	        {
-    	                for(counter= overall_counter+1; total_message.indexOf(counter) !='|'; counter++)
-    	                {
-    	                        if(total_message.indexOf(counter)== ' ')
-    	                        {
-    	                                overall_counter = checkAll(overall_counter+1, counter, total_message);
-    	                        }
-    	                        else
-    	                        {
-    	                                overall_counter++;
-    	                        }
-    	                        counter = overall_counter;
-    	                }
-    	        }
-    	        overall_counter++;
-    	}
-    	
-    }
     
     public int checkAll(int overall_counter, int c, String total_message)
 	{
