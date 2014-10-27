@@ -30,7 +30,7 @@ void deev(int);
 void gtev(int);
 void invl(int);
 void join(int);
-//void unjn(int); 
+void unjn(int); 
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -138,6 +138,10 @@ void work(int slaveSocket)
 	else if(strcmp(input1,"/join") == 0)
 	{
 		join(slaveSocket);
+	}
+	else if(strcmp(input1,"/unjn") == 0) //NEW>>>>>>>>
+	{
+		unjn(slaveSocket);		//NEW>>>>>>
 	}
 	else 										//INVALID INPUT
 	{
@@ -756,6 +760,7 @@ void join(int slaveSocket)
 	//INPUT AREAS
 	char input2[keyL];		//KEY
 	char input3[passL];	//PASS
+	char input4[evKeyL];	//eventkey
 
 	//GET INPUT
 
@@ -780,6 +785,16 @@ void join(int slaveSocket)
 	printf("%s\n",input3);
 
 	read(slaveSocket, &next, sizeof(next));
+
+	for(counter = 0; counter < evKeyL-1; counter++)
+	{
+		read(slaveSocket, &next, sizeof(next));
+		input4[counter] = next;
+	}	
+	input4[counter] = '\0';
+	printf("%s\n",input4);
+
+	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
 
 	//OTHER
@@ -792,6 +807,60 @@ void join(int slaveSocket)
 	close(slaveSocket);
 }
 
+
+void unjn(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
+	char input4[evKeyL];	//eventkey
+
+	//GET INPUT
+
+	read(slaveSocket, &next, sizeof(next));
+
+	for(counter = 0; counter < keyL-1; counter++)
+	{
+		read(slaveSocket, &next, sizeof(next));
+		input2[counter] = next;
+	}	
+	input2[counter] = '\0';
+	printf("%s\n",input2);
+
+	read(slaveSocket, &next, sizeof(next));
+
+	for(counter = 0; counter < passL-1; counter++)
+	{
+		read(slaveSocket, &next, sizeof(next));
+		input3[counter] = next;
+	}	
+	input3[counter] = '\0';
+	printf("%s\n",input3);
+
+	read(slaveSocket, &next, sizeof(next));
+
+	for(counter = 0; counter < evKeyL-1; counter++)
+	{
+		read(slaveSocket, &next, sizeof(next));
+		input4[counter] = next;
+	}	
+	input4[counter] = '\0';
+	printf("%s\n",input4);
+
+	read(slaveSocket, &next, sizeof(next));
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/unjn";
+	printStandard(slaveSocket,stringA);
+	//database code
+	//dataDeleteEvent(slaveSocket,input2,input3,input4);
+	dataUnJoinEvent(slaveSocket,input2,input3);
+	
+	close(slaveSocket);
+}
 //INVALID INPUT
 void invl(int slaveSocket)
 {

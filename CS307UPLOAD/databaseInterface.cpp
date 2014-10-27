@@ -131,6 +131,19 @@ void dataJoinEvent(int slaveSocket, char * key, char * password, char * evKey)
 	}
 }
 
+void dataUnJoinEvent(int slaveSocket, char * key, char * password, char * evKey)
+{
+	if(isValidValue(password) && isGoodPass(key, password) && isValidValue(evKey))
+	{
+		write(slaveSocket,"ISVALID",7);
+		//database stuff
+	}
+	else
+	{
+		write(slaveSocket,"INVALID",7);
+	}
+}
+
 
 //INPUT:	slaveSocket, key, password, sport, location, date, time, summary, skill level
 //IDEA:		Accept into and create an event based on provided info.
