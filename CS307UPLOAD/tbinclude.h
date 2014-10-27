@@ -16,7 +16,20 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-
+const int sportL = 31;
+const int locL = 31;
+const int dateL = 9;
+const int timeL = 5;
+const int summL = 101;
+const int passL = 21;
+const int nameL = 51;
+const int aliasL = 21;
+const int ageL = 3;
+const int genderL = 2;
+const int descL = 101;
+const int keyL = 5;
+const int evKeyL = 5;
+const int competeL = 2;
 
 void work(int);
 
@@ -60,6 +73,8 @@ void dataDeleteEvent(int,char *,char *,char *);
 void dataGetEvent(int,char *,char *,char *,char *,char *);
 
 void dataDeleteUser(int, char *, char *);
+
+void dataJoinEvent(int, char *, char *,char *);
 
 //Internal uses
 
