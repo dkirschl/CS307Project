@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView
+        android:id="@+id/epnjDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date :"
+        android:textSize="30sp"
+        android:padding="10sp"/>
+    
+    <TextView
+        android:id="@+id/epnjDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_toRightOf="@+id/epnjDateText"
+        android:hint="date"
+        android:textSize="30sp"
+        android:padding="10sp" />
+    
+    <TextView
+        android:id="@+id/epnjTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/epnjDateText"
+        android:text="Time :"
+        android:textSize="30sp"
+        android:padding="10sp"/>
+    
+    <TextView
+        android:id="@+id/epnjTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/epnjDate"
+        android:gravity="center_horizontal"
+        android:layout_toRightOf="@+id/epnjTimeText"
+        android:hint="time"
+        android:textSize="30sp"
+        android:padding="10sp" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:layout_below="@id/epnjTime"
+        android:background="@android:color/holo_blue_dark"
+        android:id="@+id/buf2"/>
+    
+    <TextView 
+        android:id="@+id/epnjLocText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_below="@id/buf2"
+        android:padding="10sp"
+        android:text="Location"
+        android:gravity="center_horizontal"/>
+    
+    <TextView 
+        android:id="@+id/epnjLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_below="@id/epnjLocText"
+        android:padding="10sp"
+        android:hint="Location"
+        android:gravity="center_horizontal"/>
+    
+    <TextView
+        android:id="@+id/epnjSportText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/epnjLoc"
+        android:text="Sport :"
+        android:textSize="30sp"
+        android:padding="10sp"/>
+    
+    <TextView
+        android:id="@+id/epnjSport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/epnjLoc"
+        android:gravity="center_horizontal"
+        android:layout_toRightOf="@+id/epnjSportText"
+        android:hint="sport"
+        android:textSize="30sp"
+        android:padding="10sp" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:layout_below="@id/epnjLoc"
+        android:background="@android:color/holo_blue_dark"
+        android:id="@+id/buf3"/>
+
+</RelativeLayout>
