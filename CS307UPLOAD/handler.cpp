@@ -29,9 +29,11 @@ void upev(int);
 void deev(int);
 void gtev(int);
 void invl(int);
+void join(int);
+//void unjn(int); 
+
 void printStandard(int,char *);
 void readRemainder(int);
-
 
 void work(int slaveSocket)
 {
@@ -133,6 +135,10 @@ void work(int slaveSocket)
 		gtev(slaveSocket);
 
 	} 
+	else if(strcmp(input1,"/join") == 0)
+	{
+		join(slaveSocket);
+	}
 	else 										//INVALID INPUT
 	{
 		invl(slaveSocket);
@@ -146,18 +152,18 @@ void crus(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[21];	//PASS
-	char input3[51];	//NAME
-	char input4[21];	//ALIAS
-	char input5[3]; 	//AGE
-	char input6[2];		//GENDER	
+	char input2[passL];	//PASS
+	char input3[nameL];	//NAME
+	char input4[aliasL];	//ALIAS
+	char input5[ageL]; 	//AGE
+	char input6[genderL];		//GENDER	
 	//char input7[101];	//DESC
 
 	//GET INPUT
 	printf("Hey");
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < passL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -167,7 +173,7 @@ void crus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 50; counter++)
+	for(counter = 0; counter < nameL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -177,7 +183,7 @@ void crus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < aliasL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input4[counter] = next;
@@ -187,7 +193,7 @@ void crus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 2; counter++)
+	for(counter = 0; counter < ageL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input5[counter] = next;
@@ -197,7 +203,7 @@ void crus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 1; counter++)
+	for(counter = 0; counter < genderL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input6[counter] = next;
@@ -235,15 +241,15 @@ void deus(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[5];		//KEY
-	char input3[21];	//PASS
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
 
 	//GET INPUT
 
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < keyL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -253,7 +259,7 @@ void deus(int slaveSocket)
 	read(slaveSocket, &next, sizeof(next));
 
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < passL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -283,21 +289,21 @@ void crev(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[5];		//KEY
-	char input3[21];	//PASS
-	char input4[31];	//SPORT
-	char input5[31];	//LOC
-	char input6[11];	//DATE
-	char input7[6];		//TIME
-	char input8[101];	//SUMM
-	char input9[2];		//SKILL
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
+	char input4[sportL];	//SPORT
+	char input5[locL];	//LOC
+	char input6[dateL];	//DATE
+	char input7[timeL];		//TIME
+	char input8[summL];	//SUMM
+	char input9[competeL];		//compete
 
 
 	//GET INPUT
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < keyL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -307,7 +313,7 @@ void crev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < passL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -317,7 +323,7 @@ void crev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 30; counter++)
+	for(counter = 0; counter < sportL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input4[counter] = next;
@@ -327,7 +333,7 @@ void crev(int slaveSocket)
 	
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 30; counter++)
+	for(counter = 0; counter < locL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input5[counter] = next;
@@ -337,7 +343,7 @@ void crev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 10; counter++)
+	for(counter = 0; counter < dateL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input6[counter] = next;
@@ -347,7 +353,7 @@ void crev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 5; counter++)
+	for(counter = 0; counter < timeL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input7[counter] = next;
@@ -357,7 +363,7 @@ void crev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 100; counter++)
+	for(counter = 0; counter < summL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input8[counter] = next;
@@ -367,7 +373,7 @@ void crev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 1; counter++)
+	for(counter = 0; counter < competeL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input9[counter] = next;
@@ -395,20 +401,20 @@ void upus(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[5];		//KEY
-	char input3[21];	//PASS
-	char input4[51];	//NAME
-	char input5[21];	//ALIAS
-	char input6[3];		//AGE
-	char input7[2];		//GENDER
-	char input8[101];	//DESC
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
+	char input4[nameL];	//NAME
+	char input5[aliasL];	//ALIAS
+	char input6[ageL];		//AGE
+	char input7[genderL];		//GENDER
+	char input8[descL];	//DESC
 
 	
 	//GET INPUT
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < keyL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -418,7 +424,7 @@ void upus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < passL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -428,7 +434,7 @@ void upus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 50; counter++)
+	for(counter = 0; counter < nameL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input4[counter] = next;
@@ -438,7 +444,7 @@ void upus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < aliasL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input5[counter] = next;
@@ -448,7 +454,7 @@ void upus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 2; counter++)
+	for(counter = 0; counter < ageL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input6[counter] = next;
@@ -458,7 +464,7 @@ void upus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 1; counter++)
+	for(counter = 0; counter < genderL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input7[counter] = next;
@@ -468,7 +474,7 @@ void upus(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 100; counter++)
+	for(counter = 0; counter < descL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input8[counter] = next;
@@ -494,22 +500,22 @@ void upev(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[5];		//KEY
-	char input3[21];	//PASS
-	char input4[5];		//EVKEY
-	char input5[31];	//SPORT
-	char input6[31];	//LOC
-	char input7[11];	//DATE
-	char input8[6];		//TIME
-	char input9[101];	//SUMM
-	char input10[2];	//SKILL
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
+	char input4[evKeyL];		//EVKEY
+	char input5[sportL];	//SPORT
+	char input6[locL];	//LOC
+	char input7[dateL];	//DATE
+	char input8[timeL];		//TIME
+	char input9[summL];	//SUMM
+	char input10[competeL];	//SKILL
 
 
 	//GET INPUT
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < keyL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -519,7 +525,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < passL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -529,7 +535,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < evKey-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input4[counter] = next;
@@ -539,7 +545,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 30; counter++)
+	for(counter = 0; counter < sportL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input5[counter] = next;
@@ -549,7 +555,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 30; counter++)
+	for(counter = 0; counter < locL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input6[counter] = next;
@@ -559,7 +565,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 10; counter++)
+	for(counter = 0; counter < dateL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input7[counter] = next;
@@ -569,7 +575,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 5; counter++)
+	for(counter = 0; counter < timeL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input8[counter] = next;
@@ -579,7 +585,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 100; counter++)
+	for(counter = 0; counter < summL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input9[counter] = next;
@@ -589,7 +595,7 @@ void upev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 1; counter++)
+	for(counter = 0; counter < competeL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input10[counter] = next;
@@ -615,16 +621,16 @@ void deev(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[5];		//KEY
-	char input3[21];	//PASS
-	char input4[5];		//EVKEY
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
+	char input4[evKeyL];		//EVKEY
 
 
 	//GET INPUT
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < keyL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -634,7 +640,7 @@ void deev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 20; counter++)
+	for(counter = 0; counter < passL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -644,7 +650,7 @@ void deev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 4; counter++)
+	for(counter = 0; counter < evKeyL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input4[counter] = next;
@@ -671,18 +677,18 @@ void gtev(int slaveSocket)
 	unsigned char next;
 	int counter;
 	//INPUT AREAS
-	char input2[31];	//SPORT
-	char input3[31];	//LOC
-	char input4[11];	//DATE
-	char input5[6];		//TIME
-	char input6[2];		//SKILL
+	char input2[sportL];	//SPORT
+	char input3[locL];	//LOC
+	char input4[dateL];	//DATE
+	char input5[timeL];		//TIME
+	char input6[competeL];		//competeL
 
 
 	//GET INPUT
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 30; counter++)
+	for(counter = 0; counter < sportL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input2[counter] = next;
@@ -692,7 +698,7 @@ void gtev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 30; counter++)
+	for(counter = 0; counter < locL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input3[counter] = next;
@@ -702,7 +708,7 @@ void gtev(int slaveSocket)
 	
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 10; counter++)
+	for(counter = 0; counter < dateL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input4[counter] = next;
@@ -712,7 +718,7 @@ void gtev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 5; counter++)
+	for(counter = 0; counter < timeL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input5[counter] = next;
@@ -722,7 +728,7 @@ void gtev(int slaveSocket)
 
 	read(slaveSocket, &next, sizeof(next));
 
-	for(counter = 0; counter < 1; counter++)
+	for(counter = 0; counter < competeL-1; counter++)
 	{
 		read(slaveSocket, &next, sizeof(next));
 		input6[counter] = next;
@@ -742,6 +748,49 @@ void gtev(int slaveSocket)
 	close(slaveSocket);
 }
 
+
+void join(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];		//KEY
+	char input3[passL];	//PASS
+
+	//GET INPUT
+
+	read(slaveSocket, &next, sizeof(next));
+
+	for(counter = 0; counter < keyL-1; counter++)
+	{
+		read(slaveSocket, &next, sizeof(next));
+		input2[counter] = next;
+	}	
+	input2[counter] = '\0';
+	printf("%s\n",input2);
+
+	read(slaveSocket, &next, sizeof(next));
+
+	for(counter = 0; counter < passL-1; counter++)
+	{
+		read(slaveSocket, &next, sizeof(next));
+		input3[counter] = next;
+	}	
+	input3[counter] = '\0';
+	printf("%s\n",input3);
+
+	read(slaveSocket, &next, sizeof(next));
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/join";
+	printStandard(slaveSocket,stringA);
+	//database code
+	//dataDeleteEvent(slaveSocket,input2,input3,input4);
+	dataJoinEvent(slaveSocket,input2,input3);
+	
+	close(slaveSocket);
+}
 
 //INVALID INPUT
 void invl(int slaveSocket)
@@ -785,10 +834,7 @@ void readRemainder(int slaveSocket)
 
 			read(slaveSocket, &next, sizeof(next));
 			printf("%c\n", next);
-			//if(end == true && next == '\n' && last == '\r')
-			//{
-			//	break;
-			//}
+
 			if (next == '\n' && last == '\r')
 			{
 				read(slaveSocket, &last, sizeof(last));
@@ -798,10 +844,6 @@ void readRemainder(int slaveSocket)
 					break;
 				}
 			}
-			//else
-			//{
-			//	end = false;
-			//}
 			last = next;
 		}
 }
