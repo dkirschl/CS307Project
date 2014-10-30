@@ -76,7 +76,7 @@ void dataDeleteUser(int, char *, char *);
 
 void dataJoinEvent(int, char *, char *,char *);
 
-void dataUnJoinEvent(int char *, char *, char *);
+void dataUnJoinEvent(int, char *, char *, char *);
 
 //Internal uses
 
