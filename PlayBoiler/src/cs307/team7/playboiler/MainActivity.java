@@ -1,24 +1,22 @@
 package cs307.team7.playboiler;
 
-import android.app.Activity;
+import java.util.concurrent.ExecutionException;
+
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.app.Dialog;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -49,21 +47,94 @@ public class MainActivity extends Activity
         //Setup database and check for user info
         Global.userDatabase = new MySqlLiteHelper(this);
         Global.current_user = Global.userDatabase.getUser();
-        if (Global.current_user.getKey() == -1) {
-        	//prompt user to create profile
-        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        	builder.setMessage("Welcome new user! Please go the profile page to fill out some information, then you can get started!")
-        	.setCancelable(false)
-        	.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
+        
+        final Dialog d = new Dialog(this);
+    	d.setContentView(R.layout.login);
+    	
+    	d.setTitle("Login");
+    	Button login = (Button) d.findViewById(R.id.login);
+    	Button create = (Button) d.findViewById(R.id.create);
+    	create.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				final Dialog login = new Dialog(v.getContext());
+				login.setContentView(R.layout.create_user);
+				Button createUser = (Button) login.findViewById(R.id.createButton);
+				final EditText alias = (EditText) login.findViewById(R.id.newAlias);
+				final EditText name = (EditText) login.findViewById(R.id.newName);
+				final EditText password = (EditText) login.findViewById(R.id.newPassword);
+				final EditText age = (EditText) login.findViewById(R.id.newAge);
+				final EditText gender = (EditText) login.findViewById(R.id.newGender);
+				createUser.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						
+						StringBuilder m = new StringBuilder();
+						m.append("/crus/");
+						m.append(password.getText());
+						addSpaces(m,20 - password.getText().length());
+						m.append("/");
+						m.append(name.getText());
+						addSpaces(m,50 - name.getText().length());
+						m.append("/");
+						m.append(alias.getText());
+						addSpaces(m,20 - alias.getText().length());
+						m.append("/");
+						m.append(age.getText());
+						addSpaces(m,2 - age.getText().length());
+						m.append("/");
+						m.append(gender.getText());
+						addSpaces(m,1 - gender.getText().length());
+						m.append("/");
+						m.append("HTTP/1.0\r\n");
+						
+						NetworkHandler nh = new NetworkHandler();
+						//nh.execute(m.toString());
+						String result = null;
+						try {
+							result = nh.execute(m.toString()).get();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						} catch (ExecutionException e1) {
+							e1.printStackTrace();
+						}
+						int res = Integer.parseInt(result.substring(7));
+						
+						
+						User u = new User(res, name.getText().toString(), alias.getText().toString(), gender.getText().toString(), Integer.parseInt(age.getText().toString()), "", "", password.getText().toString());
+						Global.userDatabase.addUser(u);
+						
+						login.cancel();
+					}
+				});
+				login.show();
+			}
+    		
+    	});
+    	final EditText enteredUser = (EditText) d.findViewById(R.id.userEdit);
+    	final EditText enteredPassword = (EditText) d.findViewById(R.id.passEdit);
+    	login.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				User u = Global.userDatabase.login(enteredUser.getText().toString(), enteredPassword.getText().toString());
+				if (u.getKey() == -1) {
+					//check global database
+					
+					
+					
+					//login failed
+					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();
+				} else {
+					Global.current_user = u;
+					d.cancel();
 				}
-			});
-        	AlertDialog alert = builder.create();
-        	alert.show();
-        } 
+			}
+		});
+    	d.show(); 
+        
     }
 
     @Override
@@ -157,9 +228,23 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+    public class LoginListener implements Dialog.OnClickListener {
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			
+			
+		}
+    	
+    }
+    
+    public static StringBuilder addSpaces(StringBuilder sb, int numSpaces) {
+		for(int i=0; i < numSpaces; i++) {
+			sb.append(" ");
+		}
+    	return sb;
+    	
+    }
     
 
     

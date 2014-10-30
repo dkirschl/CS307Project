@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView
+        android:id="@+id/userPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter\nUsername"
+        android:textSize="22sp"
+        android:padding="5sp"/>
+
+    <EditText
+        android:id="@+id/userEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/userPrompt"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/userPrompt"
+        android:ems="10"
+        android:padding="5sp" />
+    
+    <TextView
+        android:id="@+id/passPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userPrompt"
+        android:text="Enter\nPassword"
+        android:textSize="22sp"
+        android:padding="5sp"/>
+
+    <EditText
+        android:id="@+id/passEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/passPrompt"
+        android:layout_alignLeft="@+id/userEdit"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:padding="5sp" />
+    
+    <Button
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/passEdit"
+        android:layout_toLeftOf="@+id/create"
+        android:text="Login"
+        android:textSize="30sp"
+        android:padding="5sp" />
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/passEdit"
+        android:text="Create New"
+        android:textSize="30sp"
+        android:padding="5sp" />
+    
+
+</RelativeLayout>

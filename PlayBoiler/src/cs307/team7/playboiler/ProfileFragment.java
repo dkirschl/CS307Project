@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProfileFragment extends Fragment {
 	 /**
@@ -119,14 +120,16 @@ public class ProfileFragment extends Fragment {
 						} else {
 							currGender.setText("Female");
 						}
-						User temp = new User(1, etName.getText().toString(), etAlias.getText().toString(), currGender.getText().toString(), Integer.parseInt(etAge.getText().toString()), etBio.getText().toString(), "");
+						User temp = new User(Global.current_user.getKey(), etName.getText().toString(), etAlias.getText().toString(), currGender.getText().toString(), Integer.parseInt(etAge.getText().toString()), etBio.getText().toString(), "");
 						if (Global.current_user.getKey() != -1) {
 							Global.userDatabase.updateUser(temp);
-						} else {
 							Global.userDatabase.addUser(temp);
-							String m = "/crus/"+temp.getName()+"/"+temp.getAlias()+"/"+temp.getAge()+"/"+temp.getGender()+"/"+"password/ HTTP/1.0\r\n";
+							String m = "/crus/"+temp.getName()+"/"+temp.getAlias()+"/"+temp.getAge()+"/"+temp.getGender()+"/"+ temp.getPassword()+"password/ HTTP/1.0\r\n";
 							NetworkHandler nh = new NetworkHandler();
-							nh.execute(m);
+							//nh.execute(m);
+						} else {
+							//error
+							Toast.makeText(v.getContext(), "Error", Toast.LENGTH_LONG).show();
 						}
 						Global.current_user = temp;
 						d.cancel();
