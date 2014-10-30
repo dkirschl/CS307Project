@@ -78,6 +78,8 @@ void dataJoinEvent(int, char *, char *,char *);
 
 void dataUnJoinEvent(int, char *, char *, char *);
 
+void dataLogOn(int, char *, char *);//????
+
 //Internal uses
 
 //INPUT:	A string key and password.
@@ -91,6 +93,8 @@ bool isGoodPass(char *, char *);
 //OUTPUT:	NONE
 //RETURN:	Check if input contains important information. If it does return True, if not return false.
 bool isValidValue(char *);
+
+bool isGoodSet( char * ,char * );
 
 
 //check if a given event is owned by a given user
