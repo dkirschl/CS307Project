@@ -445,7 +445,7 @@ void unjn(int slaveSocket)
 	printStandard(slaveSocket,stringA);
 	//database code
 	//dataDeleteEvent(slaveSocket,input2,input3,input4);
-	dataUnJoinEvent(slaveSocket,input2,input3);
+	dataUnJoinEvent(slaveSocket,input2,input3,input4);
 	
 	close(slaveSocket);
 }
