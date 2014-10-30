@@ -440,6 +440,28 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 
 }
 
+void dataLogOn(int slaveSocket,char * alias,char * password)
+{
+	if(isValidValue(password) && isValidValue(alias))
+	{
+		if(isGoodSet(alias, password) == false) //do things
+		{
+			write(slaveSocket,"INVALID",7);
+		}
+		else
+		{
+		
+		//Do stuff ************************
+
+			write(slaveSocket,"ISVALID",7);
+		}
+	}
+	else
+	{
+		write(slaveSocket,"INVALID",7);
+	}
+}
+
 //Internal uses
 
 //INPUT:	A string key and password.
@@ -490,4 +512,9 @@ bool isCorrectUser(char * key, char * evKey)
 	{
 		return false;
 	}
+}
+
+bool isGoodSet( char * alias,char * password)
+{
+	//do things
 }

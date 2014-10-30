@@ -1,24 +1,4 @@
 //Message handler By Dylan Smith
-/*
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <time.h>
-#include <pthread.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
-#include "databaseInterface.h"
-*/
-
 #include "tbinclude.h"
 
 void crus(int);
@@ -31,6 +11,7 @@ void gtev(int);
 void invl(int);
 void join(int);
 void unjn(int); 
+void lgon(int);
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -102,7 +83,7 @@ void work(int slaveSocket)
 	{
 		crus(slaveSocket);
 	}
-	else if(strcmp(input1,"/deus\0") == 0)
+	else if(strcmp(input1,"/deus\0") == 0) 		
 	{
 		deus(slaveSocket);
 	}	
@@ -127,13 +108,17 @@ void work(int slaveSocket)
 		gtev(slaveSocket);
 
 	} 
-	else if(strcmp(input1,"/join") == 0)
+	else if(strcmp(input1,"/join") == 0)	//join event
 	{
 		join(slaveSocket);
 	}
-	else if(strcmp(input1,"/unjn") == 0) //NEW>>>>>>>>
+	else if(strcmp(input1,"/unjn") == 0) //unjoin event
 	{
-		unjn(slaveSocket);		//NEW>>>>>>
+		unjn(slaveSocket);
+	}
+	else if(strcmp(input1,"/lgon") == 0)	//log into the server using alias and password
+	{
+		lgon(slaveSocket);
 	}
 	else 										//INVALID INPUT
 	{
@@ -449,6 +434,34 @@ void unjn(int slaveSocket)
 	
 	close(slaveSocket);
 }
+
+void lgon(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[aliasL];		//alias
+	char input3[passL];		//PASS
+
+
+	//GET INPUT
+
+	 readStuffs(slaveSocket, input2, aliasL);
+	 readStuffs(slaveSocket, input3, passL);
+
+	read(slaveSocket, &next, sizeof(next));
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/lgon";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataLogOn(slaveSocket,input2,input3);
+
+	close(slaveSocket);
+}
+
+
 //INVALID INPUT
 void invl(int slaveSocket)
 {

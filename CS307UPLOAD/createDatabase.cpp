@@ -37,7 +37,7 @@ int createDatabases()
 
    query = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, name CHAR(50) NOT NULL, alias CHAR(20) NOT NULL, age INT NOT NULL, gender CHAR(1) NOT NULL, password CHAR(20), picture BLOB, description CHAR(1000), proficiencies CHAR(250));";
 
-   query2 = "CREATE TABLE IF NOT EXISTS EVENTS(id INTEGER PRIMARY KEY AUTOINCREMENT, sport CHAR(30) NOT NULL, location CHAR(30) NOT NULL, date CHAR(10) NOT NULL, time CHAR(5) NOT NULL, creatingUser CHAR(20), summary CHAR(100), desiredSkillLevel INT, attendingUsers CHAR(1000));";
+   query2 = "CREATE TABLE IF NOT EXISTS EVENTS(id INTEGER PRIMARY KEY AUTOINCREMENT, sport CHAR(30) NOT NULL, location CHAR(30) NOT NULL, date INT NOT NULL, time INT NOT NULL, creatingUser CHAR(20), summary CHAR(100), desiredSkillLevel INT, attendingUsers CHAR(1000));";
 
    results = sqlite3_exec(db,query,callback, 0, &zErrMsg);
    if (results != SQLITE_OK){
