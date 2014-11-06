@@ -28,7 +28,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
 				"proficiencies TEXT, " + "password TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport TEXT, " + "location TEXT, " + 
-				"date TEXT, " + "time TEXT, " + "title TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
+				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 	}
@@ -62,10 +62,11 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String GAMES_DATE = "date";
 	public static final String GAMES_TIME = "time";
 	public static final String GAMES_TITLE = "title";
+	public static final String GAMES_SUMMARY = "summary";
 	public static final String GAMES_CREATING_USER = "creating_user";
 	public static final String GAMES_ATTENDING_IND = "attending_ind";
 	
-	public static final String[] GAMES_COLUMNS = {GAMES_KEY, GAMES_SPORT, GAMES_LOCATION, GAMES_DATE, GAMES_TIME,  GAMES_TITLE, 
+	public static final String[] GAMES_COLUMNS = {GAMES_KEY, GAMES_SPORT, GAMES_LOCATION, GAMES_DATE, GAMES_TIME,  GAMES_TITLE, GAMES_SUMMARY,
 		GAMES_CREATING_USER, GAMES_ATTENDING_IND};
 	
 	public User login(String alias, String password)
@@ -201,6 +202,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_LOCATION, event.getLocation());
 		values.put(GAMES_TIME, event.getTime());
 		values.put(GAMES_TITLE, event.getTitle());
+		values.put(GAMES_SUMMARY, event.getSummary());
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttendingInd());
 		
@@ -219,6 +221,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_LOCATION, event.getLocation());
 		values.put(GAMES_TIME, event.getTime());
 		values.put(GAMES_TITLE, event.getTitle());
+		values.put(GAMES_SUMMARY, event.getSummary());
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttendingInd());
 		
@@ -248,6 +251,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_DATE, event.getDate());
 		values.put(GAMES_TIME, event.getTime());
 		values.put(GAMES_TITLE, event.getTitle());
+		values.put(GAMES_SUMMARY, event.getSummary());
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttending_ind());
 		
@@ -277,8 +281,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setDate(cursor.getString(3));
 				event.setTime(cursor.getString(4));
 				event.setTitle(cursor.getString(5));
-				event.setCreating_user(cursor.getString(6));
-				event.setAttending_ind(Integer.parseInt(cursor.getString(7)));
+				event.setSummary(cursor.getString(6));
+				event.setCreating_user(cursor.getString(7));
+				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -308,8 +313,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setDate(cursor.getString(3));
 				event.setTime(cursor.getString(4));
 				event.setTitle(cursor.getString(5));
-				event.setCreating_user(cursor.getString(6));
-				event.setAttending_ind(Integer.parseInt(cursor.getString(7)));
+				event.setSummary(cursor.getString(6));
+				event.setCreating_user(cursor.getString(7));
+				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -339,8 +345,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setDate(cursor.getString(3));
 				event.setTime(cursor.getString(4));
 				event.setTitle(cursor.getString(5));
-				event.setCreating_user(cursor.getString(6));
-				event.setAttending_ind(Integer.parseInt(cursor.getString(7)));
+				event.setSummary(cursor.getString(6));
+				event.setCreating_user(cursor.getString(7));
+				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
