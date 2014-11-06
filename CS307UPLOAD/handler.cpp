@@ -1,36 +1,17 @@
 //Message handler By Dylan Smith
-/*
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <time.h>
-#include <pthread.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
-#include "databaseInterface.h"
-*/
-
 #include "tbinclude.h"
 
 void crus(int);
 void deus(int);
-void crev(int);
+void crev(int);//
 void upus(int);
-void upev(int);
-void deev(int);
-void gtev(int);
+void upev(int);//
+void deev(int);//
+void gtev(int);//
 void invl(int);
 void join(int);
 void unjn(int); 
+void lgon(int);
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -102,7 +83,7 @@ void work(int slaveSocket)
 	{
 		crus(slaveSocket);
 	}
-	else if(strcmp(input1,"/deus\0") == 0)
+	else if(strcmp(input1,"/deus\0") == 0) 		
 	{
 		deus(slaveSocket);
 	}	
@@ -127,13 +108,17 @@ void work(int slaveSocket)
 		gtev(slaveSocket);
 
 	} 
-	else if(strcmp(input1,"/join") == 0)
+	else if(strcmp(input1,"/join") == 0)	//join event
 	{
 		join(slaveSocket);
 	}
-	else if(strcmp(input1,"/unjn") == 0) //NEW>>>>>>>>
+	else if(strcmp(input1,"/unjn") == 0) //unjoin event
 	{
-		unjn(slaveSocket);		//NEW>>>>>>
+		unjn(slaveSocket);
+	}
+	else if(strcmp(input1,"/lgon") == 0)	//log into the server using alias and password
+	{
+		lgon(slaveSocket);
 	}
 	else 										//INVALID INPUT
 	{
@@ -158,11 +143,11 @@ void crus(int slaveSocket)
 	//GET INPUT
 	printf("Hey");
 
-	void readStuffs(slaveSocket, input2, passL);
-	void readStuffs(slaveSocket, input3, nameL);
-	void readStuffs(slaveSocket, input4, aliasL);
-	void readStuffs(slaveSocket, input5, ageL);
-	void readStuffs(slaveSocket, input6, genderL);
+	readStuffs(slaveSocket, input2, passL);
+	readStuffs(slaveSocket, input3, nameL);
+	readStuffs(slaveSocket, input4, aliasL);
+	readStuffs(slaveSocket, input5, ageL);
+	readStuffs(slaveSocket, input6, genderL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	printf("My hands are typing words lsdf;laksdjf;l.\n");
@@ -190,8 +175,8 @@ void deus(int slaveSocket)
 	//GET INPUT
 
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
 	
 	read(slaveSocket, &next, sizeof(next));
 
@@ -224,18 +209,20 @@ void crev(int slaveSocket)
 	char input7[timeL];		//TIME
 	char input8[summL];	//SUMM
 	char input9[competeL];		//compete
+	char input10[titleL];
 
 
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
-	void readStuffs(slaveSocket, input4, sportL);
-	void readStuffs(slaveSocket, input5, locL);
-	void readStuffs(slaveSocket, input6, dateL);
-	void readStuffs(slaveSocket, input7, timeL);
-	void readStuffs(slaveSocket, input8, summL);
-	void readStuffs(slaveSocket, input9, competeL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input4, sportL);
+	 readStuffs(slaveSocket, input5, locL);
+	 readStuffs(slaveSocket, input6, dateL);
+	 readStuffs(slaveSocket, input7, timeL);
+	 readStuffs(slaveSocket, input8, summL);
+	 readStuffs(slaveSocket, input9, competeL);
+	 readStuffs(slaveSocket, input10, titleL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -245,7 +232,7 @@ void crev(int slaveSocket)
 	char stringA[6] = "/crev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9);
+	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10);
 
 	close(slaveSocket);
 }
@@ -258,23 +245,25 @@ void upus(int slaveSocket)
 	int counter;
 	//INPUT AREAS
 	char input2[keyL];		//KEY
-	char input3[passL];	//PASS
-	char input4[nameL];	//NAME
+	char input3[passL];		//PASS
+	char input4[nameL];		//NAME
 	char input5[aliasL];	//ALIAS
 	char input6[ageL];		//AGE
 	char input7[genderL];		//GENDER
-	char input8[descL];	//DESC
+	char input8[descL];		//DESC
+	char input9[passL];		//new pass
 
 	
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
-	void readStuffs(slaveSocket, input4, nameL);
-	void readStuffs(slaveSocket, input5, aliasL);
-	void readStuffs(slaveSocket, input6, ageL);
-	void readStuffs(slaveSocket, input7, genderL);
-	void readStuffs(slaveSocket, input8, descL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input4, nameL);
+	 readStuffs(slaveSocket, input5, aliasL);
+	 readStuffs(slaveSocket, input6, ageL);
+	 readStuffs(slaveSocket, input7, genderL);
+	 readStuffs(slaveSocket, input8, descL);
+	 readStuffs(slaveSocket, input9, passL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -282,7 +271,7 @@ void upus(int slaveSocket)
 	char stringA[6] = "/upus";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateUser(slaveSocket,input2,input3,input4,input5,input6,input7,input8);
+	dataUpdateUser(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9);
 
 	close(slaveSocket);
 }
@@ -303,19 +292,21 @@ void upev(int slaveSocket)
 	char input8[timeL];		//TIME
 	char input9[summL];	//SUMM
 	char input10[competeL];	//SKILL
+	char input11[titleL];
 
 
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
-	void readStuffs(slaveSocket, input4, evKeyL);
-	void readStuffs(slaveSocket, input5, sportL);
-	void readStuffs(slaveSocket, input6, locL);
-	void readStuffs(slaveSocket, input7, dateL);
-	void readStuffs(slaveSocket, input8, timeL);
-	void readStuffs(slaveSocket, input9, summL);
-	void readStuffs(slaveSocket, input10, competeL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input4, evKeyL);
+	 readStuffs(slaveSocket, input5, sportL);
+	 readStuffs(slaveSocket, input6, locL);
+	 readStuffs(slaveSocket, input7, dateL);
+	 readStuffs(slaveSocket, input8, timeL);
+	 readStuffs(slaveSocket, input9, summL);
+	 readStuffs(slaveSocket, input10, competeL);
+	 readStuffs(slaveSocket, input11, titleL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -323,7 +314,7 @@ void upev(int slaveSocket)
 	char stringA[6] = "/upev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10);
+	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
 
 	close(slaveSocket);
 }
@@ -342,9 +333,9 @@ void deev(int slaveSocket)
 
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
-	void readStuffs(slaveSocket, input4, evKeyL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input4, evKeyL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -370,15 +361,17 @@ void gtev(int slaveSocket)
 	char input4[dateL];	//DATE
 	char input5[timeL];		//TIME
 	char input6[competeL];		//competeL
+	char input7[titleL];
 
 
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, sportL);
-	void readStuffs(slaveSocket, input3, locL);
-	void readStuffs(slaveSocket, input4, dateL);
-	void readStuffs(slaveSocket, input5, timeL);
-	void readStuffs(slaveSocket, input6, competeL);
+	 readStuffs(slaveSocket, input2, sportL);
+	 readStuffs(slaveSocket, input3, locL);
+	 readStuffs(slaveSocket, input4, dateL);
+	 readStuffs(slaveSocket, input5, timeL);
+	 readStuffs(slaveSocket, input6, competeL);
+	 readStuffs(slaveSocket, input7, titleL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -387,7 +380,7 @@ void gtev(int slaveSocket)
 	char stringA[6] = "/gtev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataGetEvent(slaveSocket,input2,input3,input4,input5,input6);
+	dataGetEvent(slaveSocket,input2,input3,input4,input5,input6,input7);
 
 	close(slaveSocket);
 }
@@ -404,9 +397,9 @@ void join(int slaveSocket)
 
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
-	void readStuffs(slaveSocket, input4, evKeyL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input4, evKeyL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -416,7 +409,7 @@ void join(int slaveSocket)
 	printStandard(slaveSocket,stringA);
 	//database code
 	//dataDeleteEvent(slaveSocket,input2,input3,input4);
-	dataJoinEvent(slaveSocket,input2,input3);
+	dataJoinEvent(slaveSocket,input2,input3,input4);
 	
 	close(slaveSocket);
 }
@@ -433,9 +426,9 @@ void unjn(int slaveSocket)
 
 	//GET INPUT
 
-	void readStuffs(slaveSocket, input2, keyL);
-	void readStuffs(slaveSocket, input3, passL);
-	void readStuffs(slaveSocket, input4, evKeyL);
+	 readStuffs(slaveSocket, input2, keyL);
+	 readStuffs(slaveSocket, input3, passL);
+	 readStuffs(slaveSocket, input4, evKeyL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -445,10 +438,38 @@ void unjn(int slaveSocket)
 	printStandard(slaveSocket,stringA);
 	//database code
 	//dataDeleteEvent(slaveSocket,input2,input3,input4);
-	dataUnJoinEvent(slaveSocket,input2,input3);
+	dataUnJoinEvent(slaveSocket,input2,input3,input4);
 	
 	close(slaveSocket);
 }
+
+void lgon(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[aliasL];		//alias
+	char input3[passL];		//PASS
+
+
+	//GET INPUT
+
+	 readStuffs(slaveSocket, input2, aliasL);
+	 readStuffs(slaveSocket, input3, passL);
+
+	read(slaveSocket, &next, sizeof(next));
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/lgon";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataLogOn(slaveSocket,input2,input3);
+
+	close(slaveSocket);
+}
+
+
 //INVALID INPUT
 void invl(int slaveSocket)
 {

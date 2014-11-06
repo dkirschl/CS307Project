@@ -24,9 +24,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
 		Log.d("Database", "Database being initialized in onCreate()");
-		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " + 
+		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " +
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
-				"proficiencies TEXT)";
+				"proficiencies TEXT, " + "password TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
 		db.execSQL(CREATE_GAMES_TABLE);
@@ -72,8 +72,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 		
-		String query = "SELECT * FROM " + USER_TABLE + "where " + USER_ALIAS + "=" + alias + " AND "
-				+ USER_PASSWORD + "=" + password;
+		String query = "SELECT * FROM " + USER_TABLE + " where " + USER_ALIAS + "='" + alias + "' AND "
+				+ USER_PASSWORD + "='" + password + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		
 		User return_user = new User();
@@ -107,6 +107,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(USER_PROFICIENCIES, user.getProficiencies());
 		values.put(USER_AGE, user.getAge());
 		values.put(USER_GENDER, user.getGender());
+		values.put(USER_PASSWORD, user.getPassword());
 		
 		db.insert(USER_TABLE, null, values);
 		db.close();
@@ -151,7 +152,29 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		ContentValues values = new ContentValues();
+		String query = "UPDATE " + USER_TABLE + " SET " + USER_NAME + "='" + user.getName() + "'," + USER_ALIAS + "='" + user.getAlias() + "'," + USER_GENDER + "='" + user.getGender() +"'," + 
+		USER_AGE + "='" + user.getAge() + "'," + USER_DESCRIPTION + "='" + user.getDescription() +"'," + USER_PROFICIENCIES + "='" + user.getProficiencies() + "' " +
+				"WHERE " + USER_KEY + "=" + user.getKey();
+		Cursor cursor = db.rawQuery(query, null);
+		Log.d("Database", query);
+		User return_user = new User();
+		if(!cursor.moveToFirst())
+		{
+			Log.d("Database", "User information isn't stored locally");
+			return return_user;
+		}
+		else //means that the information is stored locally
+		{
+			return_user.setKey(Integer.parseInt(cursor.getString(0)));
+			return_user.setName(cursor.getString(1));
+			return_user.setAlias(cursor.getString(2));
+			return_user.setGender(cursor.getString(4));
+			return_user.setAge(Integer.parseInt(cursor.getString(3))); //switched age and gender. May have to switch back
+			return_user.setDescription(cursor.getString(5));
+			return_user.setProficiencies(cursor.getString(6));
+		}
+		db.close();
+	/*	ContentValues values = new ContentValues();
 		values.put(USER_KEY, user.getKey());
 		values.put(USER_NAME, user.getName());
 		values.put(USER_ALIAS, user.getAlias());
@@ -159,9 +182,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(USER_AGE, user.getAge());
 		values.put(USER_DESCRIPTION, user.getDescription());
 		values.put(USER_PROFICIENCIES, user.getProficiencies());
+
 		
-		db.update(USER_TABLE, values, "key = ?", new String[]{String.valueOf(user.getKey())});
-		db.close();
+		db.update(USER_TABLE, values, "key =", new String[]{String.valueOf(user.getKey())});*/
+		
 		return user;
 	}
 	public void addEvent(Event event)
