@@ -30,7 +30,6 @@ const int descL = 101;
 const int keyL = 5;
 const int evKeyL = 5;
 const int competeL = 2;
-const int titleL = 26;
 
 void work(int);
 
@@ -47,19 +46,19 @@ void dataCreateUser(int,char *, char *, char *, char *, char *);
 //IDEA:		Accept into and create an event based on provided info.
 //OUTPUT:	Write confirmation back to user if successful.
 //RETURN:	NONE
-void dataCreateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *);
+void dataCreateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *);
 
 //INPUT:	slaveSocket, key, password, name, alias, age, gender, desc.
 //IDEA:		Accept info, check if it is valid. If valid change relevent user data.
 //OUTPUT:	Confirmation back if successful.
 //RETURN:	NONE
-void dataUpdateUser(int,char *,char *,char *,char *,char *,char *,char *,char *);
+void dataUpdateUser(int,char *,char *,char *,char *,char *,char *,char *);
 
 //INPUT:	slaveSocket, key, password, event key, sport, location, date, time, summary, skill level
 //IDEA:		Accept info, check if it is valid. If valid, change relevent event data.
 //OUTPUT:	Confirmation back if successful.
 //RETURN:	NONE
-void dataUpdateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *,char *);
+void dataUpdateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *);
 
 //INPUT:	Key, password, Event key
 //IDEA:		Accept info, check if valid. If valid, delete specified event.
@@ -71,7 +70,7 @@ void dataDeleteEvent(int,char *,char *,char *);
 //IDEA:		Accept info, check for valid inputs. For valid inputs search the database.  
 //OUTPUT:	Events matching request.
 //RETURN:	NONE
-void dataGetEvent(int,char *,char *,char *,char *,char *, char *);
+void dataGetEvent(int,char *,char *,char *,char *,char *);
 
 void dataDeleteUser(int, char *, char *);
 
@@ -97,9 +96,6 @@ bool isValidValue(char *);
 
 bool isGoodSet( char * ,char * );
 
-void resetCallback_return(void);
-
-bool checkAlias(char *);
 
 //check if a given event is owned by a given user
 bool isCorrectUser(char *, char *);
