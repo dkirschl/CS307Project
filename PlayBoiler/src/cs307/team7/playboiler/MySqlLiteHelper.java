@@ -78,6 +78,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		Cursor cursor = db.rawQuery(query, null);
 		
 		User return_user = new User();
+		
 		if(!cursor.moveToFirst())
 		{
 			Log.d("Database", "User information isn't stored locally");
@@ -92,6 +93,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 			return_user.setAge(Integer.parseInt(cursor.getString(3))); //switched age and gender. May have to switch back
 			return_user.setDescription(cursor.getString(5));
 			return_user.setProficiencies(cursor.getString(6));
+			return_user.setPassword(cursor.getString(7));
 		}
 		db.close();
 		return return_user;

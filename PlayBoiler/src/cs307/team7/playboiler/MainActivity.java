@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -102,9 +103,9 @@ public class MainActivity extends Activity
 						}
 						int res = Integer.parseInt(result.substring(7));
 						if (res == -1) {
-							Toast.makeText(v.getContext(), "Alias already exists. Please try again.", Toast.LENGTH_LONG);
+							Toast.makeText(v.getContext(), "Alias already exists. Please try again.", Toast.LENGTH_LONG).show();
 						} else {
-							User u = new User(res, name.getText().toString(), alias.getText().toString(), gender.getText().toString(), Integer.parseInt(age.getText().toString()), "", "", password.getText().toString());
+							User u = new User(res, name.getText().toString(), alias.getText().toString(), gender.getText().toString(), Integer.parseInt(age.getText().toString()), password.getText().toString());
 							Global.userDatabase.addUser(u);
 						
 							login.cancel();
@@ -128,6 +129,7 @@ public class MainActivity extends Activity
 					//login failed
 					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();
 				} else {
+					Log.d("USER INFO", u.getName() + " " + u.getPassword() + " " + u.getAlias());
 					Global.current_user = u;
 					d.cancel();
 				}

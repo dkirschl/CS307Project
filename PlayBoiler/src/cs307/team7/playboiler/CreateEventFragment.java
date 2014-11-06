@@ -1,6 +1,7 @@
 package cs307.team7.playboiler;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -68,7 +69,22 @@ public class CreateEventFragment extends Fragment {
 					
 					@Override
 					public void onClick(View v1) {
-						StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
+						int month = dp.getMonth() + 1;
+						String strMon;
+						if (month < 10) {
+							strMon = "0"+month;
+						} else {
+							strMon = ""+month;
+						}
+						int day = dp.getDayOfMonth();
+						String strDay;
+						if (day < 10) {
+							strDay = "0"+day;
+						} else {
+							strDay = ""+day;
+						}
+						StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+						//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
 						tvDate.setText(date);
 						d.cancel();
 					}
@@ -101,7 +117,7 @@ public class CreateEventFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(), 2);
-				Global.userDatabase.addEvent(event);
+				
 				int sportLen = 30;
 				int locLen = 30;
 				int dateLen = 8; //was 10
@@ -114,8 +130,9 @@ public class CreateEventFragment extends Fragment {
 				str.append(Global.current_user.getKey());
 				addSpaces(str, 4-(String.valueOf(Global.current_user.getKey()).length()));
 				str.append("/");
-				str.append("password");
-				addSpaces(str, 12);
+				String password = Global.current_user.getPassword();
+				str.append(password);
+				addSpaces(str, passLen - password.length());
 				str.append("/");
 				str.append(event.getSport());
 				addSpaces(str, sportLen - event.getSport().length());
@@ -124,13 +141,12 @@ public class CreateEventFragment extends Fragment {
 				addSpaces(str, locLen - event.getLocation().length());
 				str.append("/");
 				String date = event.getDate();
-				date.replace("/", "");
-				date.replace("-", "");
+				date = date.replace("-", "");
 				str.append(date);
 				addSpaces(str, dateLen - date.length());
 				str.append("/");
 				String time = event.getTime();
-				time.replace(":", "");
+				time = time.replace(":", "");
 				str.append(time);
 				addSpaces(str, timeLen-time.length());
 				str.append("/");
@@ -149,13 +165,30 @@ public class CreateEventFragment extends Fragment {
 				Log.d("The Message", str.toString());
 				//String m = "/crev/"+event.getSport()+"/"+event.getLocation()+"/"+event.getDate()+"/"+event.getTime()+"/"+event.getTitle()+"/"+event.getCreating_user()+"/0/ HTTP/1.0\n\r";
 				//new NetworkHandler().execute(m);
-				new NetworkHandler().execute(str.toString());
+				NetworkHandler nh = new NetworkHandler();
+				//new NetworkHandler().execute(str.toString());
 				sportEdit.setText("");
 				locEdit.setText("");
 				tvDate.setText("");
 				tvTime.setText("");
 				titleEdit.setText("");
 				Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
+				String result = null;
+				try {
+					result = nh.execute(str.toString()).get();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					e1.printStackTrace();
+				}
+				if (result.equals("INVALID")) {
+					Toast.makeText(v.getContext(), "Event Not Created", Toast.LENGTH_LONG).show();
+					
+				} else {
+					int res = Integer.parseInt(result.substring(7));
+					event.setKey(res);
+					Global.userDatabase.addEvent(event);
+				}
 			}
     		
     	});

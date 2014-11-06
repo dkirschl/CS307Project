@@ -28,6 +28,7 @@
         android:layout_below="@id/buf"
         android:textSize="30sp"
         android:hint="Title Your Event"
+        android:maxLength="25"
         android:id="@+id/setEventTitle"/>
     
     <TextView
@@ -77,6 +78,7 @@
         android:layout_below="@id/selectTime"
         android:hint="Set Location"
         android:textSize="30sp"
+        android:maxLength="30"
         android:padding="5sp"/>
     <EditText
         android:id="@+id/selectSport"
@@ -85,6 +87,7 @@
         android:layout_below="@id/selectLocation"
         android:hint="Set Sport"
         android:textSize="30sp"
+        android:maxLength="30"
         android:padding="5sp"/>
     
     <EditText 

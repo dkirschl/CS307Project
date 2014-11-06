@@ -73,7 +73,22 @@ public class SearchFragment extends Fragment {
 					
 					@Override
 					public void onClick(View v1) {
-						StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
+						int month = dp.getMonth() + 1;
+						String strMon;
+						if (month < 10) {
+							strMon = "0"+month;
+						} else {
+							strMon = ""+month;
+						}
+						int day = dp.getDayOfMonth();
+						String strDay;
+						if (day < 10) {
+							strDay = "0"+day;
+						} else {
+							strDay = ""+day;
+						}
+						StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+						//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
 						tvDate.setText(date);
 						d.cancel();
 					}
@@ -118,13 +133,17 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				str.append(location);
 				addSpaces(str, 30-location.length());
 				str.append("/");
+				date = date.replace("-", "");
 				str.append(date);
-				addSpaces(str, 10-date.length());
+				addSpaces(str, 8-date.length());
 				str.append("/");
+				time = time.replace(":", "");
 				str.append(time);
-				addSpaces(str, 5-time.length());
+				addSpaces(str, 4-time.length());
 				str.append("/");
-				addSpaces(str, 1);
+				addSpaces(str, 1); //comp level
+				str.append("/");
+				str.append("                         ");
 				str.append("/");
 				str.append("\r\n");
 				Log.d("Message", str.toString());
@@ -144,14 +163,15 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 						Log.d("PART", "" + i + "," + j + ":" +s[i][j] +":");
 					}
 				}
-				
+				Log.d("Len", ""+s.length);
 				for (int i = 0; i < s.length; i++) {
 					View ll = inflater.inflate(R.layout.event_view, container, false);
 		        	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
 		        	TextView tv2 = (TextView) ll.findViewById(R.id.searchEventDate);
 		        	Event e = new Event();
 		        	//Log.d("Info", s[i][0] + s[i][1] + s[i][2] + s[i][3] + s[i][4]);
-		        	e.setTitle(s[i][4]); e.setDate(s[i][2]); e.setTime(s[i][3]); e.setLocation(s[i][0]); e.setSport(s[i][1]);
+		        	//e.setTitle(s[i][4]); e.setDate(s[i][2]); e.setTime(s[i][3]); e.setLocation(s[i][0]); e.setSport(s[i][1]);
+		        	e.setTitle(s[i][0]); e.setDate(s[i][1]);
 		        	View page = Global.fillEventPage(e, inflater, container);
 		        	ll.setOnClickListener(new eventClickListener(s[i][0], page, e));
 		        	tv.setText("Title : " + s[i][4]);
