@@ -20,6 +20,9 @@ public class User {
 		age = 0;
 		description = "";
 		proficiencies = "";
+<<<<<<< HEAD
+		password = "";
+=======
 		password="";
 	}
 	
@@ -33,9 +36,10 @@ public class User {
 		description = d;
 		proficiencies = p;
 		password = p2;
+>>>>>>> origin/master
 	}
 	
-	public User(int k, String n, String a, String g, int ag, String d, String p)
+	public User(int k, String n, String a, String g, int ag, String p2)
 	{
 		key = k;
 		name = n;
@@ -44,6 +48,15 @@ public class User {
 		age = ag;
 		description = d;
 		proficiencies = p;
+		password = p2;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 
