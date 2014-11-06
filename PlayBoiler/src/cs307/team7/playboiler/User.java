@@ -20,10 +20,7 @@ public class User {
 		age = 0;
 		description = "";
 		proficiencies = "";
-<<<<<<< HEAD
 		password = "";
-=======
-		password="";
 	}
 	
 	public User(int k, String n, String a, String g, int ag, String d, String p, String p2)
@@ -36,7 +33,6 @@ public class User {
 		description = d;
 		proficiencies = p;
 		password = p2;
->>>>>>> origin/master
 	}
 	
 	public User(int k, String n, String a, String g, int ag, String p2)
@@ -46,19 +42,8 @@ public class User {
 		alias = a;
 		gender = g;
 		age = ag;
-		description = d;
-		proficiencies = p;
 		password = p2;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
 
 	public String getPassword() {
 		return password;

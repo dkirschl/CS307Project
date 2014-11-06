@@ -52,6 +52,7 @@ public class CreateEventFragment extends Fragment {
     	final TextView tvTime = (TextView) rootView.findViewById(R.id.eventTime);
     	final EditText sportEdit = (EditText) rootView.findViewById(R.id.selectSport);
     	final EditText locEdit = (EditText) rootView.findViewById(R.id.selectLocation);
+    	final EditText sumEdit = (EditText) rootView.findViewById(R.id.setSummary);
     	dateSelect = (Button) rootView.findViewById(R.id.selectDate);
     	dateSelect.setOnClickListener(new OnClickListener() {
 
@@ -99,13 +100,14 @@ public class CreateEventFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), 2);
+				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(), 2);
 				Global.userDatabase.addEvent(event);
 				int sportLen = 30;
 				int locLen = 30;
 				int dateLen = 8; //was 10
 				int timeLen = 4; //was 5
-				int titleLen = 100;
+				int titleLen = 25;
+				int sumLen = 100;
 				int passLen = 20;
 				StringBuilder str = new StringBuilder();
 				str.append("/crev/");
@@ -132,10 +134,16 @@ public class CreateEventFragment extends Fragment {
 				str.append(time);
 				addSpaces(str, timeLen-time.length());
 				str.append("/");
+				//summary
+				String summary = event.getSummary();
+				str.append(summary);
+				addSpaces(str, sumLen-summary.length());
+				str.append("/");
+				//comp
+				str.append(1);
+				str.append("/");
 				str.append(event.getTitle());
 				addSpaces(str, titleLen - event.getTitle().length());
-				str.append("/");
-				str.append(1);
 				str.append("/");
 				str.append("\r\n");
 				Log.d("The Message", str.toString());

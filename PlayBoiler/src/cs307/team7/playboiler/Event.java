@@ -10,6 +10,7 @@ public class Event {
 	private String title;
 	private String creating_user;
 	private int attending_ind;
+	private String summary;
 	
 	public Event()
 	{
@@ -21,8 +22,9 @@ public class Event {
 		title = "";
 		creating_user = "";
 		attending_ind = 0;
+		summary = "";
 	}
-	public Event(String s, String l, String d, String t1, String t2, String cu, int a)
+	public Event(String s, String l, String d, String t1, String t2, String cu, String su, int a)
 	{
 		//key = k;
 		sport = s;
@@ -31,7 +33,14 @@ public class Event {
 		time = t1;
 		title = t2;
 		creating_user = cu;
+		summary = su;
 		attending_ind = a;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 	public int getKey() {
 		return key;
