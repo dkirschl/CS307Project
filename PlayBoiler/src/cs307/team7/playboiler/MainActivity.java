@@ -101,12 +101,14 @@ public class MainActivity extends Activity
 							e1.printStackTrace();
 						}
 						int res = Integer.parseInt(result.substring(7));
+						if (res == -1) {
+							Toast.makeText(v.getContext(), "Alias already exists. Please try again.", Toast.LENGTH_LONG);
+						} else {
+							User u = new User(res, name.getText().toString(), alias.getText().toString(), gender.getText().toString(), Integer.parseInt(age.getText().toString()), "", "", password.getText().toString());
+							Global.userDatabase.addUser(u);
 						
-						
-						User u = new User(res, name.getText().toString(), alias.getText().toString(), gender.getText().toString(), Integer.parseInt(age.getText().toString()), "", "", password.getText().toString());
-						Global.userDatabase.addUser(u);
-						
-						login.cancel();
+							login.cancel();
+						}
 					}
 				});
 				login.show();
@@ -122,8 +124,6 @@ public class MainActivity extends Activity
 				User u = Global.userDatabase.login(enteredUser.getText().toString(), enteredPassword.getText().toString());
 				if (u.getKey() == -1) {
 					//check global database
-					
-					
 					
 					//login failed
 					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();

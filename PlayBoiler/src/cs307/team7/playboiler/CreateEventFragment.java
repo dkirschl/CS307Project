@@ -103,8 +103,8 @@ public class CreateEventFragment extends Fragment {
 				Global.userDatabase.addEvent(event);
 				int sportLen = 30;
 				int locLen = 30;
-				int dateLen = 10;
-				int timeLen = 5;
+				int dateLen = 8; //was 10
+				int timeLen = 4; //was 5
 				int titleLen = 100;
 				int passLen = 20;
 				StringBuilder str = new StringBuilder();
@@ -121,11 +121,16 @@ public class CreateEventFragment extends Fragment {
 				str.append(event.getLocation());
 				addSpaces(str, locLen - event.getLocation().length());
 				str.append("/");
-				str.append(event.getDate());
-				addSpaces(str, dateLen - event.getDate().length());
+				String date = event.getDate();
+				date.replace("/", "");
+				date.replace("-", "");
+				str.append(date);
+				addSpaces(str, dateLen - date.length());
 				str.append("/");
-				str.append(event.getTime());
-				addSpaces(str, timeLen-event.getTime().length());
+				String time = event.getTime();
+				time.replace(":", "");
+				str.append(time);
+				addSpaces(str, timeLen-time.length());
 				str.append("/");
 				str.append(event.getTitle());
 				addSpaces(str, titleLen - event.getTitle().length());

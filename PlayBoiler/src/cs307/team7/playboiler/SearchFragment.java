@@ -153,7 +153,7 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 		        	//Log.d("Info", s[i][0] + s[i][1] + s[i][2] + s[i][3] + s[i][4]);
 		        	e.setTitle(s[i][4]); e.setDate(s[i][2]); e.setTime(s[i][3]); e.setLocation(s[i][0]); e.setSport(s[i][1]);
 		        	View page = Global.fillEventPage(e, inflater, container);
-		        	ll.setOnClickListener(new eventClickListener(s[i][0], page));
+		        	ll.setOnClickListener(new eventClickListener(s[i][0], page, e));
 		        	tv.setText("Title : " + s[i][4]);
 		        	tv2.setText("Date : " + s[i][2]);
 		        	contain.addView(ll);
@@ -252,11 +252,13 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
     public class eventClickListener implements OnClickListener {
     	private String t;
     	private View page;
+    	private Event e;
     	
-    	public eventClickListener(String title, View page) {
+    	public eventClickListener(String title, View page, Event event) {
     		super();
     		t = title;
     		this.page = page;
+    		e = event;
     	}
 
 		@Override
@@ -273,6 +275,10 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					//Code to join event
+					//Add event to local database of joined events
+					Global.userDatabase.joinEvent(e);
+					//Add user to event on external server
+					NetworkHandler nh = new NetworkHandler();
 				}
 			});
 			builder.setOnCancelListener(new OnCancelListener() {

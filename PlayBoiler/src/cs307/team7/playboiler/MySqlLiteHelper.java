@@ -195,7 +195,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		ContentValues values = new ContentValues();
 		
 		/* Uncomment out when we get the key back from the server */
-		//values.put(GAMES_KEY, event.getKey());
+		values.put(GAMES_KEY, event.getKey());
 		values.put(GAMES_SPORT, event.getSport());
 		values.put(GAMES_DATE, event.getDate());
 		values.put(GAMES_LOCATION, event.getLocation());
@@ -213,7 +213,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		
-		//values.put(GAMES_KEY, event.getKey());
+		values.put(GAMES_KEY, event.getKey());
 		values.put(GAMES_SPORT, event.getSport());
 		values.put(GAMES_DATE, event.getDate());
 		values.put(GAMES_LOCATION, event.getLocation());
