@@ -9,6 +9,7 @@ public class User {
 	private int age;
 	private String description;
 	private String proficiencies;
+	private String password;
 	
 	public User()
 	{
@@ -19,9 +20,10 @@ public class User {
 		age = 0;
 		description = "";
 		proficiencies = "";
+		password = "";
 	}
 	
-	public User(int k, String n, String a, String g, int ag, String d, String p)
+	public User(int k, String n, String a, String g, int ag, String p2)
 	{
 		key = k;
 		name = n;
@@ -30,6 +32,15 @@ public class User {
 		age = ag;
 		description = d;
 		proficiencies = p;
+		password = p2;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public int getKey() {
