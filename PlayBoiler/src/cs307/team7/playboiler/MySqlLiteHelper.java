@@ -32,9 +32,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " +
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
 				"proficiencies TEXT, " + "password TEXT)";
-		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport TEXT, " + "location TEXT, " + 
+		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
-		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport_type TEXT)";
+		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "sport_type TEXT PRIMARY KEY)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 		db.execSQL(CREATE_GAMES_TYPE_TABLE);
@@ -419,7 +419,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor pointless;
-		
+
 		String query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Football')";
 		pointless = db.rawQuery(query, null);
 		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Soccer')";
