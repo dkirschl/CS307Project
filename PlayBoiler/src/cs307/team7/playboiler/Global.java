@@ -9,6 +9,7 @@ public class Global {
 	public static MySqlLiteHelper userDatabase;
 	public static User current_user;
 	public static int temp_key;
+	public static int USER_CREATED_EVENT_CODE = 2;
 	
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
@@ -24,5 +25,13 @@ public class Global {
 		sport.setText(e.getSport());
 		
     	return v;
+    }
+	
+	public static StringBuilder addSpaces(StringBuilder sb, int numSpaces) {
+		for(int i=0; i < numSpaces; i++) {
+			sb.append(" ");
+		}
+    	return sb;
+    	
     }
 }

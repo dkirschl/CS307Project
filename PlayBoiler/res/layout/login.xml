@@ -37,6 +37,7 @@
         android:layout_alignBottom="@+id/passPrompt"
         android:layout_alignLeft="@+id/userEdit"
         android:layout_alignParentRight="true"
+        android:inputType="textPassword"
         android:ems="10"
         android:padding="5sp" />
     

@@ -51,9 +51,22 @@ public class CreateEventFragment extends Fragment {
     	final EditText titleEdit = (EditText) rootView.findViewById(R.id.setEventTitle);
     	final TextView tvDate = (TextView) rootView.findViewById(R.id.eventDate);
     	final TextView tvTime = (TextView) rootView.findViewById(R.id.eventTime);
-    	final EditText sportEdit = (EditText) rootView.findViewById(R.id.selectSport);
+    	final TextView sportEdit = (TextView) rootView.findViewById(R.id.selectSport);
     	final EditText locEdit = (EditText) rootView.findViewById(R.id.selectLocation);
     	final EditText sumEdit = (EditText) rootView.findViewById(R.id.setSummary);
+    	final Button chooseSport = (Button) rootView.findViewById(R.id.chooseSport);
+    	chooseSport.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Dialog d = new Dialog(arg0.getContext());
+				d.setContentView(R.layout.sport_spinner);
+				//get list of all sports
+				//display as clickable text in a dialog
+				//return with selected event
+			}
+    		
+    	});
     	dateSelect = (Button) rootView.findViewById(R.id.selectDate);
     	dateSelect.setOnClickListener(new OnClickListener() {
 
@@ -116,7 +129,11 @@ public class CreateEventFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), tvDate.getText().toString(), tvTime.getText().toString(), titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(), 2);
+				String edittedDate = tvDate.getText().toString();
+				String edittedTime = tvTime.getText().toString();
+				edittedTime = edittedTime.replace(":", "");
+				edittedDate = edittedDate.replace("-", "");
+				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(), Global.USER_CREATED_EVENT_CODE);
 				
 				int sportLen = 30;
 				int locLen = 30;
@@ -128,51 +145,49 @@ public class CreateEventFragment extends Fragment {
 				StringBuilder str = new StringBuilder();
 				str.append("/crev/");
 				str.append(Global.current_user.getKey());
-				addSpaces(str, 4-(String.valueOf(Global.current_user.getKey()).length()));
+				Global.addSpaces(str, 4-(String.valueOf(Global.current_user.getKey()).length()));
 				str.append("/");
 				String password = Global.current_user.getPassword();
 				str.append(password);
-				addSpaces(str, passLen - password.length());
+				Global.addSpaces(str, passLen - password.length());
 				str.append("/");
 				str.append(event.getSport());
-				addSpaces(str, sportLen - event.getSport().length());
+				Global.addSpaces(str, sportLen - event.getSport().length());
 				str.append("/");
 				str.append(event.getLocation());
-				addSpaces(str, locLen - event.getLocation().length());
+				Global.addSpaces(str, locLen - event.getLocation().length());
 				str.append("/");
-				String date = event.getDate();
-				date = date.replace("-", "");
-				str.append(date);
-				addSpaces(str, dateLen - date.length());
+				//String date = event.getDate();
+				//date = date.replace("-", "");
+				str.append(edittedDate);
+				Global.addSpaces(str, dateLen - edittedDate.length());
 				str.append("/");
-				String time = event.getTime();
-				time = time.replace(":", "");
-				str.append(time);
-				addSpaces(str, timeLen-time.length());
+				//String time = event.getTime();
+				//time = time.replace(":", "");
+				str.append(edittedTime);
+				Global.addSpaces(str, timeLen-edittedTime.length());
 				str.append("/");
 				//summary
 				String summary = event.getSummary();
 				str.append(summary);
-				addSpaces(str, sumLen-summary.length());
+				Global.addSpaces(str, sumLen-summary.length());
 				str.append("/");
 				//comp
 				str.append(1);
 				str.append("/");
 				str.append(event.getTitle());
-				addSpaces(str, titleLen - event.getTitle().length());
+				Global.addSpaces(str, titleLen - event.getTitle().length());
 				str.append("/");
 				str.append("\r\n");
 				Log.d("The Message", str.toString());
-				//String m = "/crev/"+event.getSport()+"/"+event.getLocation()+"/"+event.getDate()+"/"+event.getTime()+"/"+event.getTitle()+"/"+event.getCreating_user()+"/0/ HTTP/1.0\n\r";
-				//new NetworkHandler().execute(m);
+				
 				NetworkHandler nh = new NetworkHandler();
-				//new NetworkHandler().execute(str.toString());
 				sportEdit.setText("");
 				locEdit.setText("");
 				tvDate.setText("");
 				tvTime.setText("");
 				titleEdit.setText("");
-				Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
+				
 				String result = null;
 				try {
 					result = nh.execute(str.toString()).get();
@@ -188,6 +203,7 @@ public class CreateEventFragment extends Fragment {
 					int res = Integer.parseInt(result.substring(7));
 					event.setKey(res);
 					Global.userDatabase.addEvent(event);
+					Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
 				}
 			}
     		
@@ -196,13 +212,6 @@ public class CreateEventFragment extends Fragment {
     	return rootView;
     	
     
-    }
-    public static StringBuilder addSpaces(StringBuilder sb, int numSpaces) {
-		for(int i=0; i < numSpaces; i++) {
-			sb.append(" ");
-		}
-    	return sb;
-    	
     }
     
     private static String timeFix(int c) {

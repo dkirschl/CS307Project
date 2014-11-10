@@ -14,6 +14,7 @@ import android.util.Log;
 public class NetworkHandler extends AsyncTask<String, Void, String> {
 
 	public static StringBuffer response;
+	boolean failed = false;
 	
 	@Override
 	protected String doInBackground(String... params) {

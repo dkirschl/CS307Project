@@ -36,6 +36,7 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("app", "Ping");
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -51,6 +52,7 @@ public class MainActivity extends Activity
         
         final Dialog d = new Dialog(this);
     	d.setContentView(R.layout.login);
+    	d.setCancelable(false);
     	
     	d.setTitle("Login");
     	Button login = (Button) d.findViewById(R.id.login);
@@ -75,19 +77,19 @@ public class MainActivity extends Activity
 						StringBuilder m = new StringBuilder();
 						m.append("/crus/");
 						m.append(password.getText());
-						addSpaces(m,20 - password.getText().length());
+						Global.addSpaces(m,20 - password.getText().length());
 						m.append("/");
 						m.append(name.getText());
-						addSpaces(m,50 - name.getText().length());
+						Global.addSpaces(m,50 - name.getText().length());
 						m.append("/");
 						m.append(alias.getText());
-						addSpaces(m,20 - alias.getText().length());
+						Global.addSpaces(m,20 - alias.getText().length());
 						m.append("/");
 						m.append(age.getText());
-						addSpaces(m,2 - age.getText().length());
+						Global.addSpaces(m,2 - age.getText().length());
 						m.append("/");
 						m.append(gender.getText());
-						addSpaces(m,1 - gender.getText().length());
+						Global.addSpaces(m,1 - gender.getText().length());
 						m.append("/");
 						m.append("HTTP/1.0\r\n");
 						
@@ -101,6 +103,7 @@ public class MainActivity extends Activity
 						} catch (ExecutionException e1) {
 							e1.printStackTrace();
 						}
+						result = result.replace("|", "");
 						int res = Integer.parseInt(result.substring(7));
 						if (res == -1) {
 							Toast.makeText(v.getContext(), "Alias already exists. Please try again.", Toast.LENGTH_LONG).show();
@@ -129,6 +132,8 @@ public class MainActivity extends Activity
 					//login failed
 					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();
 				} else {
+					//Global.userDatabase.addSports();
+					Global.userDatabase.setPastEvents();
 					Log.d("USER INFO", u.getName() + " " + u.getPassword() + " " + u.getAlias());
 					Global.current_user = u;
 					d.cancel();
@@ -237,14 +242,6 @@ public class MainActivity extends Activity
 			
 			
 		}
-    	
-    }
-    
-    public static StringBuilder addSpaces(StringBuilder sb, int numSpaces) {
-		for(int i=0; i < numSpaces; i++) {
-			sb.append(" ");
-		}
-    	return sb;
     	
     }
     

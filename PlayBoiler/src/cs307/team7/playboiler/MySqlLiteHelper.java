@@ -209,14 +209,14 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		// get the current date and time
-		DateFormat dateFormat = new SimpleDateFormat("YYYYMMDD HHMM");
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMDD HHmm");
 		Calendar cal = Calendar.getInstance();
 		String date_time = dateFormat.format(cal.getTime());
 		String date = date_time.substring(0, 8);
 		String time = date_time.substring(9);
 		
 		// query that parses through the whole entire list of events
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_DATE + "<'" + date + "' OR (" + GAMES_DATE + "='" + date + " AND " + GAMES_TIME + "<'" + time +"')";
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_DATE + "<'" + date + "' OR (" + GAMES_DATE + "='" + date + "' AND " + GAMES_TIME + "<'" + time +"')";
 		Cursor date_cursor = db.rawQuery(query, null);
 		
 		// have a cursor that moves through the selected values and changes their indicator values and updates the table

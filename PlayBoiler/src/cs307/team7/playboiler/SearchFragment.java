@@ -128,20 +128,20 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				StringBuilder str = new StringBuilder();
 				str.append("/gtev/");
 				str.append(sport);
-				addSpaces(str, 30-sport.length());
+				Global.addSpaces(str, 30-sport.length());
 				str.append("/");
 				str.append(location);
-				addSpaces(str, 30-location.length());
+				Global.addSpaces(str, 30-location.length());
 				str.append("/");
 				date = date.replace("-", "");
 				str.append(date);
-				addSpaces(str, 8-date.length());
+				Global.addSpaces(str, 8-date.length());
 				str.append("/");
 				time = time.replace(":", "");
 				str.append(time);
-				addSpaces(str, 4-time.length());
+				Global.addSpaces(str, 4-time.length());
 				str.append("/");
-				addSpaces(str, 1); //comp level
+				Global.addSpaces(str, 1); //comp level
 				str.append("/");
 				str.append("                         ");
 				str.append("/");
@@ -200,13 +200,6 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
                 //getArguments().getInt(ARG_SECTION_NUMBER));
     }
     
-    public static StringBuilder addSpaces(StringBuilder sb, int numSpaces) {
-		for(int i=0; i < numSpaces; i++) {
-			sb.append(" ");
-		}
-    	return sb;
-    	
-    }
     
     private static String timeFix(int c) {
     	if (c >= 10) {

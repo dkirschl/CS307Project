@@ -80,12 +80,12 @@
         android:textSize="30sp"
         android:maxLength="30"
         android:padding="5sp"/>
-    <EditText
+    <TextView
         android:id="@+id/selectSport"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/selectLocation"
-        android:hint="Set Sport"
+        android:text="Sport"
         android:textSize="30sp"
         android:maxLength="30"
         android:padding="5sp"/>
@@ -95,7 +95,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/selectSport"
-        android:hint="Enter Max Players Allowed"
+        android:inputType="number"
+        android:hint="Max Players"
+        android:maxLength="3"
         android:textSize="30sp"
         android:padding="5sp"/>
     
@@ -116,7 +118,14 @@
         android:layout_below="@id/setSummary"
         android:text="Create Event"
         android:textSize="30sp"/>
-    
+
+    <Button
+        android:id="@+id/chooseSport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/selectSport"
+        android:text="Choose Sport" />
 
 </RelativeLayout>
 </ScrollView>
