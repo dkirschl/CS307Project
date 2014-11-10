@@ -10,6 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class MySqlLiteHelper extends SQLiteOpenHelper
 {
 	public static final int DATBASE_VERSION = 1;
@@ -29,8 +34,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				"proficiencies TEXT, " + "password TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
+		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport_type TEXT)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
+		db.execSQL(CREATE_GAMES_TYPE_TABLE);
 	}
 	
 	@Override
@@ -38,6 +45,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		db.execSQL("DROP TABLE IF EXISTS user_profile");
 		db.execSQL("DROP TABLE IF EXISTS past_games");
+		db.execSQL("DROP TABLE IF EXISTS types_of_games");
 		
 		this.onCreate(db);
 	}
@@ -68,6 +76,11 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	
 	public static final String[] GAMES_COLUMNS = {GAMES_KEY, GAMES_SPORT, GAMES_LOCATION, GAMES_DATE, GAMES_TIME,  GAMES_TITLE, GAMES_SUMMARY,
 		GAMES_CREATING_USER, GAMES_ATTENDING_IND};
+	
+	public static final String GAMES_TYPE_TABLE = "types_of_games";
+	public static final String GAMES_TYPE_KEY = "id";
+	public static final String GAMES_TYPE = "sport_type";
+	public static final String[] TYPE_COLUMN = {GAMES_TYPE_KEY, GAMES_TYPE};
 	
 	public User login(String alias, String password)
 	{
@@ -191,6 +204,32 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		return user;
 	}
+	public void setPastEvents()
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		// get the current date and time
+		DateFormat dateFormat = new SimpleDateFormat("YYYYMMDD HHMM");
+		Calendar cal = Calendar.getInstance();
+		String date_time = dateFormat.format(cal.getTime());
+		String date = date_time.substring(0, 8);
+		String time = date_time.substring(9);
+		
+		// query that parses through the whole entire list of events
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_DATE + "<'" + date + "' OR (" + GAMES_DATE + "='" + date + " AND " + GAMES_TIME + "<'" + time +"')";
+		Cursor date_cursor = db.rawQuery(query, null);
+		
+		// have a cursor that moves through the selected values and changes their indicator values and updates the table
+		while(date_cursor.moveToNext())
+		{
+			String update_query = "UPDATE " + GAMES_TABLE +
+								"SET " + GAMES_ATTENDING_IND + "='" + 2 + "'" +
+								"WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
+			Cursor return_value = db.rawQuery(update_query, null);
+			Log.d("Database", "Updated a value given the current date");					
+		}
+		db.close();
+	}
 	public void addEvent(Event event)
 	{
 		Log.d("Add Event", "Adding event : " + event.getTitle());
@@ -257,7 +296,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttending_ind());
 		
-		db.update(GAMES_TABLE, values, "key = ?", new String[]{String.valueOf(event.getKey())});
+		db.update(GAMES_TABLE, values, "key = ", new String[]{String.valueOf(event.getKey())});
 		db.close();
 		return event;
 	}
@@ -356,6 +395,73 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		}
 		db.close();
 		return events;
+	}
+	public List<String> getSports()
+	{
+		List<String> sport_types = new LinkedList<String>();
+		
+		String query = "SELECT * FROM " + GAMES_TYPE_TABLE;
+		SQLiteDatabase db = this.getReadableDatabase();
+		
+		Cursor cursor = db.rawQuery(query, null);
+		int x = 0;
+		
+		while(cursor.moveToNext())
+		{
+			sport_types.add(cursor.getString(x));
+			x++;
+		}
+		
+		db.close();
+		return sport_types;
+	}
+	public void addSports()
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor pointless;
+		
+		String query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Football')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Soccer')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Baseball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Basketball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Cricket')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Disc Golf')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Golf')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Wallyball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Bowling')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Volleyball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Sand Volleyball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Ultimate Frisbee')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Ping-Pong')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Floor Hockey')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Dodgeball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Racquetball')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Squash')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Badminton')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Tennis')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Nerf Wars')";
+		pointless = db.rawQuery(query, null);
+		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Other')";
+		pointless = db.rawQuery(query, null);
 	}
 
 }
