@@ -3,15 +3,16 @@
 
 void crus(int);
 void deus(int);
-void crev(int);
+void crev(int);//
 void upus(int);
-void upev(int);
-void deev(int);
-void gtev(int);
+void upev(int);//
+void deev(int);//
+void gtev(int);//
 void invl(int);
 void join(int);
 void unjn(int); 
 void lgon(int);
+void upts(int);  ///////////////// DYLAN, I ADDED AN UPDATE TOP SPORTS FUNCTION. DON'T PANIC. ///////////
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -120,6 +121,10 @@ void work(int slaveSocket)
 	{
 		lgon(slaveSocket);
 	}
+	else if(strcmp(input1,"/upts") == 0)
+	{
+		upts(slaveSocket);					// update top sports for a user
+	}
 	else 										//INVALID INPUT
 	{
 		invl(slaveSocket);
@@ -209,6 +214,7 @@ void crev(int slaveSocket)
 	char input7[timeL];		//TIME
 	char input8[summL];	//SUMM
 	char input9[competeL];		//compete
+	char input10[titleL];
 
 
 	//GET INPUT
@@ -221,6 +227,7 @@ void crev(int slaveSocket)
 	 readStuffs(slaveSocket, input7, timeL);
 	 readStuffs(slaveSocket, input8, summL);
 	 readStuffs(slaveSocket, input9, competeL);
+	 readStuffs(slaveSocket, input10, titleL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -230,7 +237,7 @@ void crev(int slaveSocket)
 	char stringA[6] = "/crev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9);
+	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10);
 
 	close(slaveSocket);
 }
@@ -243,12 +250,13 @@ void upus(int slaveSocket)
 	int counter;
 	//INPUT AREAS
 	char input2[keyL];		//KEY
-	char input3[passL];	//PASS
-	char input4[nameL];	//NAME
+	char input3[passL];		//PASS
+	char input4[nameL];		//NAME
 	char input5[aliasL];	//ALIAS
 	char input6[ageL];		//AGE
 	char input7[genderL];		//GENDER
-	char input8[descL];	//DESC
+	char input8[descL];		//DESC
+	char input9[passL];		//new pass
 
 	
 	//GET INPUT
@@ -260,6 +268,7 @@ void upus(int slaveSocket)
 	 readStuffs(slaveSocket, input6, ageL);
 	 readStuffs(slaveSocket, input7, genderL);
 	 readStuffs(slaveSocket, input8, descL);
+	 readStuffs(slaveSocket, input9, passL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -267,7 +276,7 @@ void upus(int slaveSocket)
 	char stringA[6] = "/upus";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateUser(slaveSocket,input2,input3,input4,input5,input6,input7,input8);
+	dataUpdateUser(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9);
 
 	close(slaveSocket);
 }
@@ -288,6 +297,7 @@ void upev(int slaveSocket)
 	char input8[timeL];		//TIME
 	char input9[summL];	//SUMM
 	char input10[competeL];	//SKILL
+	char input11[titleL];
 
 
 	//GET INPUT
@@ -301,6 +311,7 @@ void upev(int slaveSocket)
 	 readStuffs(slaveSocket, input8, timeL);
 	 readStuffs(slaveSocket, input9, summL);
 	 readStuffs(slaveSocket, input10, competeL);
+	 readStuffs(slaveSocket, input11, titleL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -308,7 +319,7 @@ void upev(int slaveSocket)
 	char stringA[6] = "/upev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10);
+	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
 
 	close(slaveSocket);
 }
@@ -355,6 +366,7 @@ void gtev(int slaveSocket)
 	char input4[dateL];	//DATE
 	char input5[timeL];		//TIME
 	char input6[competeL];		//competeL
+	char input7[titleL];
 
 
 	//GET INPUT
@@ -364,6 +376,7 @@ void gtev(int slaveSocket)
 	 readStuffs(slaveSocket, input4, dateL);
 	 readStuffs(slaveSocket, input5, timeL);
 	 readStuffs(slaveSocket, input6, competeL);
+	 readStuffs(slaveSocket, input7, titleL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -372,7 +385,7 @@ void gtev(int slaveSocket)
 	char stringA[6] = "/gtev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataGetEvent(slaveSocket,input2,input3,input4,input5,input6);
+	dataGetEvent(slaveSocket,input2,input3,input4,input5,input6,input7);
 
 	close(slaveSocket);
 }
@@ -461,6 +474,36 @@ void lgon(int slaveSocket)
 	close(slaveSocket);
 }
 
+void upts(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];
+	char input3[passL];
+	char input4[sportL];
+	char input5[sportL];
+	char input6[sportL];
+
+
+	//GET INPUT
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, sportL);
+	readStuffs(slaveSocket, input5, sportL);
+	readStuffs(slaveSocket, input6, sportL);
+
+	read(slaveSocket, &next, sizeof(next));
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/upts";
+	printStandard(slaveSocket, stringA);
+	//database code
+	updateTopSports(slaveSocket, input2, input3, input4, input5, input6);
+
+	close(slaveSocket);
+}
 
 //INVALID INPUT
 void invl(int slaveSocket)

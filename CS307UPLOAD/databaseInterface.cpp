@@ -1,11 +1,12 @@
 //DATABASE INTERFACE CODE
 
 #include "tbinclude.h"
-#include <sqlite3.h>
 using namespace std;
 
 string callback_return;
 
+sqlite3 *db;
+bool dbOpen = false;
 
 static int callback(void *data, int argc, char **argv, char **azColName){
 	int i;
@@ -18,9 +19,9 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 			callback_return += "~";
 		}
 	}
-	if(argc != 1){
+	//if(argc > 1){
 		callback_return += "|";
-	}
+	//}
 	
 	printf("\n");
 	return 0;
@@ -41,14 +42,14 @@ int main(int argc, char *argv[]){
 //RETURN:	NONE
 void dataCreateUser(int slaveSocket,char * password, char * name, char * alias, char * age, char * gender)
 {
-	if(isValidValue(password) && isValidValue(name) && isValidValue(alias) && isValidValue(age) && isValidValue(gender))
+	if(isValidValue(password) && isValidValue(name) && isValidValue(alias) && isValidValue(age) && isValidValue(gender) && !checkAlias(alias))
 	{
 		
 		//add user to the database and return the key from the database if there is an error then return -1
 		write(slaveSocket,"ISVALID",7);
 
 
-		sqlite3 *db;
+		//sqlite3 *db;
 		char *zErrMsg = 0;
 		int rc;
 		std::string query;
@@ -57,12 +58,15 @@ void dataCreateUser(int slaveSocket,char * password, char * name, char * alias, 
 		int file_entry;
 		char* user;
 
-		rc = sqlite3_open("serverDatabase.db", &db);
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
 
-		if(rc){
-			fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
-		} else {
-			fprintf(stderr, "Opened database succesfully\n");
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
 		}
 
 		// check if alias is unique
@@ -70,12 +74,15 @@ void dataCreateUser(int slaveSocket,char * password, char * name, char * alias, 
 
 		const char* data = "Callback functioin called";
 
-		query = "INSERT INTO USERS (password, name, alias, age, gender) VALUES('"+string(password)+"','"+ string(name) + "','" + string(alias) + "','" + string(age) + "','" + string(gender) + "');";
+		query = "INSERT INTO USERS (password, name, alias, age, gender, firstSport, secondSport, thirdSport) VALUES('"+string(password)+"','"+ string(name) + "','" + string(alias) + "','" + string(age) + "','" + string(gender) + "','  ','  ','  ');";
 		query2 = "SELECT seq FROM sqlite_sequence WHERE name='USERS';";
 		//query2 = "SELECT last_row_id();";
 fprintf(stdout, "%s\n", query.c_str());
+		
 		results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
 fprintf(stdout, "RESULTS IS: %d\n", results);
+
+		resetCallback_return();
 		file_entry = sqlite3_exec(db, query2.c_str(), callback, (void*) data, &zErrMsg);
 
 		if(results != SQLITE_OK){
@@ -90,7 +97,10 @@ fprintf(stdout, "RESULTS IS: %d\n", results);
 			fprintf(stdout, "User ID found succesfully\n");
 		}
 		fprintf(stdout, "User Id: %s\n", callback_return.c_str());
+
 		sqlite3_close(db);
+		dbOpen = false;
+
 		write(slaveSocket, callback_return.c_str(), callback_return.length());
 		fprintf(stdout, "Wrote back\n");
 	
@@ -111,6 +121,43 @@ void dataDeleteUser(int slaveSocket, char * key, char * password)
 	{
 		write(slaveSocket,"ISVALID",7);
 		//database stuff
+
+			//sqlite3 *db;
+			char *zErrMsg = 0;
+			int rc;
+			std::string query;
+			int results;
+
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
+				
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}
+			}
+
+			const char* data = "Callback functioin called";
+
+			query = "DELETE from USERS where id="+string(key)+";"; 
+			
+			fprintf(stdout, "%s\n", query.c_str());
+			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+			fprintf(stdout, "RESULTS IS: %d\n", results);
+			
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "User deleted succesfully\n");
+			}
+			
+			sqlite3_close(db);
+			dbOpen = false;
+			
+			fprintf(stdout, "Finished action\n");
+
 	}
 	else
 	{
@@ -149,9 +196,9 @@ void dataUnJoinEvent(int slaveSocket, char * key, char * password, char * evKey)
 //IDEA:		Accept into and create an event based on provided info.
 //OUTPUT:	Write confirmation back to user if successful.
 //RETURN:	NONE
-void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,char * location,char * date,char * time,char * summary,char * skill)
+void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,char * location,char * date,char * time,char * summary,char * compete, char * title)
 {
-	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(skill))
+	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(compete) && isValidValue(title))
 	{
 		if(isGoodPass(key, password) == false)
 		{
@@ -164,7 +211,7 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 
 			write(slaveSocket,"ISVALID",7);
 
-			sqlite3 *db;
+			//sqlite3 *db;
 			char *zErrMsg = 0;
 			char *zErrMsg2 = 0;
 			int rc;
@@ -174,22 +221,28 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 			int file_entry;
 			char* event;
 
-			rc = sqlite3_open("serverDatabase.db", &db);
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
 
-			if(rc){
-				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
-			} else {
-				fprintf(stderr, "Opened database succesfully\n");
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}
 			}
 
 			const char* data = "Callback functioin called";
 
-			query = "INSERT INTO EVENTS (sport, location, date, time, summary,desiredSkillLevel) VALUES('"+string(sport)+"','"+ string(location) + "','" + string(date) + "','" + string(time) + "','" + string(summary) + "','" + string(skill) + "');";
+			query = "INSERT INTO EVENTS (sport, location, date, time, summary,desiredSkillLevel, creatingUser, title) VALUES('"+string(sport)+"','"+ string(location) + "','" + string(date) + "','" + string(time) + "','" + string(summary) + "','" + string(compete) + "'," + string(key)+",'"+string(title)+"' );";
+
 			query2 = "SELECT seq FROM sqlite_sequence WHERE name='EVENTS';";
-			//query2 = "SELECT last_row_id();";
+			//query2 = "SELECT last_row_id();";\
+
 	fprintf(stdout, "%s\n", query.c_str());
 			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
 	fprintf(stdout, "RESULTS IS: %d\n", results);
+			resetCallback_return();
 			file_entry = sqlite3_exec(db, query2.c_str(), callback, (void*) data, &zErrMsg2);
 
 			if(results != SQLITE_OK){
@@ -204,7 +257,10 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 				fprintf(stdout, "Event ID found succesfully\n");
 			}
 			fprintf(stdout, "Event Id: %s\n", callback_return.c_str());
+
 			sqlite3_close(db);
+			dbOpen = false;
+
 			write(slaveSocket, callback_return.c_str(), callback_return.length());
 			fprintf(stdout, "Wrote back\n");
 	
@@ -221,9 +277,9 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 //IDEA:		Accept info, check if it is valid. If valid change relevent user data.
 //OUTPUT:	Confirmation back if successful.
 //RETURN:	NONE
-void dataUpdateUser(int slaveSocket,char * key,char * password,char * name,char * alias,char * age,char * gender,char * desc)
+void dataUpdateUser(int slaveSocket,char * key,char * password,char * name,char * alias,char * age,char * gender,char * desc, char * newPass)
 {
-	if(isValidValue(password) && isValidValue(name) && isValidValue(alias) && isValidValue(age) && isValidValue(gender) && isValidValue(desc))
+	if(isValidValue(password) && isValidValue(name) && isValidValue(alias) && isValidValue(age) && isValidValue(gender) && isValidValue(desc) && isValidValue(newPass))
 	{
 		if(isGoodPass(key, password) == false)
 		{
@@ -231,8 +287,63 @@ void dataUpdateUser(int slaveSocket,char * key,char * password,char * name,char 
 		}
 		else
 		{
-		
-		//Do stuff ************************
+			//sqlite3 *db;
+			char *zErrMsg = 0;
+			int rc;
+			std::string query;
+			int results;
+			int aliasFlag = 1;
+
+
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
+
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}			
+			}
+
+			const char* data = "Callback functioin called";
+////////////////////////////////////
+
+			query = "SELECT alias FROM USERS WHERE id="+string(key)+";";
+
+			resetCallback_return();
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+			if(strncmp(callback_return.c_str(), alias, 21) == 0){
+				aliasFlag = 0;
+			}
+
+			if(aliasFlag == 1){
+				if(checkAlias(alias)){
+					write(slaveSocket, "INVALID ALIAS", 13);
+					sqlite3_close(db);
+					return;
+				}
+			}
+
+
+////////////////////////////////////
+			query = "UPDATE USERS SET name='"+string(name)+"' alias='"+string(alias)+"' age='"+string(age)+"' gender='"+string(gender)+"' description='"+string(desc)+"' password='"+ string(newPass) +"' WHERE id="+string(key)+";"; 
+			
+			fprintf(stdout, "%s\n", query.c_str());
+			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+			fprintf(stdout, "RESULTS IS: %d\n", results);
+			
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "Event deleted succesfully\n");
+			}
+			
+			sqlite3_close(db);
+			dbOpen = false;
+
+			fprintf(stdout, "Finished action\n");
 
 			write(slaveSocket,"ISVALID",7);
 		}
@@ -247,9 +358,9 @@ void dataUpdateUser(int slaveSocket,char * key,char * password,char * name,char 
 //IDEA:		Accept info, check if it is valid. If valid, change relevent event data.
 //OUTPUT:	Confirmation back if successful.
 //RETURN:	NONE
-void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,char * sport,char * location,char * date,char * time,char * summary,char * skill)
+void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,char * sport,char * location,char * date,char * time,char * summary,char * skill, char * title)
 {
-	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(skill))
+	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(skill) && isValidValue(title))
 	{
 		if(isGoodPass(key, password) == false || isCorrectUser(key,evKey) == false)
 		{
@@ -258,7 +369,44 @@ void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,cha
 		else
 		{
 		
-		//Do stuff ************************
+			//sqlite3 *db;
+			char *zErrMsg = 0;
+			int rc;
+			std::string query;
+			int results;
+
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
+
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}			
+			}
+
+			const char* data = "Callback functioin called";
+
+			query = "UPDATE EVENTS SET sport='"+string(sport)+"' location='"+string(location)+"' date='"+string(date)+"' time='"+string(time)+"' summary='"+string(summary)+"' skill='"+ string(skill) +"' title='"+string(title)+"' WHERE id="+string(evKey)+";"; 
+			
+			fprintf(stdout, "%s\n", query.c_str());
+			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+			fprintf(stdout, "RESULTS IS: %d\n", results);
+			
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "Event updated succesfully\n");
+			}
+			
+			sqlite3_close(db);
+			dbOpen = false;
+
+			fprintf(stdout, "Finished action\n");
+
+
+
 
 			write(slaveSocket,"ISVALID",7);
 		}
@@ -286,21 +434,23 @@ void dataDeleteEvent(int slaveSocket,char * key,char * password,char * evKey)
 
 /////////////////////////////////////////////////////////////////
 			
-			sqlite3 *db;
+			//sqlite3 *db;
 			char *zErrMsg = 0;
 			int rc;
 			std::string query;
 			int results;
 			int file_entry;
 
-			rc = sqlite3_open("serverDatabase.db", &db);
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
 
-			if(rc){
-				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
-			} else {
-				fprintf(stderr, "Opened database succesfully\n");
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}
 			}
-
 			const char* data = "Callback functioin called";
 
 			query = "DELETE from EVENTS where id="+string(evKey)+";"; 
@@ -316,6 +466,8 @@ void dataDeleteEvent(int slaveSocket,char * key,char * password,char * evKey)
 			}
 			
 			sqlite3_close(db);
+			dbOpen = false;
+
 			fprintf(stdout, "Finished action\n");
 
 ////////////////////////////////////////////////////////////////		
@@ -327,13 +479,13 @@ void dataDeleteEvent(int slaveSocket,char * key,char * password,char * evKey)
 //IDEA:		Accept info, check for valid inputs. For valid inputs search the database.  
 //OUTPUT:	Events matching request.
 //RETURN:	NONE
-void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char * time,char * skill)
+void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char * time,char * skill, char * title)
 {
 
 	write(slaveSocket,"ISVALID",7);
 
 
-	string query = "SELECT summary, date FROM EVENTS";
+	string query = "SELECT title, date FROM EVENTS";
 	int flag = 0;
 	if(isValidValue(sport))
 	{
@@ -386,6 +538,20 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 		flag = 1;
 	}
 
+	if(isValidValue(title))
+	{
+		if(flag == 0){
+			query += " WHERE ";
+		}
+
+		if(flag == 1)
+		{
+			query += " AND ";
+		}	
+		query += " title ='" + string(title) + "' ";
+		flag = 1;
+	}
+
 	if(isValidValue(skill))
 	{
 		if(flag == 0){
@@ -404,24 +570,29 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 
 ///////////////////////////////////////////////////////////////////////
 
-			sqlite3 *db;
+			//sqlite3 *db;
 			char *zErrMsg = 0;
 			int rc;
 			int results;
 			int file_entry;
 
-			rc = sqlite3_open("serverDatabase.db", &db);
-
-			if(rc){
-				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
-			} else {
-				fprintf(stderr, "Opened database succesfully\n");
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}
 			}
 
 			const char* data = "Callback function called";
 
 			fprintf(stdout, "%s\n", query.c_str());
+			
+			resetCallback_return();
 			callback_return = "|";
+
 			results = sqlite3_exec(db, query.c_str(), callback, (void*) data, &zErrMsg);
 
 			if(results != SQLITE_OK){
@@ -431,7 +602,10 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 			}
 		
 			fprintf(stdout, "callback_return: %s\n", callback_return.c_str());
+			
 			sqlite3_close(db);
+			dbOpen = false;
+
 			write(slaveSocket, callback_return.c_str(), callback_return.length());
 			fprintf(stdout, "Wrote back\n");
 	
@@ -454,6 +628,108 @@ void dataLogOn(int slaveSocket,char * alias,char * password)
 		//Do stuff ************************
 
 			write(slaveSocket,"ISVALID",7);
+
+		//sqlite3 *db;
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		// check if alias is unique
+		//
+
+		const char* data = "Callback functioin called";
+
+		query = "SELECT id, age, gender, name, description FROM USERS WHERE alias='" + string(alias)+ "');";
+
+		fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+		fprintf(stdout, "RESULTS IS: %d\n", results);
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "User inserted succesfully\n");
+		}
+		
+
+		sqlite3_close(db);
+		dbOpen = false;
+
+		write(slaveSocket, callback_return.c_str(), callback_return.length());
+		fprintf(stdout, "Wrote back\n");
+
+		}
+	}
+	else
+	{
+		write(slaveSocket,"INVALID",7);
+	}
+}
+
+
+void updateTopSports(int slaveSocket, char * key, char * password, char * firstSport, char * secondSport, char * thirdSport)
+{
+	if(isValidValue(password))
+	{
+		if(isGoodPass(key, password) == false)
+		{
+			write(slaveSocket,"INVALID",7);
+		}
+		else
+		{
+			//sqlite3 *db;
+			char *zErrMsg = 0;
+			int rc;
+			std::string query;
+			int results;
+
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
+
+				if(rc){
+					fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+				} else {
+					fprintf(stderr, "Opened database succesfully\n");
+				}			
+			}
+
+			const char* data = "Callback function called";
+
+			query = "UPDATE USERS SET firstSport='"+string(firstSport)+"' secondSport='"+string(secondSport)+"' thirdSport='"+string(thirdSport)+"' WHERE id="+string(key)+";"; 
+			
+			fprintf(stdout, "%s\n", query.c_str());
+			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+			fprintf(stdout, "RESULTS IS: %d\n", results);
+			
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "Updated top sports succesfully\n");
+			}
+			
+			sqlite3_close(db);
+			dbOpen = false;
+
+			fprintf(stdout, "Finished action\n");
+
+			write(slaveSocket,"ISVALID",7);
 		}
 	}
 	else
@@ -470,23 +746,58 @@ void dataLogOn(int slaveSocket,char * alias,char * password)
 //RETURN:	True if pair match, false if they do not.
 bool isGoodPass(char * key, char * password)
 {
-	int *temp;
-	int value;
-	temp = (int *) key;
-	value = *temp;
 
-	printf("\n value = %d\n", value);
 
-	// SELECT password FROM users WHERE id = value
-	/*
-	if(strncmp(,password,21) == 0) //need to add in a reference to the password that the provided key matches ************************ 
-	{
-		return true;
-	}
-	return false;
-	*/
+		//sqlite3 *db;
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
 
-	return true;
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback function called";
+
+
+		resetCallback_return();
+
+		query = "SELECT password FROM USERS WHERE id="+string(key)+";";
+fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+		results = sqlite3_exec(db, query.c_str(), callback, (void*) data , &zErrMsg);
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "is good pass\n");
+		}
+		
+		//sqlite3_close(db);
+		//dbOpen = false;
+
+		if(strncmp(callback_return.c_str(),password,21) == 0) //need to add in a reference to the password that the provided key matches ************************ 
+		{
+			fprintf(stdout, "password is correct\n");
+			return true;
+		}
+		fprintf(stdout, "password is incorrect\n");
+		return false;
+
+
+		
+
+	
+
 }
 
 //INPUT:	String to be checked. 	ex: Location, Date, time, skill, or sport.
@@ -497,6 +808,7 @@ bool isValidValue(char * string)
 {
 	if(string == NULL || string[0] == ' ')
 	{
+		fprintf(stdout, "value is not valid yo\n");
 		return false;
 	}
 	return true;
@@ -504,17 +816,156 @@ bool isValidValue(char * string)
 
 bool isCorrectUser(char * key, char * evKey)
 {
-	if(1)	//event owner key == given key
-	{
-		return true;
-	}
-	else
-	{
+
+		//sqlite3 *db;
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback function called";
+
+		resetCallback_return();	
+
+		query = "SELECT creatingUser FROM EVENTS WHERE id="+string(evKey)+";";
+fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "User checked\n");
+		}
+		
+		//sqlite3_close(db);
+		//dbOpen = false;
+
+		if(strncmp(callback_return.c_str(),key,5) == 0)  
+		{
+			return true;
+		}
 		return false;
-	}
+		
+
 }
 
 bool isGoodSet( char * alias,char * password)
 {
-	//do things
+	
+		//sqlite3 *db;
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback function called";
+
+		resetCallback_return();	
+
+		query = "SELECT password FROM USERS WHERE alias="+string(alias)+";";
+fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "is good set\n");
+		}
+		
+		//sqlite3_close(db);
+		//dbOpen = false;
+
+		if(strncmp(callback_return.c_str(),password,21) == 0) 
+		{
+			return true;
+		}
+		return false;
+
+
+		
+}
+
+bool checkAlias(char * alias)
+{
+
+		//sqlite3 *db;
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback function called";
+
+		resetCallback_return();	
+
+		query = "SELECT alias FROM USERS WHERE alias='"+string(alias)+"';";
+fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "alias checked\n");
+		}
+		
+		//sqlite3_close(db);
+		//dbOpen = false;
+	
+	if(strncmp(callback_return.c_str(),alias,21) == 0)
+	{
+		fprintf(stdout, "alias is taken\n");
+		return true;
+	}
+	else
+	{
+		fprintf(stdout, "alias isn't taken\n");
+		return false;
+	}
+}
+
+void resetCallback_return()
+{
+	callback_return = "";
 }
