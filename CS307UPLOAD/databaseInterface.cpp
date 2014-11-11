@@ -7,6 +7,7 @@ string callback_return;
 
 sqlite3 *db;
 bool dbOpen = false;
+bool usePipe = true;
 
 static int callback(void *data, int argc, char **argv, char **azColName){
 	int i;
@@ -19,9 +20,9 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 			callback_return += "~";
 		}
 	}
-	//if(argc > 1){
+	if(usePipe == true){
 		callback_return += "|";
-	//}
+	}
 	
 	printf("\n");
 	return 0;
@@ -83,7 +84,9 @@ fprintf(stdout, "%s\n", query.c_str());
 fprintf(stdout, "RESULTS IS: %d\n", results);
 
 		resetCallback_return();
+		usePipe = false;
 		file_entry = sqlite3_exec(db, query2.c_str(), callback, (void*) data, &zErrMsg);
+		usePipe = true;
 
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -196,9 +199,9 @@ void dataUnJoinEvent(int slaveSocket, char * key, char * password, char * evKey)
 //IDEA:		Accept into and create an event based on provided info.
 //OUTPUT:	Write confirmation back to user if successful.
 //RETURN:	NONE
-void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,char * location,char * date,char * time,char * summary,char * compete, char * title)
+void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,char * location,char * date,char * time,char * summary,char * compete, char * title, char * attendM)
 {
-	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(compete) && isValidValue(title))
+	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(compete) && isValidValue(title) && isValidValue(attendM))
 	{
 		if(isGoodPass(key, password) == false)
 		{
@@ -234,13 +237,15 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 
 			const char* data = "Callback functioin called";
 
-			query = "INSERT INTO EVENTS (sport, location, date, time, summary,desiredSkillLevel, creatingUser, title) VALUES('"+string(sport)+"','"+ string(location) + "','" + string(date) + "','" + string(time) + "','" + string(summary) + "','" + string(compete) + "'," + string(key)+",'"+string(title)+"' );";
+			query = "INSERT INTO EVENTS (sport, location, date, time, summary,desiredSkillLevel, creatingUser, title, numAttending, maxNumAttending) VALUES('"+string(sport)+"','"+ string(location) + "','" + string(date) + "','" + string(time) + "','" + string(summary) + "','" + string(compete) + "'," + string(key)+",'"+string(title)+"','"+string("0")+"','"+string(attendM)+");";
 
 			query2 = "SELECT seq FROM sqlite_sequence WHERE name='EVENTS';";
 			//query2 = "SELECT last_row_id();";\
 
 	fprintf(stdout, "%s\n", query.c_str());
+			usePipe = false;
 			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+			usePipe = true;
 	fprintf(stdout, "RESULTS IS: %d\n", results);
 			resetCallback_return();
 			file_entry = sqlite3_exec(db, query2.c_str(), callback, (void*) data, &zErrMsg2);
@@ -358,9 +363,9 @@ void dataUpdateUser(int slaveSocket,char * key,char * password,char * name,char 
 //IDEA:		Accept info, check if it is valid. If valid, change relevent event data.
 //OUTPUT:	Confirmation back if successful.
 //RETURN:	NONE
-void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,char * sport,char * location,char * date,char * time,char * summary,char * skill, char * title)
+void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,char * sport,char * location,char * date,char * time,char * summary,char * skill, char * title, char * attendM)
 {
-	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(skill) && isValidValue(title))
+	if(isValidValue(password) && isValidValue(sport) && isValidValue(location) && isValidValue(date) && isValidValue(time) && isValidValue(summary) && isValidValue(skill) && isValidValue(title) && isValidValue(attendM))
 	{
 		if(isGoodPass(key, password) == false || isCorrectUser(key,evKey) == false)
 		{
@@ -388,7 +393,7 @@ void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,cha
 
 			const char* data = "Callback functioin called";
 
-			query = "UPDATE EVENTS SET sport='"+string(sport)+"' location='"+string(location)+"' date='"+string(date)+"' time='"+string(time)+"' summary='"+string(summary)+"' skill='"+ string(skill) +"' title='"+string(title)+"' WHERE id="+string(evKey)+";"; 
+			query = "UPDATE EVENTS SET sport='"+string(sport)+"' location='"+string(location)+"' date='"+string(date)+"' time='"+string(time)+"' summary='"+string(summary)+"' skill='"+ string(skill) +"' title='"+string(title)+ +"' maxNumAttending='"+string(attendM) +"' WHERE id="+string(evKey)+";"; 
 			
 			fprintf(stdout, "%s\n", query.c_str());
 			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
@@ -657,7 +662,10 @@ void dataLogOn(int slaveSocket,char * alias,char * password)
 		fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
+
+		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
 
 		fprintf(stdout, "RESULTS IS: %d\n", results);
 
@@ -715,7 +723,11 @@ void updateTopSports(int slaveSocket, char * key, char * password, char * firstS
 			query = "UPDATE USERS SET firstSport='"+string(firstSport)+"' secondSport='"+string(secondSport)+"' thirdSport='"+string(thirdSport)+"' WHERE id="+string(key)+";"; 
 			
 			fprintf(stdout, "%s\n", query.c_str());
+			
+			usePipe = false;
 			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+			usePipe = true;
+			
 			fprintf(stdout, "RESULTS IS: %d\n", results);
 			
 			if(results != SQLITE_OK){
@@ -769,12 +781,18 @@ bool isGoodPass(char * key, char * password)
 
 
 		resetCallback_return();
-
+	
+	
 		query = "SELECT password FROM USERS WHERE id="+string(key)+";";
+		
+		
 fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
+		
+		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void*) data , &zErrMsg);
+		usePipe = true;
 
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -843,7 +861,10 @@ bool isCorrectUser(char * key, char * evKey)
 fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
+		
+		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
 
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -892,7 +913,10 @@ bool isGoodSet( char * alias,char * password)
 fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
+		
+		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
 
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -942,7 +966,9 @@ bool checkAlias(char * alias)
 fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
+		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
 
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);

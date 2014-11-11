@@ -215,6 +215,7 @@ void crev(int slaveSocket)
 	char input8[summL];	//SUMM
 	char input9[competeL];		//compete
 	char input10[titleL];
+	char input11[attendL];
 
 
 	//GET INPUT
@@ -228,6 +229,7 @@ void crev(int slaveSocket)
 	 readStuffs(slaveSocket, input8, summL);
 	 readStuffs(slaveSocket, input9, competeL);
 	 readStuffs(slaveSocket, input10, titleL);
+	 readStuffs(slaveSocket, input10, attendL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -237,7 +239,7 @@ void crev(int slaveSocket)
 	char stringA[6] = "/crev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10);
+	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
 
 	close(slaveSocket);
 }
@@ -298,6 +300,7 @@ void upev(int slaveSocket)
 	char input9[summL];	//SUMM
 	char input10[competeL];	//SKILL
 	char input11[titleL];
+	char input12[attendL];
 
 
 	//GET INPUT
@@ -312,6 +315,7 @@ void upev(int slaveSocket)
 	 readStuffs(slaveSocket, input9, summL);
 	 readStuffs(slaveSocket, input10, competeL);
 	 readStuffs(slaveSocket, input11, titleL);
+	 readStuffs(slaveSocket, input12, attendL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -319,7 +323,7 @@ void upev(int slaveSocket)
 	char stringA[6] = "/upev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11, input12);
 
 	close(slaveSocket);
 }
