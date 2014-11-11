@@ -38,7 +38,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 		db.execSQL(CREATE_GAMES_TYPE_TABLE);
-		
+		addSports();
 	}
 	
 	@Override
@@ -123,7 +123,6 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		if(!cursor.moveToFirst())
 		{
 			Log.d("Database", "User information isn't stored locally");
-			db.close();
 			return return_user;
 		}
 		else //means that the information is stored locally
@@ -249,13 +248,11 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		Cursor date_cursor = db.rawQuery(query, null);
 		
 		// have a cursor that moves through the selected values and changes their indicator values and updates the table
-		Log.d("Past Events", "Getting Past Events");
 		while(date_cursor.moveToNext())
 		{
 			String update_query = "UPDATE " + GAMES_TABLE +
 								"SET " + GAMES_ATTENDING_IND + "='" + 3 + "'" +
 								"WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
-			Log.d("Past Events", date_cursor.getString(0));
 			Cursor return_value = db.rawQuery(update_query, null);
 			Log.d("Database", "Updated a value given the current date");					
 		}
@@ -459,7 +456,6 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		
 		values.put(GAMES_TYPE, "Football");
 		db.insert(GAMES_TYPE_TABLE, null, values);
 		values.put(GAMES_TYPE, "Soccer");

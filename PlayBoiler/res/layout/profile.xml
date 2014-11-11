@@ -115,51 +115,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/bio"
-        android:text="Top 3 Sports:"
+        android:text="Proficiencies :"
         android:textSize="18sp"
         android:padding="10sp" />
     
-    <LinearLayout 
-        android:id="@+id/topThreeLayout"
-        android:layout_below="@id/skills"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/skills_list"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
-        
-        <TextView 
-            android:id="@+id/sportOne"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0sp"/>
-        
-        <TextView 
-            android:id="@+id/sportTwo"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0sp"/>
-        
-        <TextView 
-            android:id="@+id/sportThree"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0sp"/>
-        
-    </LinearLayout>
-    
+        android:layout_below="@id/skills"
+        android:text="Volleyball : 8\nUltimate : 6\nBasketball : 2"
+        android:textSize="18sp"
+        android:padding="10sp" />
     
     <Button
         android:id="@+id/edit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topThreeLayout"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/skills_list"
         android:text="Edit Profile" />
     
     <Button
         android:id="@+id/createDefaultUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topThreeLayout"
+        android:layout_below="@id/skills_list"
         android:layout_toRightOf="@id/edit"
         android:text="User" />
     
