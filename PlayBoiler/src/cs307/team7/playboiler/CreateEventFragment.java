@@ -213,6 +213,8 @@ public class CreateEventFragment extends Fragment {
 				tvDate.setText("");
 				tvTime.setText("");
 				titleEdit.setText("");
+				sumEdit.setText("");
+				maxPlay.setText("");
 				
 				String result = null;
 				try {

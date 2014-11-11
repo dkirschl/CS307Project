@@ -47,8 +47,9 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         //Setup database and check for user info
+        Log.d("Ping", "Ping");
         Global.userDatabase = new MySqlLiteHelper(this);
-        Global.current_user = Global.userDatabase.getUser();
+        //Global.current_user = Global.userDatabase.getUser();
         
         final Dialog d = new Dialog(this);
     	d.setContentView(R.layout.login);
@@ -132,7 +133,6 @@ public class MainActivity extends Activity
 					//login failed
 					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();
 				} else {
-					//Global.userDatabase.addSports();
 					Global.userDatabase.setPastEvents();
 					Log.d("USER INFO", u.getName() + " " + u.getPassword() + " " + u.getAlias());
 					Global.current_user = u;
