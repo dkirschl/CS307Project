@@ -34,7 +34,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				"proficiencies TEXT, " + "password TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
-		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "sport_type TEXT)";
+		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (sport_type TEXT PRIMARY KEY)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 		db.execSQL(CREATE_GAMES_TYPE_TABLE);
@@ -408,6 +408,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		while(cursor.moveToNext())
 		{
+			Log.d("Database", cursor.getString(x));
 			sport_types.add(cursor.getString(x));
 			x++;
 		}
@@ -418,8 +419,12 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public void addSports()
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor pointless;
+		//Cursor pointless;
+		ContentValues values = new ContentValues();
+		values.put(GAMES_TYPE_KEY,  "Football");
+		db.insert(GAMES_TYPE_TABLE, null, values);
 		
+		/*
 		String query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Football')";
 		pointless = db.rawQuery(query, null);
 		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Soccer')";
@@ -462,6 +467,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		pointless = db.rawQuery(query, null);
 		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Other')";
 		pointless = db.rawQuery(query, null);
+		*/
+		db.close();
 	}
 
 }

@@ -132,7 +132,7 @@ public class MainActivity extends Activity
 					//login failed
 					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();
 				} else {
-					//Global.userDatabase.addSports();
+					Global.userDatabase.addSports();
 					Global.userDatabase.setPastEvents();
 					Log.d("USER INFO", u.getName() + " " + u.getPassword() + " " + u.getAlias());
 					Global.current_user = u;

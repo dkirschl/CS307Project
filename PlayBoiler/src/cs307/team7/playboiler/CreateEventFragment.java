@@ -1,12 +1,16 @@
 package cs307.team7.playboiler;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +18,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -62,7 +68,24 @@ public class CreateEventFragment extends Fragment {
 				Dialog d = new Dialog(arg0.getContext());
 				d.setContentView(R.layout.sport_spinner);
 				//get list of all sports
+				List<String> allSports = (List<String>) Global.userDatabase.getSports();
+				Log.d("Test", "Ping");
+				for (int i = 0; i < allSports.size(); i++) {
+					Log.d("Sports", allSports.get(i));
+				}
+				final Spinner spinner = (Spinner) d.findViewById(R.id.sportsSpinner);
+				ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(arg0.getContext(), android.R.layout.simple_spinner_dropdown_item, allSports);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spinner.setAdapter(dataAdapter);
+				d.show();
 				//display as clickable text in a dialog
+				d.setOnCancelListener(new OnCancelListener() {
+					
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						sportEdit.setText(String.valueOf(spinner.getSelectedItem()));
+					}
+				});
 				//return with selected event
 			}
     		
