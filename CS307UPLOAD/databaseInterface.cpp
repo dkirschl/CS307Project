@@ -1244,7 +1244,7 @@ int stringFindLocation(const char * input, char * alias)
 		strcpy(tester, "|");
 		
 		char * result;
-		result= strstr((char *)input,alias + "|");
+		result= strstr((char *)input,tester);
 		if(result != NULL)
 		{
 			return (int)(result - input);
@@ -1304,7 +1304,7 @@ void lockRow(char *evKey, char *userKey){
 				fprintf(stdout, "owningUser checked\n");
 			}
 			
-			if(strcmp(callback_return.c_str(), key) == 0){
+			if(strcmp(callback_return.c_str(), userKey) == 0){
 				flag = 0;
 			}
 		

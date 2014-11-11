@@ -105,6 +105,9 @@ void resetCallback_return(void);
 
 bool checkAlias(char *);
 
+void unlockRow(char *);
+void lockRow(char *, char *);
+
 //check if a given event is owned by a given user
 bool isCorrectUser(char *, char *);
 
