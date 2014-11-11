@@ -175,6 +175,11 @@ public class MainActivity extends Activity
         		.replace(R.id.container, CreatedEventsFragment.newInstance(position+1))
         		.commit();
         		break;
+        	case 5:
+        		fragmentManager.beginTransaction()
+        		.replace(R.id.container, JoinedGamesFragment.newInstance(position+1))
+        		.commit();
+        		break;
         
         }
     	
