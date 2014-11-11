@@ -38,6 +38,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 		db.execSQL(CREATE_GAMES_TYPE_TABLE);
+		addSports();
 	}
 	
 	@Override
@@ -103,7 +104,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		while(cursor.moveToNext())
 		{
-			top_sports.add(cursor.getString(x));
+			top_sports.add(cursor.getString(0));
 			x++;
 		}
 		db.close();
@@ -444,7 +445,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		while(cursor.moveToNext())
 		{
-			sport_types.add(cursor.getString(x));
+			sport_types.add(cursor.getString(0));
 			x++;
 		}
 		

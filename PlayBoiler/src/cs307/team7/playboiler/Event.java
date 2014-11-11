@@ -11,6 +11,7 @@ public class Event {
 	private String creating_user;
 	private int attending_ind;
 	private String summary;
+	private int maxPlayers;
 	
 	public Event()
 	{
@@ -24,7 +25,7 @@ public class Event {
 		attending_ind = 0;
 		summary = "";
 	}
-	public Event(String s, String l, String d, String t1, String t2, String cu, String su, int a)
+	public Event(String s, String l, String d, String t1, String t2, String cu, String su, int max, int a)
 	{
 		//key = k;
 		sport = s;
@@ -35,6 +36,13 @@ public class Event {
 		creating_user = cu;
 		summary = su;
 		attending_ind = a;
+		maxPlayers = max;
+	}
+	public int getMaxPlayers() {
+		return maxPlayers;
+	}
+	public void setMaxPlayers(int maxPlayers) {
+		this.maxPlayers = maxPlayers;
 	}
 	public String getSummary() {
 		return summary;

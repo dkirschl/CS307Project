@@ -1,26 +1,27 @@
 package cs307.team7.playboiler;
 
-import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.TimePicker.OnTimeChangedListener;
 
 public class CreateEventFragment extends Fragment {
 	
@@ -54,6 +55,7 @@ public class CreateEventFragment extends Fragment {
     	final TextView sportEdit = (TextView) rootView.findViewById(R.id.selectSport);
     	final EditText locEdit = (EditText) rootView.findViewById(R.id.selectLocation);
     	final EditText sumEdit = (EditText) rootView.findViewById(R.id.setSummary);
+    	final EditText maxPlay = (EditText) rootView.findViewById(R.id.setCapacity);
     	final Button chooseSport = (Button) rootView.findViewById(R.id.chooseSport);
     	chooseSport.setOnClickListener(new OnClickListener() {
 
@@ -61,7 +63,26 @@ public class CreateEventFragment extends Fragment {
 			public void onClick(View arg0) {
 				Dialog d = new Dialog(arg0.getContext());
 				d.setContentView(R.layout.sport_spinner);
+				d.setTitle("Select Sport");
 				//get list of all sports
+				List<String> allSports = (List<String>) Global.userDatabase.getSports();
+				Log.d("Test", "Ping");
+				for (int i = 0; i < allSports.size(); i++) {
+					Log.d("Sports", allSports.get(i));
+				}
+				final Spinner spinner = (Spinner) d.findViewById(R.id.sportsSpinner);
+				ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(arg0.getContext(), android.R.layout.simple_spinner_dropdown_item, allSports);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spinner.setAdapter(dataAdapter);
+				d.show();
+				//display as clickable text in a dialog
+				d.setOnCancelListener(new OnCancelListener() {
+					
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						sportEdit.setText(String.valueOf(spinner.getSelectedItem()));
+					}
+				});
 				//display as clickable text in a dialog
 				//return with selected event
 			}
@@ -133,7 +154,7 @@ public class CreateEventFragment extends Fragment {
 				String edittedTime = tvTime.getText().toString();
 				edittedTime = edittedTime.replace(":", "");
 				edittedDate = edittedDate.replace("-", "");
-				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(), Global.USER_CREATED_EVENT_CODE);
+				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE);
 				
 				int sportLen = 30;
 				int locLen = 30;
@@ -142,6 +163,7 @@ public class CreateEventFragment extends Fragment {
 				int titleLen = 25;
 				int sumLen = 100;
 				int passLen = 20;
+				int maxPlayerLen = 3;
 				StringBuilder str = new StringBuilder();
 				str.append("/crev/");
 				str.append(Global.current_user.getKey());
@@ -177,6 +199,10 @@ public class CreateEventFragment extends Fragment {
 				str.append("/");
 				str.append(event.getTitle());
 				Global.addSpaces(str, titleLen - event.getTitle().length());
+				str.append("/");
+				str.append(event.getMaxPlayers());
+				String maxPlayersString = ""+event.getMaxPlayers();
+				Global.addSpaces(str, maxPlayerLen - maxPlayersString.length());
 				str.append("/");
 				str.append("\r\n");
 				Log.d("The Message", str.toString());
