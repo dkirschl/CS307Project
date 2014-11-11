@@ -82,6 +82,32 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String GAMES_TYPE = "sport_type";
 	public static final String[] TYPE_COLUMN = {GAMES_TYPE_KEY, GAMES_TYPE};
 	
+	public List<String> topThreeSports()
+	{
+	/*	SELECT	GAMES_SPORT
+		FROM	GAMES_TABLE
+		WHERE	GAMES_ATTENDING_IND = '3'
+		ORDER BY COUNT(GAMES_SPORT) limit 3 */
+		
+		List<String> top_sports = new LinkedList<String>();
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = 	"SELECT " + GAMES_SPORT + 
+						" FROM " + GAMES_TABLE + 
+						" WHERE " + GAMES_ATTENDING_IND + "='" + 3 + "'" + 
+						" ORDER BY COUNT(" + GAMES_SPORT + ") desc limit 3";
+		
+		Cursor cursor = db.rawQuery(query, null);
+		int x = 0;
+		
+		while(cursor.moveToNext())
+		{
+			top_sports.add(cursor.getString(x));
+			x++;
+		}
+		db.close();
+		return top_sports;
+	}
 	public User login(String alias, String password)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -223,7 +249,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		while(date_cursor.moveToNext())
 		{
 			String update_query = "UPDATE " + GAMES_TABLE +
-								"SET " + GAMES_ATTENDING_IND + "='" + 2 + "'" +
+								"SET " + GAMES_ATTENDING_IND + "='" + 3 + "'" +
 								"WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
 			Cursor return_value = db.rawQuery(update_query, null);
 			Log.d("Database", "Updated a value given the current date");					
@@ -418,9 +444,51 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public void addSports()
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor pointless;
+		ContentValues values = new ContentValues();
+		values.put(GAMES_TYPE, "Football");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Soccer");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Baseball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Basketball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Cricket");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Disc Golf");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Golf");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Wallyball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Bowling");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Volleyball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Sand Voleyball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Ultimate Frisbee");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Ping-Pong");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Floor Hockey");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Dodgeball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Racquetball");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Squash");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Badminton");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Tennis");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Nerf Wars");
+		db.insert(GAMES_TYPE_TABLE, null, values);
+		values.put(GAMES_TYPE, "Other");
+		db.insert(GAMES_TYPE_TABLE, null, values);
 
-		String query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Football')";
+	/*	String query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Football')";
 		pointless = db.rawQuery(query, null);
 		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Soccer')";
 		pointless = db.rawQuery(query, null);
@@ -461,7 +529,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Nerf Wars')";
 		pointless = db.rawQuery(query, null);
 		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Other')";
-		pointless = db.rawQuery(query, null);
+		pointless = db.rawQuery(query, null);*/
+		db.close();
 	}
 
 }
