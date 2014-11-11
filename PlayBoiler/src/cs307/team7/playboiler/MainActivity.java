@@ -48,6 +48,7 @@ public class MainActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         //Setup database and check for user info
         Global.userDatabase = new MySqlLiteHelper(this);
+        Global.userDatabase.addSports();
         //Global.current_user = Global.userDatabase.getUser();
         
         final Dialog d = new Dialog(this);

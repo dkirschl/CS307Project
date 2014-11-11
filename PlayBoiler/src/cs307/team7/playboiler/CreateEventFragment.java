@@ -228,6 +228,7 @@ public class CreateEventFragment extends Fragment {
 					Toast.makeText(v.getContext(), "Event Not Created", Toast.LENGTH_LONG).show();
 					
 				} else {
+					result = result.replace("|", "");
 					int res = Integer.parseInt(result.substring(7));
 					event.setKey(res);
 					Global.userDatabase.addEvent(event);

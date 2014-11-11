@@ -96,6 +96,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		String query = 	"SELECT " + GAMES_SPORT + 
 						" FROM " + GAMES_TABLE + 
 						" WHERE " + GAMES_ATTENDING_IND + "='" + 3 + "'" + 
+						" GROUP BY " + GAMES_SPORT +
 						" ORDER BY COUNT(" + GAMES_SPORT + ") desc limit 3";
 		
 		Cursor cursor = db.rawQuery(query, null);
@@ -250,8 +251,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		while(date_cursor.moveToNext())
 		{
 			String update_query = "UPDATE " + GAMES_TABLE +
-								"SET " + GAMES_ATTENDING_IND + "='" + 3 + "'" +
-								"WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
+								" SET " + GAMES_ATTENDING_IND + "='" + 3 + "'" +
+								" WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
 			Cursor return_value = db.rawQuery(update_query, null);
 			Log.d("Database", "Updated a value given the current date");					
 		}

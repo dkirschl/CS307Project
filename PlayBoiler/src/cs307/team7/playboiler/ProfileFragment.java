@@ -1,5 +1,6 @@
 package cs307.team7.playboiler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -51,11 +52,15 @@ public class ProfileFragment extends Fragment {
         final TextView topOne = (TextView) rootView.findViewById(R.id.sportOne);
         final TextView topTwo = (TextView) rootView.findViewById(R.id.sportTwo);
         final TextView topThree = (TextView) rootView.findViewById(R.id.sportThree);
+        List<TextView> listOfBullshit = new ArrayList<TextView>();
+        listOfBullshit.add(topOne);
+        listOfBullshit.add(topTwo);
+        listOfBullshit.add(topThree);
         
         List<String> topThreeSports = Global.userDatabase.topThreeSports();
-        topOne.setText(topThreeSports.get(0));
-        topTwo.setText(topThreeSports.get(1));
-        topThree.setText(topThreeSports.get(2));
+        for (int i = 0; i < topThreeSports.size(); i++) {
+        	listOfBullshit.get(i).setText(topThreeSports.get(i));
+        }
         User user = Global.current_user;
         if (user.getKey() != -1) {
         	currName.setText(user.getName());
