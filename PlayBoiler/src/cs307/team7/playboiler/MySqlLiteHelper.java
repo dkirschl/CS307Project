@@ -393,6 +393,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public List<Event> getCreatedEvents()
 	{
 		// crazy changes
+		// double crazy changes
 		List<Event> events = new LinkedList<Event>();
 		
 		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=2";
