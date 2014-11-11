@@ -108,6 +108,9 @@ bool checkAlias(char *);
 //check if a given event is owned by a given user
 bool isCorrectUser(char *, char *);
 
+int stringFindLocation(const char *, char *);
+void getAlias(char *, char *);
+
 int createDatabases();
 
 extern sqlite3 *db;

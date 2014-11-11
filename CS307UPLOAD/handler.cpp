@@ -229,7 +229,7 @@ void crev(int slaveSocket)
 	 readStuffs(slaveSocket, input8, summL);
 	 readStuffs(slaveSocket, input9, competeL);
 	 readStuffs(slaveSocket, input10, titleL);
-	 readStuffs(slaveSocket, input10, attendL);
+	 readStuffs(slaveSocket, input11, attendL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
