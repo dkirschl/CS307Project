@@ -33,7 +33,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
 				"proficiencies TEXT, " + "password TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY, " + "sport TEXT, " + "location TEXT, " + 
-				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER)";
+				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER, " + "max_attending INTEGER)";
 		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "sport_type TEXT PRIMARY KEY)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
@@ -73,9 +73,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String GAMES_SUMMARY = "summary";
 	public static final String GAMES_CREATING_USER = "creating_user";
 	public static final String GAMES_ATTENDING_IND = "attending_ind";
+	public static final String GAMES_MAX_ATTENDING = "max_attending";
 	
 	public static final String[] GAMES_COLUMNS = {GAMES_KEY, GAMES_SPORT, GAMES_LOCATION, GAMES_DATE, GAMES_TIME,  GAMES_TITLE, GAMES_SUMMARY,
-		GAMES_CREATING_USER, GAMES_ATTENDING_IND};
+		GAMES_CREATING_USER, GAMES_ATTENDING_IND, GAMES_MAX_ATTENDING};
 	
 	public static final String GAMES_TYPE_TABLE = "types_of_games";
 	public static final String GAMES_TYPE_KEY = "id";
@@ -272,6 +273,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_SUMMARY, event.getSummary());
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttendingInd());
+		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
+		
 		
 		db.insert(GAMES_TABLE, null, values);
 		db.close();
@@ -291,6 +294,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_SUMMARY, event.getSummary());
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttendingInd());
+		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
 		
 		db.insert(GAMES_TABLE, null, values);
 		db.close();
@@ -321,6 +325,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_SUMMARY, event.getSummary());
 		values.put(GAMES_CREATING_USER, event.getCreating_user());
 		values.put(GAMES_ATTENDING_IND, event.getAttending_ind());
+		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
 		
 		db.update(GAMES_TABLE, values, "key = ", new String[]{String.valueOf(event.getKey())});
 		db.close();
@@ -351,6 +356,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setSummary(cursor.getString(6));
 				event.setCreating_user(cursor.getString(7));
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
+				event.setMaxPlayers(cursor.getInt(9));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -383,6 +389,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setSummary(cursor.getString(6));
 				event.setCreating_user(cursor.getString(7));
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
+				event.setMaxPlayers(cursor.getInt(9));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -417,6 +424,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setSummary(cursor.getString(6));
 				event.setCreating_user(cursor.getString(7));
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
+				event.setMaxPlayers(cursor.getInt(9));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -490,48 +498,6 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_TYPE, "Other");
 		db.insert(GAMES_TYPE_TABLE, null, values);
 
-	/*	String query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Football')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Soccer')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Baseball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Basketball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Cricket')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Disc Golf')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Golf')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Wallyball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Bowling')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Volleyball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Sand Volleyball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Ultimate Frisbee')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Ping-Pong')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Floor Hockey')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Dodgeball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Racquetball')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Squash')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Badminton')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Tennis')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Nerf Wars')";
-		pointless = db.rawQuery(query, null);
-		query = "INSERT INTO " + GAMES_TYPE_TABLE + " VALUES ('Other')";
-		pointless = db.rawQuery(query, null);*/
 		db.close();
 	}
 
