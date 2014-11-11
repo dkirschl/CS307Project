@@ -38,7 +38,6 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 		db.execSQL(CREATE_GAMES_TYPE_TABLE);
-		addSports();
 	}
 	
 	@Override
