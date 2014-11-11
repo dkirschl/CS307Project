@@ -455,49 +455,54 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put(GAMES_TYPE, "Football");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Soccer");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Baseball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Basketball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Cricket");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Disc Golf");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Golf");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Wallyball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Bowling");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Volleyball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Sand Voleyball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Ultimate Frisbee");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Ping-Pong");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Floor Hockey");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Dodgeball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Racquetball");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Squash");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Badminton");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Tennis");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Nerf Wars");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-		values.put(GAMES_TYPE, "Other");
-		db.insert(GAMES_TYPE_TABLE, null, values);
-
+		
+		String query = "SELECT * FROM " + GAMES_TYPE_TABLE;
+		Cursor cursor = db.rawQuery(query, null);
+		if(!cursor.moveToNext())
+		{
+			values.put(GAMES_TYPE, "Football");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Soccer");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Baseball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Basketball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Cricket");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Disc Golf");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Golf");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Wallyball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Bowling");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Volleyball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Sand Voleyball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Ultimate Frisbee");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Ping-Pong");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Floor Hockey");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Dodgeball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Racquetball");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Squash");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Badminton");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Tennis");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Nerf Wars");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+			values.put(GAMES_TYPE, "Other");
+			db.insert(GAMES_TYPE_TABLE, null, values);
+		}
 		db.close();
 	}
 
