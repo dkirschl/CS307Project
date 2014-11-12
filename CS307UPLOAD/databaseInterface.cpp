@@ -194,10 +194,11 @@ void dataJoinEvent(int slaveSocket, char * key, char * password, char * evKey)
 		}
 
 		const char* data = "Callback functioin called";
+		
+		printf("eventkey: %s\n",evKey);
+		lockRow(evKey,key);
 
 		getAlias(key, alias);
-		
-		lockRow(evKey,key);
 
 		query = "SELECT attendingUsers FROM EVENTS where id="+string(evKey)+";";
 		
@@ -306,10 +307,10 @@ char *zErrMsg = 0;
 		}
 
 		const char* data = "Callback functioin called";
-
-		getAlias(key, alias);
 		
 		lockRow(evKey,key);
+
+		getAlias(key, alias);
 
 		query = "SELECT attendingUsers FROM EVENTS where id="+string(evKey)+";";
 		
@@ -410,7 +411,7 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 		
 		//Do stuff ************************
 
-			write(slaveSocket,"ISVALID",7);
+			//write(slaveSocket,"ISVALID",7);
 
 			//sqlite3 *db;
 			char *zErrMsg = 0;
@@ -435,7 +436,7 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 
 			const char* data = "Callback functioin called";
 
-			query = "INSERT INTO EVENTS (sport, location, date, time, summary,desiredSkillLevel, creatingUser, title, numAttending, maxNumAttending, owningUser) VALUES('"+string(sport)+"','"+ string(location) + "','" + string(date) + "','" + string(time) + "','" + string(summary) + "','" + string(compete) + "'," + string(key)+",'"+string(title)+"','"+string("0")+"','"+string(attendM)+"',0);";
+			query = "INSERT INTO EVENTS (sport, location, date, time, summary,desiredSkillLevel, creatingUser, title, numAttending, maxNumAttending, owningUser,attendingUsers) VALUES('"+string(sport)+"','"+ string(location) + "','" + string(date) + "','" + string(time) + "','" + string(summary) + "','" + string(compete) + "'," + string(key)+",'"+string(title)+"','"+string("0")+"','"+string(attendM)+"',0,'');";
 
 			query2 = "SELECT seq FROM sqlite_sequence WHERE name='EVENTS';";
 			//query2 = "SELECT last_row_id();";\
@@ -467,7 +468,15 @@ void dataCreateEvent(int slaveSocket,char * key,char * password,char * sport,cha
 
 			write(slaveSocket, callback_return.c_str(), callback_return.length());
 			fprintf(stdout, "Wrote back\n");
-	
+
+			fprintf(stdout, "key=%s\n", key);
+			fprintf(stdout, "evKey=%s\n", callback_return.c_str());
+			
+			char evKeyinput[5];
+			strcpy(evKeyinput, callback_return.c_str());
+			printf("eventKey: %s", evKeyinput);			
+
+			dataJoinEvent( slaveSocket, key, password, evKeyinput);
 			
 		}
 	}
@@ -689,7 +698,7 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 	write(slaveSocket,"ISVALID",7);
 
 
-	string query = "SELECT title, date FROM EVENTS";	//need to return more
+	string query = "SELECT * FROM EVENTS";	//need to return more
 	int flag = 0;
 	if(isValidValue(sport))
 	{
@@ -1279,7 +1288,7 @@ void lockRow(char *evKey, char *userKey){
 		
 		int flag = 1;
 		
-		query = "UPDATE EVENTS SET owningUser= "+string(userKey)+" WHERE id="+string(evKey)+" AND owningUser=0;";
+		query = "UPDATE EVENTS SET owningUser="+string(userKey)+" WHERE id="+string(evKey)+" AND owningUser=0;";
 		query2 = "SELECT owningUser FROM EVENTS WHERE id="+string(evKey)+";";
 		
 		while(flag){
@@ -1303,7 +1312,7 @@ void lockRow(char *evKey, char *userKey){
 			} else {
 				fprintf(stdout, "owningUser checked\n");
 			}
-			
+			printf("STRING!:%s = %s\n", callback_return.c_str(), userKey);
 			if(strcmp(callback_return.c_str(), userKey) == 0){
 				flag = 0;
 			}
