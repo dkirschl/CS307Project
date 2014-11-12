@@ -13,7 +13,7 @@ public class Event {
 	private String summary;
 	private int maxPlayers;
 	private String created;
-	
+	//comment
 	public Event()
 	{
 		key = -1;
