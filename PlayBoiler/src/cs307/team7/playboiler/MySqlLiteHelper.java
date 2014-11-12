@@ -34,7 +34,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				"proficiencies TEXT, " + "password TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER, " + "max_attending INTEGER, " + "created TEXT, " + 
-				"number_attending INTEGER)";
+				"number_attending INTEGER, " + "specific_user TEXT)";
 		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "sport_type TEXT PRIMARY KEY)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
@@ -77,9 +77,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String GAMES_MAX_ATTENDING = "max_attending";
 	public static final String GAMES_CREATED = "created";
 	public static final String GAMES_ATTENDING_NO = "number_attending";
+	public static final String GAMES_CURR_USER = "specific_user";
 	
 	public static final String[] GAMES_COLUMNS = {GAMES_KEY, GAMES_SPORT, GAMES_LOCATION, GAMES_DATE, GAMES_TIME,  GAMES_TITLE, GAMES_SUMMARY,
-		GAMES_CREATING_USER, GAMES_ATTENDING_IND, GAMES_MAX_ATTENDING, GAMES_CREATED, GAMES_ATTENDING_NO};
+		GAMES_CREATING_USER, GAMES_ATTENDING_IND, GAMES_MAX_ATTENDING, GAMES_CREATED, GAMES_ATTENDING_NO, GAMES_CURR_USER};
 	
 	public static final String GAMES_TYPE_TABLE = "types_of_games";
 	public static final String GAMES_TYPE_KEY = "id";
@@ -99,6 +100,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		String query = 	"SELECT " + GAMES_SPORT + ", COUNT(" + GAMES_SPORT + ")" +
 						" FROM " + GAMES_TABLE + 
 						" WHERE " + GAMES_ATTENDING_IND + "=" + 3 + "" + 
+						" AND " + GAMES_CURR_USER + "=" + Global.current_user.getAlias() + 
 						" GROUP BY " + GAMES_SPORT + 
 						" ORDER BY COUNT(" + GAMES_SPORT + ") desc limit 3";
 		
@@ -293,6 +295,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
 		values.put(GAMES_CREATED, event.getCreated());
 		values.put(GAMES_ATTENDING_NO, event.getCurrentNumberAttending());
+		values.put(GAMES_CURR_USER, event.getSpecificUser());
 		
 		
 		db.insert(GAMES_TABLE, null, values);
@@ -325,6 +328,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
 		values.put(GAMES_CREATED, event.getCreated());
 		values.put(GAMES_ATTENDING_NO, event.getCurrentNumberAttending());
+		values.put(GAMES_CURR_USER, event.getSpecificUser());
 		
 		db.insert(GAMES_TABLE, null, values);
 		db.close();
@@ -356,7 +360,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
 		values.put(GAMES_CREATED, event.getCreated());
 		values.put(GAMES_ATTENDING_NO, event.getCurrentNumberAttending());
-
+		values.put(GAMES_CURR_USER, event.getSpecificUser());
 		
 		db.update(GAMES_TABLE, values, "key = " + event.getKey(), null);
 		db.close();
@@ -366,7 +370,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=3";
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=3 AND " + GAMES_CURR_USER + "=" + Global.current_user.getAlias();
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
@@ -389,6 +393,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				event.setMaxPlayers(cursor.getInt(9));
 				event.setCurrentNumberAttending(cursor.getInt(10));
+				event.setSpecificUser(cursor.getString(11));
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -400,7 +405,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=1";
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=1 " + GAMES_CURR_USER + "=" + Global.current_user.getAlias();
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
@@ -423,7 +428,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				event.setMaxPlayers(cursor.getInt(9));
 				event.setCurrentNumberAttending(cursor.getInt(10));
-
+				event.setSpecificUser(cursor.getString(11));
+				
 				events.add(event);
 				x++;
 			}while(x < 5 && cursor.moveToNext());
@@ -437,7 +443,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		// double crazy changes
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_CREATED + "='yes'";
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_CREATED + "='yes' " + " AND " + GAMES_CURR_USER + "=" + Global.current_user.getAlias();
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
@@ -460,6 +466,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				event.setMaxPlayers(cursor.getInt(9));
 				event.setCurrentNumberAttending(cursor.getInt(10));
+				event.setSpecificUser(cursor.getString(11));
 
 				events.add(event);
 				x++;
