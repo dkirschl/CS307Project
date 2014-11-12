@@ -93,12 +93,15 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		List<String> top_sports = new LinkedList<String>();
 
 		SQLiteDatabase db = this.getReadableDatabase();
-		String query = 	"SELECT " + GAMES_SPORT + 
+		String query = 	"SELECT " + GAMES_SPORT + ", COUNT(" + GAMES_SPORT + ")" +
 						" FROM " + GAMES_TABLE + 
-						" WHERE " + GAMES_ATTENDING_IND + "='" + 3 + "'" + 
-						" GROUP BY " + GAMES_SPORT +
+						" WHERE " + GAMES_ATTENDING_IND + "=" + 3 + "" + 
+						" GROUP BY " + GAMES_SPORT + 
 						" ORDER BY COUNT(" + GAMES_SPORT + ") desc limit 3";
 		
+		//String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=" + 3;
+		
+		Log.d("Query", query);
 		Cursor cursor = db.rawQuery(query, null);
 		int x = 0;
 		
@@ -107,6 +110,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 			top_sports.add(cursor.getString(0));
 			x++;
 		}
+		Log.d("Database", "" + x);
 		db.close();
 		return top_sports;
 	}
@@ -250,11 +254,14 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		// have a cursor that moves through the selected values and changes their indicator values and updates the table
 		while(date_cursor.moveToNext())
 		{
-			String update_query = "UPDATE " + GAMES_TABLE +
-								" SET " + GAMES_ATTENDING_IND + "='" + 3 + "'" +
+			ContentValues values = new ContentValues();
+			values.put(GAMES_ATTENDING_IND, 3);
+			db.update(GAMES_TABLE, values, GAMES_KEY + "=" + date_cursor.getString(0), null);
+		/*	String update_query = "UPDATE " + GAMES_TABLE +
+								" SET " + GAMES_ATTENDING_IND + "=" + 3 +
 								" WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
-			Cursor return_value = db.rawQuery(update_query, null);
-			Log.d("Database", "Updated a value given the current date");					
+			Cursor return_value = db.rawQuery(update_query, null);*/
+			Log.d("Database", "updating stuffer");					
 		}
 		db.close();
 	}

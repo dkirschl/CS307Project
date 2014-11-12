@@ -171,11 +171,13 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 		        	Event e = new Event();
 		        	//Log.d("Info", s[i][0] + s[i][1] + s[i][2] + s[i][3] + s[i][4]);
 		        	//e.setTitle(s[i][4]); e.setDate(s[i][2]); e.setTime(s[i][3]); e.setLocation(s[i][0]); e.setSport(s[i][1]);
-		        	e.setTitle(s[i][0]); e.setDate(s[i][1]);
+		        	//e.setTitle(s[i][0]); e.setDate(s[i][1]);
+		        	e.setTitle(s[i][9]); e.setDate(s[i][3]); e.setTitle(s[i][4]); e.setLocation(s[i][2]); e.setMaxPlayers(Integer.parseInt(s[i][11])); e.setSummary(s[i][6]); e.setKey(Integer.parseInt(s[i][0])); e.setCreating_user(s[i][5]);
+		        	
 		        	View page = Global.fillEventPage(e, inflater, container);
 		        	ll.setOnClickListener(new eventClickListener(s[i][0], page, e));
-		        	tv.setText("Title : " + s[i][4]);
-		        	tv2.setText("Date : " + s[i][2]);
+		        	tv.setText("Title : " + s[i][9]);
+		        	tv2.setText("Date : " + s[i][3]);
 		        	contain.addView(ll);
 				}
 				
@@ -288,10 +290,41 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					//Code to join event
+					int keyLen = 4;
+					int pasLen = 20;
+					StringBuilder str = new StringBuilder();
+					str.append("/join/");
+					str.append(Global.current_user.getKey());
+					String kyString = "" + Global.current_user.getKey();
+					Global.addSpaces(str, keyLen - kyString.length());
+					str.append("/");
+					str.append(Global.current_user.getPassword());
+					Global.addSpaces(str, pasLen - Global.current_user.getPassword().length());
+					str.append("/");
+					str.append(e.getKey());
+					String keyString = "" + e.getKey();
+					Global.addSpaces(str, keyLen - keyString.length());
+					str.append("/");
+					str.append("\r\n");
+					//Add user to event on external server
+					Log.d("Message", str.toString());
+					String result = null;
+					NetworkHandler nh = new NetworkHandler();
+					try {
+						result = nh.execute(str.toString()).get();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					} catch (ExecutionException e1) {
+						e1.printStackTrace();
+					}
+					Log.d("Join Result", result);
+					Toast.makeText(getActivity(), "Event Joined", Toast.LENGTH_LONG).show();
+					
+					
+					
 					//Add event to local database of joined events
 					Global.userDatabase.joinEvent(e);
-					//Add user to event on external server
-					NetworkHandler nh = new NetworkHandler();
+					
 				}
 			});
 			builder.setOnCancelListener(new OnCancelListener() {

@@ -57,6 +57,8 @@ public class CreateEventFragment extends Fragment {
     	final EditText sumEdit = (EditText) rootView.findViewById(R.id.setSummary);
     	final EditText maxPlay = (EditText) rootView.findViewById(R.id.setCapacity);
     	final Button chooseSport = (Button) rootView.findViewById(R.id.chooseSport);
+    	final EditText compete = (EditText) rootView.findViewById(R.id.compete);
+    	compete.setFilters(new InputFilterMinMax[]{ new InputFilterMinMax("1", "3")});
     	chooseSport.setOnClickListener(new OnClickListener() {
 
 			@Override
