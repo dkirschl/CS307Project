@@ -68,13 +68,23 @@
         android:layout_margin="5sp"
         android:layout_below="@id/searchSelectDate"
         android:text="Select Time" />
+    
+    <EditText
+        android:id="@+id/compSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchSelectTime"
+        android:textSize="30sp"
+        android:hint="Competitivness"
+        android:inputType="number"
+        />
 
     <Button
         android:id="@+id/searchButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/searchSelectTime"
+        android:layout_below="@id/compSearch"
         android:textSize="25sp"
         android:text="Search" />
     <ScrollView 

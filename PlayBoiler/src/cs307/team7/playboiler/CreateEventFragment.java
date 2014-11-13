@@ -119,7 +119,8 @@ public class CreateEventFragment extends Fragment {
 						} else {
 							strDay = ""+day;
 						}
-						StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+						//StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+						StringBuilder date = new StringBuilder().append(dp.getYear()).append(strMon).append(strDay);
 						//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
 						tvDate.setText(date);
 						d.cancel();

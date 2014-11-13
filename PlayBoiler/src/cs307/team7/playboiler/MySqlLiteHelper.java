@@ -245,14 +245,16 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		// get the current date and time
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMDD HHmm");
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
 		Calendar cal = Calendar.getInstance();
 		String date_time = dateFormat.format(cal.getTime());
 		String date = date_time.substring(0, 8);
 		String time = date_time.substring(9);
-		
+		Log.d("DB", date);
+		Log.d("DB", time);
 		// query that parses through the whole entire list of events
-		String query = "SELECT " + GAMES_KEY + " FROM " + GAMES_TABLE + " WHERE " + GAMES_DATE + "<'" + date + "' OR (" + GAMES_DATE + "='" + date + "' AND " + GAMES_TIME + "<'" + time +"')";
+		String query = "SELECT " + GAMES_KEY + " FROM " + GAMES_TABLE + " WHERE (" + GAMES_DATE + "<'" + date + "' OR (" + GAMES_DATE + "='" + date + "' AND " + GAMES_TIME + "<'" + time +"'))"
+				+ " AND " + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() +"'";
 		Cursor date_cursor = db.rawQuery(query, null);
 		
 		// have a cursor that moves through the selected values and changes their indicator values and updates the table
@@ -266,11 +268,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 								" WHERE " + GAMES_KEY + "=" + date_cursor.getString(0);
 			Cursor return_value = db.rawQuery(update_query, null);*/
 			Log.d("Database", "updating stuffer");
-			String update_query = "UPDATE " + GAMES_TABLE +
-								" SET " + GAMES_ATTENDING_IND + "=" + 3 + "" +
-								" WHERE " + GAMES_KEY + "=" + date_cursor.getString(0) + 
-								" AND " + GAMES_ATTENDING_IND + "!=3";
-			Cursor return_value = db.rawQuery(update_query, null);
+			
 			Log.d("Database", "Updated a value given the current date");
 		}
 		db.close();
@@ -318,9 +316,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(GAMES_MAX_ATTENDING, event.getMaxPlayers());
 		values.put(GAMES_CREATED, event.getCreated());
 		values.put(GAMES_SPECIFIC_USER, event.getSpecificUser());
+		Log.d("DB", event.getSpecificUser());
 		values.put(GAMES_ATTENDING, event.getAttending());
 
-		
+		Log.d("DB", "Joining "+event.getKey());
 		db.insert(GAMES_TABLE, null, values);
 		db.close();
 	}
@@ -396,7 +395,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setAttending(cursor.getInt(11));
 				events.add(event);
 				x++;
-			}while(x < 5 && cursor.moveToNext());
+			}while(cursor.moveToNext());
 		}
 		db.close();
 		return events;
@@ -406,7 +405,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		List<Event> events = new LinkedList<Event>();
 		
 		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND " + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() +"'";
-
+		Log.d("DB", query);
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
 		Event event = null;
@@ -428,6 +427,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setAttending_ind(Integer.parseInt(cursor.getString(8)));
 				event.setMaxPlayers(cursor.getInt(9));
 				event.setSpecificUser(cursor.getString(10));
+				Log.d("DB", cursor.getString(10));
 				event.setAttending(cursor.getInt(11));
 				events.add(event);
 				x++;

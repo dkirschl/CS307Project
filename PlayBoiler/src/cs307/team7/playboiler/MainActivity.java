@@ -134,7 +134,6 @@ public class MainActivity extends Activity
 					Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_LONG).show();
 				} else {
 					//Global.userDatabase.addSports();
-					Global.userDatabase.setPastEvents();
 					Log.d("USER INFO", u.getName() + " " + u.getPassword() + " " + u.getAlias());
 					Global.current_user = u;
 					d.cancel();
@@ -181,6 +180,11 @@ public class MainActivity extends Activity
         		.replace(R.id.container, JoinedGamesFragment.newInstance(position+1))
         		.commit();
         		break;
+        	case 6:
+        		fragmentManager.beginTransaction()
+        		.replace(R.id.container, PastGamesFragment.newInstance(position+1))
+        		.commit();
+        		break;
         
         }
     	
@@ -207,6 +211,9 @@ public class MainActivity extends Activity
             	break;
             case 6:
             	mTitle = getString(R.string.title_section6);
+            	break;
+            case 7:
+            	mTitle = getString(R.string.title_section7);
             	break;
         }
     }

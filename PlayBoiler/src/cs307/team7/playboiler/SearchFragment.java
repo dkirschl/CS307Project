@@ -55,6 +55,7 @@ public class SearchFragment extends Fragment {
         final EditText searchLocation = (EditText) rootView.findViewById(R.id.searchLocation);
         final TextView tvDate = (TextView) rootView.findViewById(R.id.searchEventDate);
         final TextView tvTime = (TextView) rootView.findViewById(R.id.searchEventTime);
+        final EditText compete = (EditText) rootView.findViewById(R.id.compSearch);
         titles = new ArrayList<String>();
     	dates  = new ArrayList<String>();
         
@@ -124,6 +125,7 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				String location = searchLocation.getText().toString();
 				String date = tvDate.getText().toString();
 				String time = tvTime.getText().toString();
+				String comp = compete.getText().toString();
 				
 				StringBuilder str = new StringBuilder();
 				str.append("/gtev/");
@@ -141,7 +143,8 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 				str.append(time);
 				Global.addSpaces(str, 4-time.length());
 				str.append("/");
-				Global.addSpaces(str, 1); //comp level
+				str.append(comp);
+				Global.addSpaces(str, 1-comp.length()); //comp level
 				str.append("/");
 				str.append("                         ");
 				str.append("/");
@@ -185,7 +188,7 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 		        	e.setCompetitivness(Integer.parseInt(s[i][7]));
 		        	//s[i][8] all attending users
 		        	//s[i][12] owning user
-		        	
+		        	e.setAttending_ind(1);
 		        	View page = Global.fillEventPage(e, inflater, container);
 		        	ll.setOnClickListener(new eventClickListener(e.getTitle(), page, e));
 		        	tv.setText("Title : " + e.getTitle());
@@ -330,13 +333,18 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 						e1.printStackTrace();
 					}
 					Log.d("Join Result", result);
-					Toast.makeText(getActivity(), "Event Joined", Toast.LENGTH_LONG).show();
+					if (result.equals("INVALID")) {
+						Toast.makeText(getActivity(), "Event Not Joined : Full", Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(getActivity(), "Event Joined", Toast.LENGTH_LONG).show();
+						//Add event to local database of joined events
+						e.setSpecificUser(Global.current_user.getAlias());
+						Global.userDatabase.joinEvent(e);
+					}
 					
 					
 					
-					//Add event to local database of joined events
-					e.setSpecificUser(Global.current_user.getAlias());
-					Global.userDatabase.joinEvent(e);
+					
 					
 				}
 			});
