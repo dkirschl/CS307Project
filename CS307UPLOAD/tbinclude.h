@@ -32,6 +32,7 @@ const int keyL = 5;
 const int evKeyL = 5;
 const int competeL = 2;
 const int titleL = 26;
+const int attendL = 4;
 
 void work(int);
 
@@ -48,7 +49,7 @@ void dataCreateUser(int,char *, char *, char *, char *, char *);
 //IDEA:		Accept into and create an event based on provided info.
 //OUTPUT:	Write confirmation back to user if successful.
 //RETURN:	NONE
-void dataCreateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *);
+void dataCreateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *, char *);
 
 //INPUT:	slaveSocket, key, password, name, alias, age, gender, desc.
 //IDEA:		Accept info, check if it is valid. If valid change relevent user data.
@@ -60,7 +61,7 @@ void dataUpdateUser(int,char *,char *,char *,char *,char *,char *,char *,char *)
 //IDEA:		Accept info, check if it is valid. If valid, change relevent event data.
 //OUTPUT:	Confirmation back if successful.
 //RETURN:	NONE
-void dataUpdateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *,char *);
+void dataUpdateEvent(int,char *,char *,char *,char *,char *,char *,char *,char *,char *,char *, char *);
 
 //INPUT:	Key, password, Event key
 //IDEA:		Accept info, check if valid. If valid, delete specified event.
@@ -76,13 +77,17 @@ void dataGetEvent(int,char *,char *,char *,char *,char *, char *);
 
 void dataDeleteUser(int, char *, char *);
 
-void dataJoinEvent(int, char *, char *,char *);
+void dataJoinEvent(int, char *, char *,char *, int);
 
 void dataUnJoinEvent(int, char *, char *, char *);
 
 void dataLogOn(int, char *, char *);//????
 
 void updateTopSports(int, char *, char *, char *, char *, char *);
+
+void getCreatedNumAttending(int, char *);
+
+void dataCheck(int, char *);
 
 //Internal uses
 
@@ -104,8 +109,14 @@ void resetCallback_return(void);
 
 bool checkAlias(char *);
 
+void unlockRow(char *);
+void lockRow(char *, char *);
+
 //check if a given event is owned by a given user
 bool isCorrectUser(char *, char *);
+
+int stringFindLocation(const char *, char *);
+void getAlias(char *, char *);
 
 int createDatabases();
 

@@ -13,6 +13,8 @@ void join(int);
 void unjn(int); 
 void lgon(int);
 void upts(int);  ///////////////// DYLAN, I ADDED AN UPDATE TOP SPORTS FUNCTION. DON'T PANIC. ///////////
+void crup(int);
+void chck(int);
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -125,12 +127,62 @@ void work(int slaveSocket)
 	{
 		upts(slaveSocket);					// update top sports for a user
 	}
+	else if(strcmp(input1,"/crup") == 0)
+	{
+		crup(slaveSocket);				
+	}
+	else if(strcmp(input1,"/chck") == 0)
+	{
+		chck(slaveSocket);
+	}
 	else 										//INVALID INPUT
 	{
 		invl(slaveSocket);
 	}
 }
 
+void chck(int slaveSocket)
+{
+	
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[5]; //# of events
+
+	//GET INPUT
+
+
+	readStuffs(slaveSocket, input2, 5);
+	
+	int temp = atoi(input2);	
+
+	if(temp <= 0)
+	{
+		char stringA[6] = "/chck";
+		printStandard(slaveSocket,stringA);
+		write(slaveSocket, "ISVALID0",8);
+		close(slaveSocket);
+		return;
+	}	 
+
+	char input3[temp * evKeyL];
+	
+	readStuffs(slaveSocket, input3,(temp * evKeyL));
+	read(slaveSocket, &next, sizeof(next));
+
+	readRemainder(slaveSocket);
+
+
+	//OTHER
+	char stringA[6] = "/chck";
+	printStandard(slaveSocket,stringA);
+
+	//database code
+	//dataDeleteUser(slaveSocket,input2,input3);
+	dataCheck(slaveSocket, input3);
+	close(slaveSocket);
+
+}
 
 //CREATE USER
 void crus(int slaveSocket)
@@ -167,6 +219,31 @@ void crus(int slaveSocket)
 	close(slaveSocket);
 }
 
+
+void crup(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL]; //key
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/crup";
+	printStandard(slaveSocket,stringA);
+	//database code
+	getCreatedNumAttending(slaveSocket,input2);
+
+	close(slaveSocket);
+}
 
 void deus(int slaveSocket)
 {
@@ -215,6 +292,7 @@ void crev(int slaveSocket)
 	char input8[summL];	//SUMM
 	char input9[competeL];		//compete
 	char input10[titleL];
+	char input11[attendL];
 
 
 	//GET INPUT
@@ -228,6 +306,7 @@ void crev(int slaveSocket)
 	 readStuffs(slaveSocket, input8, summL);
 	 readStuffs(slaveSocket, input9, competeL);
 	 readStuffs(slaveSocket, input10, titleL);
+	 readStuffs(slaveSocket, input11, attendL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -237,7 +316,7 @@ void crev(int slaveSocket)
 	char stringA[6] = "/crev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10);
+	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
 
 	close(slaveSocket);
 }
@@ -298,6 +377,7 @@ void upev(int slaveSocket)
 	char input9[summL];	//SUMM
 	char input10[competeL];	//SKILL
 	char input11[titleL];
+	char input12[attendL];
 
 
 	//GET INPUT
@@ -312,6 +392,7 @@ void upev(int slaveSocket)
 	 readStuffs(slaveSocket, input9, summL);
 	 readStuffs(slaveSocket, input10, competeL);
 	 readStuffs(slaveSocket, input11, titleL);
+	 readStuffs(slaveSocket, input12, attendL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -319,7 +400,7 @@ void upev(int slaveSocket)
 	char stringA[6] = "/upev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+	dataUpdateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11, input12);
 
 	close(slaveSocket);
 }
@@ -414,7 +495,7 @@ void join(int slaveSocket)
 	printStandard(slaveSocket,stringA);
 	//database code
 	//dataDeleteEvent(slaveSocket,input2,input3,input4);
-	dataJoinEvent(slaveSocket,input2,input3,input4);
+	dataJoinEvent(slaveSocket,input2,input3,input4, 0);
 	
 	close(slaveSocket);
 }
@@ -546,7 +627,7 @@ void readRemainder(int slaveSocket)
 		{
 
 			read(slaveSocket, &next, sizeof(next));
-			printf("%c\n", next);
+			printf("%c", next);
 
 			if (next == '\n' && last == '\r')
 			{
@@ -554,6 +635,7 @@ void readRemainder(int slaveSocket)
 				read(slaveSocket, &next, sizeof(next));
 				if(next == '\n' && last == '\r')
 				{
+					printf("\n");
 					break;
 				}
 			}
