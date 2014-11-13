@@ -335,6 +335,7 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 					
 					
 					//Add event to local database of joined events
+					e.setSpecificUser(Global.current_user.getAlias());
 					Global.userDatabase.joinEvent(e);
 					
 				}

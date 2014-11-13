@@ -228,6 +228,7 @@ public class CreateEventFragment extends Fragment {
 					Log.d("Create", ""+res);
 					//event.setKey(res);
 					event = new Event(res,sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE, Global.USER_CREATED_YES);
+					event.setSpecificUser(Global.current_user.getAlias());
 					sportEdit.setText("");
 					locEdit.setText("");
 					tvDate.setText("");
