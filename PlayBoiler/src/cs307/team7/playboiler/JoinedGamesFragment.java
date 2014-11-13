@@ -50,6 +50,7 @@ public class JoinedGamesFragment extends Fragment {
         	ll.setOnClickListener(new eventClickListener(joinedEvents.get(i).getTitle(), page, joinedEvents.get(i)));
         	tv.setText("Title : " + joinedEvents.get(i).getTitle());
         	tv2.setText("Date : " + joinedEvents.get(i).getDate());
+        	//aaa
         	contain.addView(ll);
 		}
 				
