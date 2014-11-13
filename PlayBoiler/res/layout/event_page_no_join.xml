@@ -94,5 +94,21 @@
         android:layout_below="@id/epnjLoc"
         android:background="@android:color/holo_blue_dark"
         android:id="@+id/buf3"/>
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currAttending9"
+        android:hint="----"
+        android:layout_below="@id/epnjSport"
+        />
+
+    <TextView
+        android:id="@+id/maxAttending9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:hint="----"
+        android:layout_below="@id/epnjSport" />
 
 </RelativeLayout>

@@ -20,11 +20,15 @@ public class Global {
 		TextView time = (TextView) v.findViewById(R.id.epnjTime);
 		TextView loc = (TextView) v.findViewById(R.id.epnjLoc);
 		TextView sport = (TextView) v.findViewById(R.id.epnjSport);
+		TextView currAttending = (TextView) v.findViewById(R.id.currAttending9);
+		TextView maxPlayers = (TextView) v.findViewById(R.id.maxAttending9);
 		//title.setText(e.getTitle());
 		date.setText(e.getDate());
 		time.setText(e.getTime());
 		loc.setText(e.getLocation());
 		sport.setText(e.getSport());
+		currAttending.setText(String.valueOf(e.getCurrentNumberAttending()));
+		maxPlayers.setText(String.valueOf(e.getMaxPlayers()));
 		
     	return v;
     }
