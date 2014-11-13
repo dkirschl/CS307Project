@@ -32,9 +32,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " +
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
 				"proficiencies TEXT, " + "password TEXT)";
-		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id INTEGER PRIMARY KEY, " + "sport TEXT, " + "location TEXT, " + 
+		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER, " + "max_attending INTEGER, " + "created TEXT, "+
-				"specific_user TEXT, " + "number_attending INTEGER)";
+				"specific_user TEXT, " + "number_attending INTEGER, PRIMARY KEY (id, specific_user))";
 		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "sport_type TEXT PRIMARY KEY)";
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
@@ -405,7 +405,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND" + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() +"'";
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND " + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() +"'";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
