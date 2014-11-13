@@ -99,7 +99,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getReadableDatabase();
 		String query = 	"SELECT " + GAMES_SPORT + ", COUNT(" + GAMES_SPORT + ")" +
 						" FROM " + GAMES_TABLE + 
-						" WHERE " + GAMES_ATTENDING_IND + "=" + 3 + " AND " + GAMES_SPECIFIC_USER + "=" + Global.current_user.getAlias() +
+						" WHERE " + GAMES_ATTENDING_IND + "=" + 3 + " AND " + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() + "'" +
 						" GROUP BY " + GAMES_SPORT + 
 						" ORDER BY COUNT(" + GAMES_SPORT + ") desc limit 3";
 		
@@ -370,7 +370,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=3" + " AND " + GAMES_SPECIFIC_USER + "=" + Global.current_user.getAlias();
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=3" + " AND " + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() + "'";
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
@@ -405,7 +405,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND" + GAMES_SPECIFIC_USER + "=" + Global.current_user.getAlias();
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND" + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() +"'";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
@@ -442,7 +442,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		// double crazy changes
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_CREATED + "='yes' AND " + GAMES_SPECIFIC_USER + "=" + Global.current_user.getAlias();
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_CREATED + "='yes' AND " + GAMES_SPECIFIC_USER + "='" + Global.current_user.getAlias() + "'";
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
