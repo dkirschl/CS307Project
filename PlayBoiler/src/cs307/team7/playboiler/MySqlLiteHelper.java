@@ -319,9 +319,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public Event deleteEvent(Event event)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		String query = "DELETE FROM " + GAMES_TABLE + " WHERE " + GAMES_KEY + "=" + event.getKey();
-		
-		db.rawQuery(query, null);
+		db.delete(GAMES_TABLE, GAMES_KEY + "=" + event.getKey(), null);
 		db.close();
 		return event;
 	}
@@ -386,7 +384,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND " + GAMES_CURR_USER + "=" + Global.current_user.getAlias();
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2)";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
