@@ -172,12 +172,24 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 		        	//Log.d("Info", s[i][0] + s[i][1] + s[i][2] + s[i][3] + s[i][4]);
 		        	//e.setTitle(s[i][4]); e.setDate(s[i][2]); e.setTime(s[i][3]); e.setLocation(s[i][0]); e.setSport(s[i][1]);
 		        	//e.setTitle(s[i][0]); e.setDate(s[i][1]);
-		        	e.setTitle(s[i][9]); e.setDate(s[i][3]); e.setTitle(s[i][4]); e.setLocation(s[i][2]); e.setMaxPlayers(Integer.parseInt(s[i][11])); e.setSummary(s[i][6]); e.setKey(Integer.parseInt(s[i][0])); e.setCreating_user(s[i][5]);
+		        	e.setKey(Integer.parseInt(s[i][0]));
+		        	e.setSport(s[i][1]);
+		        	e.setLocation(s[i][2]);
+		        	e.setDate(s[i][3]);
+		        	e.setTime(s[i][4]);
+		        	e.setCreating_user(s[i][5]);
+		        	e.setTitle(s[i][9]);
+		        	e.setSummary(s[i][6]);
+		        	e.setCurrentNumberAttending(Integer.parseInt(s[i][10]));
+		        	e.setMaxPlayers(Integer.parseInt(s[i][11]));
+		        	e.setCompetitivness(Integer.parseInt(s[i][7]));
+		        	//s[i][8] all attending users
+		        	//s[i][12] owning user
 		        	
 		        	View page = Global.fillEventPage(e, inflater, container);
-		        	ll.setOnClickListener(new eventClickListener(s[i][0], page, e));
-		        	tv.setText("Title : " + s[i][9]);
-		        	tv2.setText("Date : " + s[i][3]);
+		        	ll.setOnClickListener(new eventClickListener(e.getTitle(), page, e));
+		        	tv.setText("Title : " + e.getTitle());
+		        	tv2.setText("Date : " + e.getDate());
 		        	contain.addView(ll);
 				}
 				

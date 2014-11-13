@@ -421,7 +421,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		// double crazy changes
 		List<Event> events = new LinkedList<Event>();
 		
-		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_CREATED + "'yes'";
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_CREATED + "='yes'";
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);

@@ -156,7 +156,6 @@ public class CreateEventFragment extends Fragment {
 				String edittedTime = tvTime.getText().toString();
 				edittedTime = edittedTime.replace(":", "");
 				edittedDate = edittedDate.replace("-", "");
-				event = new Event(sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE);
 				
 				int sportLen = 30;
 				int locLen = 30;
@@ -175,11 +174,11 @@ public class CreateEventFragment extends Fragment {
 				str.append(password);
 				Global.addSpaces(str, passLen - password.length());
 				str.append("/");
-				str.append(event.getSport());
-				Global.addSpaces(str, sportLen - event.getSport().length());
+				str.append(sportEdit.getText().toString());
+				Global.addSpaces(str, sportLen - sportEdit.getText().toString().length());
 				str.append("/");
-				str.append(event.getLocation());
-				Global.addSpaces(str, locLen - event.getLocation().length());
+				str.append(locEdit.getText().toString());
+				Global.addSpaces(str, locLen - locEdit.getText().toString().length());
 				str.append("/");
 				//String date = event.getDate();
 				//date = date.replace("-", "");
@@ -192,31 +191,25 @@ public class CreateEventFragment extends Fragment {
 				Global.addSpaces(str, timeLen-edittedTime.length());
 				str.append("/");
 				//summary
-				String summary = event.getSummary();
+				String summary = sumEdit.getText().toString();
 				str.append(summary);
 				Global.addSpaces(str, sumLen-summary.length());
 				str.append("/");
 				//comp
 				str.append(1);
 				str.append("/");
-				str.append(event.getTitle());
-				Global.addSpaces(str, titleLen - event.getTitle().length());
+				str.append(titleEdit.getText().toString());
+				Global.addSpaces(str, titleLen - titleEdit.getText().toString().length());
 				str.append("/");
-				str.append(event.getMaxPlayers());
-				String maxPlayersString = ""+event.getMaxPlayers();
-				Global.addSpaces(str, maxPlayerLen - maxPlayersString.length());
+				str.append(maxPlay.getText().toString());
+				//String maxPlayersString = ""+event.getMaxPlayers();
+				Global.addSpaces(str, maxPlayerLen - maxPlay.getText().toString().length());
 				str.append("/");
 				str.append("\r\n");
 				Log.d("The Message", str.toString());
 				
 				NetworkHandler nh = new NetworkHandler();
-				sportEdit.setText("");
-				locEdit.setText("");
-				tvDate.setText("");
-				tvTime.setText("");
-				titleEdit.setText("");
-				sumEdit.setText("");
-				maxPlay.setText("");
+				
 				
 				String result = null;
 				try {
@@ -232,7 +225,16 @@ public class CreateEventFragment extends Fragment {
 				} else {
 					result = result.replace("|", "");
 					int res = Integer.parseInt(result.substring(7));
-					event.setKey(res);
+					Log.d("Create", ""+res);
+					//event.setKey(res);
+					event = new Event(res,sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE, Global.USER_CREATED_YES);
+					sportEdit.setText("");
+					locEdit.setText("");
+					tvDate.setText("");
+					tvTime.setText("");
+					titleEdit.setText("");
+					sumEdit.setText("");
+					maxPlay.setText("");
 					Global.userDatabase.addEvent(event);
 					Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
 				}

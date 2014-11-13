@@ -13,6 +13,20 @@ public class Event {
 	private String summary;
 	private int maxPlayers;
 	private String created;
+	private int currentNumberAttending;
+	private int competitivness;
+	public int getCompetitivness() {
+		return competitivness;
+	}
+	public void setCompetitivness(int competitivness) {
+		this.competitivness = competitivness;
+	}
+	public int getCurrentNumberAttending() {
+		return currentNumberAttending;
+	}
+	public void setCurrentNumberAttending(int currentNumberAttending) {
+		this.currentNumberAttending = currentNumberAttending;
+	}
 	//comment
 	public Event()
 	{
@@ -24,8 +38,10 @@ public class Event {
 		title = "";
 		creating_user = "";
 		attending_ind = 0;
+		currentNumberAttending = 0;
 		summary = "";
 		created = "";
+		competitivness = 1;
 	}
 	public Event(int k, String s, String l, String d, String t1, String t2, String cu, String su, int max, int a, String c)
 	{

@@ -10,6 +10,8 @@ public class Global {
 	public static User current_user;
 	public static int temp_key;
 	public static int USER_CREATED_EVENT_CODE = 2;
+	public static String USER_CREATED_YES = "yes";
+	public static String USER_CREATED_NO = "no";
 	
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
