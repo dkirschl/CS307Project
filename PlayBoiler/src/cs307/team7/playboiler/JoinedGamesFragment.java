@@ -40,7 +40,7 @@ public class JoinedGamesFragment extends Fragment {
 		Log.d("JOINED", "Ping");
 		final LinearLayout contain = (LinearLayout) rootView.findViewById(R.id.joinedContainer);
 		List<Event> joinedEvents = Global.userDatabase.getJoinedGames();
-		
+		Log.d("Joined Games", ""+joinedEvents.size());
 		for (int i = 0; i < joinedEvents.size(); i++) {
 			View ll = inflater.inflate(R.layout.event_view, container, false);
 			TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);
