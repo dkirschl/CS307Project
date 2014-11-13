@@ -15,6 +15,9 @@ public class Event {
 	private String created;
 	private int currentNumberAttending;
 	private int competitivness;
+	private String specificUser;
+	private int attending;
+	
 	public int getCompetitivness() {
 		return competitivness;
 	}
@@ -42,6 +45,14 @@ public class Event {
 		summary = "";
 		created = "";
 		competitivness = 1;
+		specificUser = "";
+		attending = 0;
+	}
+	public int getAttending() {
+		return attending;
+	}
+	public void setAttending(int attending) {
+		this.attending = attending;
 	}
 	public Event(int k, String s, String l, String d, String t1, String t2, String cu, String su, int max, int a, String c)
 	{
@@ -56,6 +67,12 @@ public class Event {
 		attending_ind = a;
 		maxPlayers = max;
 		created = c;
+	}
+	public String getSpecificUser() {
+		return specificUser;
+	}
+	public void setSpecificUser(String specificUser) {
+		this.specificUser = specificUser;
 	}
 	public String getCreated() {
 		return created;
