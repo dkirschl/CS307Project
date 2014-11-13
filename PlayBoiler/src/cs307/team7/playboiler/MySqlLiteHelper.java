@@ -386,7 +386,11 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		List<Event> events = new LinkedList<Event>();
 		
+<<<<<<< HEAD
 		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ATTENDING_IND + "=1";
+=======
+		String query = "SELECT * FROM " + GAMES_TABLE + " WHERE (" + GAMES_ATTENDING_IND + "=1 OR " + GAMES_ATTENDING_IND + "=2) AND " + GAMES_CURR_USER + "=" + Global.current_user.getAlias();
+>>>>>>> ee3beb066c58ee9e27d1df6fdf516db990a3a5fc
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		Cursor cursor = db.rawQuery(query, null);
