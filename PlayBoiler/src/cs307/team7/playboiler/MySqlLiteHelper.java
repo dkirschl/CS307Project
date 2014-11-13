@@ -50,7 +50,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		this.onCreate(db);
 	}
-	
+	// hello
 	public static final String USER_TABLE = "user_profile";
 	public static final String USER_KEY = "id";
 	public static final String USER_NAME = "name";
