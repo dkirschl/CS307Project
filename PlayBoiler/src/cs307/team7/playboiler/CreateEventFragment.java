@@ -196,7 +196,7 @@ public class CreateEventFragment extends Fragment {
 				Global.addSpaces(str, sumLen-summary.length());
 				str.append("/");
 				//comp
-				str.append(1);
+				str.append(compete.getText());
 				str.append("/");
 				str.append(titleEdit.getText().toString());
 				Global.addSpaces(str, titleLen - titleEdit.getText().toString().length());
@@ -236,6 +236,7 @@ public class CreateEventFragment extends Fragment {
 					titleEdit.setText("");
 					sumEdit.setText("");
 					maxPlay.setText("");
+					compete.setText("");
 					Global.userDatabase.addEvent(event);
 					Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
 				}
