@@ -2,8 +2,10 @@ package cs307.team7.playboiler;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Global {
 	public static MySqlLiteHelper userDatabase;
@@ -12,6 +14,8 @@ public class Global {
 	public static int USER_CREATED_EVENT_CODE = 2;
 	public static String USER_CREATED_YES = "yes";
 	public static String USER_CREATED_NO = "no";
+	public static final int DECLINE = 0;
+	public static final int ACCEPT = 1;
 	
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
@@ -40,4 +44,29 @@ public class Global {
     	return sb;
     	
     }
+	
+	public static class RequestClickListener implements OnClickListener {
+
+		int action;
+		View message;
+		
+		public RequestClickListener(int action, View message) {
+			this.action = action;
+			this.message = message;
+		}
+		
+		@Override
+		public void onClick(View v) {
+			switch (action) {
+			case DECLINE:
+				Toast.makeText(v.getContext(), "Friend Request Declined.", Toast.LENGTH_SHORT).show();
+				break;
+			case ACCEPT:
+				Toast.makeText(v.getContext(), "Friend Request Accepted!", Toast.LENGTH_SHORT).show();
+				break;
+			}
+			((ViewGroup)message.getParent()).removeView(message);
+		}
+		
+	}
 }

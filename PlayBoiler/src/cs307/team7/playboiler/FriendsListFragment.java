@@ -34,7 +34,9 @@ public class FriendsListFragment extends Fragment {
             Bundle savedInstanceState) {
     	
     	final View rootView = inflater.inflate(R.layout.friends_list, container, false);
-    	List<String> friends = Global.userDatabase.getAllFriends();
+    	List<Integer> friends = Global.userDatabase.getFriends(Global.current_user.getKey());
+    	StringBuilder message = new StringBuilder();
+    			
     	
     	LinearLayout contain = (LinearLayout) rootView.findViewById(R.id.friendsListContainer);
     	for (int i = 0; i < friends.size(); i++) {

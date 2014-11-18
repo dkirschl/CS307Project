@@ -1,11 +1,15 @@
 package cs307.team7.playboiler;
 
+import cs307.team7.playboiler.Global.RequestClickListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class FrontPageFragment extends Fragment {
     /**
@@ -28,6 +32,18 @@ public class FrontPageFragment extends Fragment {
     	
     	
         View rootView = inflater.inflate(R.layout.front_page, container, false);
+        LinearLayout messagesContainer = (LinearLayout) rootView.findViewById(R.id.messagesContainer);
+        //Get messages
+        
+        //PLACEHOLDER MESSAGE FOR TESTING
+        View testMessage = inflater.inflate(R.layout.friend_request, container, false);
+        Button yes = (Button) testMessage.findViewById(R.id.acceptRequest);
+        Button no = (Button) testMessage.findViewById(R.id.declineRequest);
+        yes.setOnClickListener(new RequestClickListener(Global.ACCEPT, testMessage));
+        no.setOnClickListener(new RequestClickListener(Global.DECLINE, testMessage));
+        messagesContainer.addView(testMessage);
+        //////////////////////////////////////
+        
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
         return rootView;
