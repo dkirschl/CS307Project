@@ -1,5 +1,9 @@
 package cs307.team7.playboiler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,11 +13,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class MySqlLiteHelper extends SQLiteOpenHelper
 {
@@ -31,7 +30,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		Log.d("Database", "Database being initialized in onCreate()");
 		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " +
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
-				"proficiencies TEXT, " + "password TEXT)";
+				"proficiencies TEXT, " + "password TEXT, " + "friends TEXT)";
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER, " + "max_attending INTEGER, " + "created TEXT, "+
 				"specific_user TEXT, " + "number_attending INTEGER, PRIMARY KEY (id, specific_user))";
@@ -60,9 +59,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String USER_DESCRIPTION = "description";
 	public static final String USER_PROFICIENCIES = "proficiencies";
 	public static final String USER_PASSWORD = "password";
+	public static final String USER_FRIENDS = "friends";
 	
 	public static final String[] USER_COLUMNS = {USER_KEY, USER_NAME, USER_ALIAS, USER_GENDER, USER_AGE, USER_DESCRIPTION
-		, USER_PROFICIENCIES, USER_PASSWORD};
+		, USER_PROFICIENCIES, USER_PASSWORD, USER_FRIENDS};
 	
 	public static final String GAMES_TABLE = "past_games";
 	public static final String GAMES_KEY = "id";
@@ -143,9 +143,118 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 			return_user.setDescription(cursor.getString(5));
 			return_user.setProficiencies(cursor.getString(6));
 			return_user.setPassword(cursor.getString(7));
+			return_user.setFriends(cursor.getString(8));
 		}
 		db.close();
 		return return_user;
+	}
+	public boolean addFriend(int user_key, int friend_key)
+	{
+		String friends_list = "";
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String get_friends_query = "SELECT friends FROM " + USER_TABLE + " WHERE " + USER_KEY + " = " + user_key;
+		Cursor cursor = db.rawQuery(get_friends_query, null);
+		
+		if(!cursor.moveToFirst())
+		{
+			Log.d("Database", "Something really isn't correct");
+			return false;
+		}
+		else
+		{
+			friends_list = cursor.getString(0);
+		}
+		String[] remover = friends_list.split("~");
+		StringBuilder s = new StringBuilder();
+		
+		int x = 0;
+		while(x<remover.length)
+		{
+			if(Integer.parseInt(remover[x]) == friend_key)
+			{
+				return false;
+			}
+			x++;
+		}
+		s.append(friends_list);
+		s.append("~"+friend_key);
+		
+		friends_list = s.toString();
+		
+		ContentValues values = new ContentValues();
+		values.put(USER_FRIENDS, friends_list);
+		db.update(USER_TABLE, values, USER_KEY + "=" + user_key, null);
+		db.close();
+		
+		return true;
+	}
+	public boolean removeFriend(int user_key, int friend_key)
+	{
+		String friends_list = "";
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String get_friends_query = "SELECT " + USER_FRIENDS + " FROM " + USER_TABLE + " WHERE " + USER_KEY + " = " + user_key;
+		Cursor cursor = db.rawQuery(get_friends_query, null);
+		
+		if(!cursor.moveToFirst())
+		{
+			Log.d("Database", "Something really isn't correct");
+			return false;
+		}
+		else
+		{
+			friends_list = cursor.getString(0);
+		}
+		String[] remover = friends_list.split("~");
+		StringBuilder s = new StringBuilder();
+		
+		int x = 0;
+		while(x<remover.length)
+		{
+			if(!(Integer.parseInt(remover[x]) == friend_key))
+			{
+				s.append("~" + remover[x]);
+			}
+			x++;
+		}
+		friends_list = s.toString();
+		ContentValues values = new ContentValues();
+		values.put(USER_FRIENDS, friends_list);
+		db.update(USER_TABLE, values, USER_KEY + "=" + user_key, null);
+		db.close();
+		
+		return true;
+	}
+	public ArrayList<Integer> getFriends(int user_key)
+	{
+		ArrayList<Integer> friends_list = new ArrayList<Integer>();
+		String friends = "";
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String get_friends_query = "SELECT friends FROM " + USER_TABLE + " WHERE " + USER_KEY + " = " + user_key;
+		Cursor cursor = db.rawQuery(get_friends_query, null);
+		
+		if(!cursor.moveToFirst())
+		{
+			Log.d("Database", "Something really isn't correct");
+			return friends_list;
+		}
+		else
+		{
+			friends = cursor.getString(0);
+			String[] f = friends.split("~");
+			int x = 0;
+			while(x < f.length)
+			{
+				friends_list.add(Integer.parseInt(f[x]));
+				x++;
+			}
+		}
+		return friends_list;
 	}
 	public void addUser(User user)
 	{
@@ -160,6 +269,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(USER_AGE, user.getAge());
 		values.put(USER_GENDER, user.getGender());
 		values.put(USER_PASSWORD, user.getPassword());
+		values.put(USER_FRIENDS, user.getFriends());
 		
 		db.insert(USER_TABLE, null, values);
 		db.close();
@@ -196,6 +306,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		return_user.setAge(Integer.parseInt(cursor.getString(3))); //switched age and gender. May have to switch back
 		return_user.setDescription(cursor.getString(5));
 		return_user.setProficiencies(cursor.getString(6));
+		return_user.setFriends(cursor.getString(8));
 		Log.d("Database", "Name : " + return_user.getName());
 		db.close();
 		return return_user;
@@ -204,39 +315,19 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		String query = "UPDATE " + USER_TABLE + " SET " + USER_NAME + "='" + user.getName() + "'," + USER_ALIAS + "='" + user.getAlias() + "'," + USER_GENDER + "='" + user.getGender() +"'," + 
+		/*String query = "UPDATE " + USER_TABLE + " SET " + USER_NAME + "='" + user.getName() + "'," + USER_ALIAS + "='" + user.getAlias() + "'," + USER_GENDER + "='" + user.getGender() +"'," + 
 		USER_AGE + "='" + user.getAge() + "'," + USER_DESCRIPTION + "='" + user.getDescription() +"'," + USER_PROFICIENCIES + "='" + user.getProficiencies() + "' " +
-				"WHERE " + USER_KEY + "=" + user.getKey();
-		Cursor cursor = db.rawQuery(query, null);
-		Log.d("Database", query);
-		User return_user = new User();
-		if(!cursor.moveToFirst())
-		{
-			Log.d("Database", "User information isn't stored locally");
-			return return_user;
-		}
-		else //means that the information is stored locally
-		{
-			return_user.setKey(Integer.parseInt(cursor.getString(0)));
-			return_user.setName(cursor.getString(1));
-			return_user.setAlias(cursor.getString(2));
-			return_user.setGender(cursor.getString(4));
-			return_user.setAge(Integer.parseInt(cursor.getString(3))); //switched age and gender. May have to switch back
-			return_user.setDescription(cursor.getString(5));
-			return_user.setProficiencies(cursor.getString(6));
-		}
-		db.close();
-	/*	ContentValues values = new ContentValues();
-		values.put(USER_KEY, user.getKey());
+				"WHERE " + USER_KEY + "=" + user.getKey();*/
+		ContentValues values = new ContentValues();
 		values.put(USER_NAME, user.getName());
 		values.put(USER_ALIAS, user.getAlias());
 		values.put(USER_GENDER, user.getGender());
 		values.put(USER_AGE, user.getAge());
 		values.put(USER_DESCRIPTION, user.getDescription());
 		values.put(USER_PROFICIENCIES, user.getProficiencies());
-
 		
-		db.update(USER_TABLE, values, "key =", new String[]{String.valueOf(user.getKey())});*/
+		db.update(USER_TABLE, values, USER_KEY + "=" + user.getKey(), null);
+		db.close();
 		
 		return user;
 	}

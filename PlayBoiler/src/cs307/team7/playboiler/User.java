@@ -10,6 +10,7 @@ public class User {
 	private String description;
 	private String proficiencies;
 	private String password;
+	private String friends;
 	
 	public User()
 	{
@@ -21,6 +22,7 @@ public class User {
 		description = "";
 		proficiencies = "";
 		password = "";
+		friends = "";
 	}
 	
 	public User(int k, String n, String a, String g, int ag, String d, String p, String p2)
@@ -33,6 +35,7 @@ public class User {
 		description = d;
 		proficiencies = p;
 		password = p2;
+		friends = "";
 	}
 	
 	public User(int k, String n, String a, String g, int ag, String p2)
@@ -43,6 +46,15 @@ public class User {
 		gender = g;
 		age = ag;
 		password = p2;
+		friends = "";
+	}
+
+	public String getFriends() {
+		return friends;
+	}
+
+	public void setFriends(String friends) {
+		this.friends = friends;
 	}
 
 	public String getPassword() {
