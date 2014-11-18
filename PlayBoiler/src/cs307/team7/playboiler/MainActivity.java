@@ -36,7 +36,6 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("app", "Ping");
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -185,6 +184,11 @@ public class MainActivity extends Activity
         		.replace(R.id.container, PastGamesFragment.newInstance(position+1))
         		.commit();
         		break;
+        	case 7:
+        		fragmentManager.beginTransaction()
+        		.replace(R.id.container, PastGamesFragment.newInstance(position+1))
+        		.commit();
+        		break;
         
         }
     	
@@ -214,6 +218,9 @@ public class MainActivity extends Activity
             	break;
             case 7:
             	mTitle = getString(R.string.title_section7);
+            	break;
+            case 8:
+            	mTitle = getString(R.string.title_section8);
             	break;
         }
     }

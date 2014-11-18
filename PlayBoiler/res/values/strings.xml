@@ -9,6 +9,7 @@
     <string name="title_section5">Created Games</string>
     <string name="title_section6">Joined Games</string>
     <string name="title_section7">Past Games</string>
+    <string name="title_section8">Friends List</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>

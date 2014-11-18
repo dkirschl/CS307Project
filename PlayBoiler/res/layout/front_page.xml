@@ -26,24 +26,27 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="20dp"
         android:background="@android:color/white"
         android:id="@+id/profileSummary"
         android:gravity="center"
         android:layout_below="@id/test"
-        android:textSize="30sp"
-        android:text="Profile Info" />
+        android:textSize="25sp"
+        android:text="Messages" />
     
-    <TextView
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profileSummary"
+        android:background="@android:color/white">
+    <LinearLayout
+        android:id="@+id/messagesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:layout_margin="20dp"
-        android:padding="20dp"
-        android:gravity="center"
-        android:layout_below="@id/profileSummary"
-        android:textSize="30sp"
-        android:text="News?" />
+        android:orientation="vertical"
+        android:padding="5sp">
+    </LinearLayout>
+</ScrollView>
+    
+    
 
 </RelativeLayout>
