@@ -111,23 +111,95 @@ void child(int sig)
 	while(waitpid(-1, NULL, WNOHANG) > 0); 
 }
 
+using namespace std;
+
+#include <time.h>
+
+void * dispatchAuto(void * nothing)
+{
+		char *zErrMsg = 0;
+		int rc;
+		int results;
+		int file_entry;
+		const char* data = "Callback function called";
+		
+		time_t now;
+		struct tm tstruct;
+		char date[80], timeA[80];
+		
+
+		
+		string callback_return;
+		sqlite3 *db;
+		std::string query;
+		
+		while(1)
+		{
+			printf("Where is the leak ma'am?\n");
+			
+			now = time(0);
+			tstruct = *localtime(&now);
+			strftime(date,sizeof(date),"%Y%m%d",&tstruct);
+			strftime(timeA,sizeof(timeA), "%H%M", &tstruct);
+			query = "DELETE FROM EVENTS WHERE date<"+ string(date)+" OR (date="+string(date)+" AND time<"+string(timeA) +");";
+			printf("%s\n",query.c_str());
+
+			if(!dbOpen){
+				rc = sqlite3_open("serverDatabase.db", &db);
+				dbOpen = true;
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+				}
+			}
+
+			results = sqlite3_exec(db, query.c_str(), NULL, (void*) data, &zErrMsg);
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "Automated complete\n");
+			}
+			
+			//fprintf(stdout, "callback_return: %s\n", callback_return.c_str());
+				
+			sqlite3_close(db);
+			dbOpen = false;
+			printf("Fixed it, nap time.\n");
+			sleep(3600);
+		}
+}
+
 void createThreadForEachRequest ( int masterSocket)
 {
+	//new
+	pthread_t autoM;
+	printf("making complete\n");
+	//pthread_attr_t attrM;
+	//pthread_attr_init(&attrM);
+	//pthread_attr_setdetachstate(&attrM, PTHREAD_CREATE_DETACHED);
+	pthread_create(&autoM, (const pthread_attr_t *)NULL, dispatchAuto, (void*) NULL);
+	//pthread_attr_destroy(&attrM);
+	
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	//not new
+	
+	
 	printf("Here\n");
 	while(1)
 	{
 		printf("making\n");
 		struct sockaddr_in clientIPAddress;
-    		int alen = sizeof( clientIPAddress );
-    		int slaveSocket = accept( masterSocket,(struct sockaddr*) &clientIPAddress,(socklen_t*) &alen);
+		int alen = sizeof( clientIPAddress );
+		int slaveSocket = accept( masterSocket,(struct sockaddr*) &clientIPAddress,(socklen_t*) &alen);
 		printf("making attempt\n");
 		pthread_t thread;
 		if(slaveSocket >= 0)
 		{
 			printf("making complete\n");
-			pthread_attr_t attr;
-			pthread_attr_init(&attr);
-			pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 			pthread_create(&thread, &attr, dispatchHTTP, (void*) &slaveSocket);
 		}
 		else

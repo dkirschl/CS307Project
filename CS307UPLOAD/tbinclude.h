@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sqlite3.h>
+#include <algorithm>
 
 const int sportL = 31;
 const int locL = 31;
@@ -117,6 +118,8 @@ bool isCorrectUser(char *, char *);
 
 int stringFindLocation(const char *, char *);
 void getAlias(char *, char *);
+
+char * aliasesFromIDs(char *);
 
 int createDatabases();
 

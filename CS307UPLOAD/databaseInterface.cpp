@@ -15,7 +15,16 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 	fprintf(stdout, "%d\n", argc);
 	for(i = 0; i<argc; i++){
 		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-		callback_return += string(argv[i]);
+		if(strcmp(azColName[i],"attendingUsers") == 0 || strcmp(azColName[i],"friendsList") == 0){
+			string aliasList;			
+			//argv[i] will be list of ids that need to be translated
+			
+			aliasList = string(aliasesFromIDs(argv[i]));
+			callback_return += aliasList.c_str();
+		} else {
+			callback_return += string(argv[i]);
+		}
+		
 		if(i != (argc - 1)){
 			callback_return += "~";
 		}
@@ -1541,3 +1550,46 @@ void unlockRow(char * evKey){
 	
 	
 }
+
+char * aliasesFromIDs(char * idList )
+{
+	string s = string(idList);
+	replace(s.begin(), s.end(), '*', ',');
+	s = s.substr(0,s.size()-1);
+
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback function called";
+
+		resetCallback_return();	
+
+		query = "SELECT alias FROM USERS WHERE id in ("+s+");";
+
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "aliases converted\n");
+		}
+
+		return (char *)callback_return.c_str();
+	
+}
+
+
