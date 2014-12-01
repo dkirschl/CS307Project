@@ -186,7 +186,7 @@ public class MainActivity extends Activity
         		break;
         	case 7:
         		fragmentManager.beginTransaction()
-        		.replace(R.id.container, PastGamesFragment.newInstance(position+1))
+        		.replace(R.id.container, FriendsListFragment.newInstance(position+1))
         		.commit();
         		break;
         
