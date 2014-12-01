@@ -31,13 +31,21 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " +
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
 				"proficiencies TEXT, " + "password TEXT, " + "friends TEXT)";
+		
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER, " + "max_attending INTEGER, " + "created TEXT, "+
 				"specific_user TEXT, " + "number_attending INTEGER, PRIMARY KEY (id, specific_user))";
+		
 		String CREATE_GAMES_TYPE_TABLE = "CREATE TABLE types_of_games (" + "sport_type TEXT PRIMARY KEY)";
+		
+		String CREATE_REOCURRING_GAMES_TABLE = "CREATE TABLE reoccuring_games (" + "id INTEGER PRIMARY KEY, " + "start_date TEXT, " + "end_date TEXT, " +"sport TEXT, " + "location TEXT, " + 
+				"time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "max_attending INTEGER, " + "created TEXT, "+
+				"specific_user TEXT, "+ "monday TEXT, " + "tuesday TEXT, " + "wednesday TEXT, " + "thursday TEXT, " + "friday TEXT, " + "saturday TEXT, " + "sunday TEXT)";
+		
 		db.execSQL(CREATE_GAMES_TABLE);
 		db.execSQL(CREATE_USER_PROFILE_TABLE);
 		db.execSQL(CREATE_GAMES_TYPE_TABLE);
+		db.execSQL(CREATE_REOCURRING_GAMES_TABLE);
 	}
 	
 	@Override
@@ -46,6 +54,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		db.execSQL("DROP TABLE IF EXISTS user_profile");
 		db.execSQL("DROP TABLE IF EXISTS past_games");
 		db.execSQL("DROP TABLE IF EXISTS types_of_games");
+		db.execSQL("DROP TABLE IF EXISTS reoccuring_games");
 		
 		this.onCreate(db);
 	}
@@ -86,6 +95,24 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String GAMES_TYPE_KEY = "id";
 	public static final String GAMES_TYPE = "sport_type";
 	public static final String[] TYPE_COLUMN = {GAMES_TYPE_KEY, GAMES_TYPE};
+	
+	public static final String R_GAMES_TABLE = "reoccuring_games";
+	public static final String R_GAMES_START_DATE = "start_date";
+	public static final String R_GAMES_END_DATE = "end_date";
+	public static final String R_GAMES_KEY ="id";
+	public static final String R_MONDAY = "monday";
+	public static final String R_TUESDAY = "tuesday";
+	public static final String R_WEDNESDAY = "wednesday";
+	public static final String R_THURSDAY = "thursday";
+	public static final String R_FRIDAY = "friday";
+	public static final String R_SATURDAY = "saturday";
+	public static final String R_SUNDAY = "sunday";
+
+
+
+	
+	public static final String[] REOCCURING_GAMES_COLUMNS = {R_GAMES_KEY, R_GAMES_START_DATE, R_GAMES_END_DATE, GAMES_SPORT, GAMES_LOCATION, GAMES_TIME, GAMES_TITLE, GAMES_SUMMARY, 
+		GAMES_CREATING_USER, GAMES_MAX_ATTENDING, GAMES_CREATED, GAMES_SPECIFIC_USER, R_MONDAY, R_TUESDAY, R_WEDNESDAY, R_THURSDAY, R_FRIDAY, R_SATURDAY, R_SUNDAY};
 	
 	public List<String> topThreeSports()
 	{
