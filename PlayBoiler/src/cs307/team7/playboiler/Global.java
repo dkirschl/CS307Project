@@ -60,9 +60,11 @@ public class Global {
 			switch (action) {
 			case DECLINE:
 				Toast.makeText(v.getContext(), "Friend Request Declined.", Toast.LENGTH_SHORT).show();
+				//Global.userDatabase.removeFriend(Global.current_user.getKey(),20);
 				break;
 			case ACCEPT:
 				Toast.makeText(v.getContext(), "Friend Request Accepted!", Toast.LENGTH_SHORT).show();
+				//Global.userDatabase.addFriend(Global.current_user.getKey(), 21);
 				break;
 			}
 			((ViewGroup)message.getParent()).removeView(message);
