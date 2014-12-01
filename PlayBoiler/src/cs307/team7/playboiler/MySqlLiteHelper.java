@@ -193,18 +193,27 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		else
 		{
 			friends_list = cursor.getString(0);
+			Log.d("Database", "Frieds List contains: " + friends_list);
 		}
+		
 		String[] remover = friends_list.split("~");
 		StringBuilder s = new StringBuilder();
 		
-		int x = 0;
-		while(x<remover.length)
+		Log.d("Database", "Friends List size: " + remover.length);
+		int x = 1;
+		if(!friends_list.equals(""))
 		{
-			if(Integer.parseInt(remover[x]) == friend_key)
+			while(x<remover.length)
 			{
-				return false;
+				Log.d("Database", "Friend: " + x);
+				Log.d("Database", "ID: " + remover[x]);
+				if(Integer.parseInt(remover[x]) == friend_key)
+				{
+					Log.d("Database", "Error friend already in the list");
+					return false;
+				}
+				x++;
 			}
-			x++;
 		}
 		s.append(friends_list);
 		s.append("~"+friend_key);
@@ -239,7 +248,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		String[] remover = friends_list.split("~");
 		StringBuilder s = new StringBuilder();
 		
-		int x = 0;
+		int x = 1;
 		while(x<remover.length)
 		{
 			if(!(Integer.parseInt(remover[x]) == friend_key))
@@ -274,14 +283,21 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		else
 		{
 			friends = cursor.getString(0);
+			Log.d("Database", "Friends list is: " + friends);
 			if(friends.equals(""))
 			{
 				return null;
 			}
 			String[] f = friends.split("~");
+			Log.d("Database", "Friends list size is: " + f.length);
 			int x = 0;
 			while(x < f.length)
 			{
+				if(x == 0)
+				{
+					x++;
+					continue;
+				}
 				friends_list.add(Integer.parseInt(f[x]));
 				x++;
 			}
