@@ -58,7 +58,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		
 		this.onCreate(db);
 	}
-	// hello
+
 	public static final String USER_TABLE = "user_profile";
 	public static final String USER_KEY = "id";
 	public static final String USER_NAME = "name";
@@ -108,12 +108,13 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String R_SATURDAY = "saturday";
 	public static final String R_SUNDAY = "sunday";
 
-
-
-	
 	public static final String[] REOCCURING_GAMES_COLUMNS = {R_GAMES_KEY, R_GAMES_START_DATE, R_GAMES_END_DATE, GAMES_SPORT, GAMES_LOCATION, GAMES_TIME, GAMES_TITLE, GAMES_SUMMARY, 
 		GAMES_CREATING_USER, GAMES_MAX_ATTENDING, GAMES_CREATED, GAMES_SPECIFIC_USER, R_MONDAY, R_TUESDAY, R_WEDNESDAY, R_THURSDAY, R_FRIDAY, R_SATURDAY, R_SUNDAY};
 	
+	public void addReoccuringGame(ReoccuringGame g)
+	{
+		
+	}
 	public List<String> topThreeSports()
 	{
 	/*	SELECT	GAMES_SPORT
@@ -273,6 +274,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		else
 		{
 			friends = cursor.getString(0);
+			if(friends.equals(""))
+			{
+				return null;
+			}
 			String[] f = friends.split("~");
 			int x = 0;
 			while(x < f.length)
