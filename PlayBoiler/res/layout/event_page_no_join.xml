@@ -110,5 +110,12 @@
         android:layout_alignParentRight="true"
         android:hint="----"
         android:layout_below="@id/epnjSport" />
+    
+    <Button
+        android:id="@+id/inviteFriend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/maxAttending9"
+        android:text="Invite Friends" />
 
 </RelativeLayout>

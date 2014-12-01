@@ -1,6 +1,7 @@
 package cs307.team7.playboiler;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +9,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FriendsListFragment extends Fragment {
 	
@@ -68,12 +71,36 @@ public class FriendsListFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						//Ping server
+						int keyLen = 4;
+						int pasLen = 20;
+						int userLen = 20;
 						String user = name.getText().toString();
+						StringBuilder sb = new StringBuilder();
+						//your id : your pass : alias of friend
+						sb.append("addf/");
+						sb.append(Global.current_user.getKey());
+						String kyString = "" + Global.current_user.getKey();
+						Global.addSpaces(sb, keyLen - kyString.length());
+						sb.append("/");
+						sb.append(Global.current_user.getPassword());
+						Global.addSpaces(sb, pasLen - Global.current_user.getPassword().length());
+						sb.append("/");
+						sb.append(user);
+						Global.addSpaces(sb, userLen - user.length());
+						sb.append("/");
+						sb.append("\r\n");
 						
-						
-						
-						
-						
+						Log.d("Message", sb.toString());
+						String result = null;
+						NetworkHandler nh = new NetworkHandler();
+						try {
+							result = nh.execute(sb.toString()).get();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						} catch (ExecutionException e1) {
+							e1.printStackTrace();
+						}
+						Log.d("Friend Requested", result);
 						//Search is either successful or failed
 					}
 				});

@@ -35,6 +35,7 @@ public class FrontPageFragment extends Fragment {
         LinearLayout messagesContainer = (LinearLayout) rootView.findViewById(R.id.messagesContainer);
         //Get messages
         
+        
         //PLACEHOLDER MESSAGE FOR TESTING
         View testMessage = inflater.inflate(R.layout.friend_request, container, false);
         Button yes = (Button) testMessage.findViewById(R.id.acceptRequest);

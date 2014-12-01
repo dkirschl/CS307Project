@@ -1,9 +1,16 @@
 package cs307.team7.playboiler;
 
+import java.util.List;
+
+import cs307.team7.playboiler.FriendsListFragment.friendClickListener;
+import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +26,8 @@ public class Global {
 	
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
+		Button invite = (Button) v.findViewById(R.id.inviteFriend);
+		invite.setOnClickListener(new inviteFriendListener(inflater, container));
 		//TextView title = (TextView) v.findViewById(R.id.epnjTitle);
 		TextView date = (TextView) v.findViewById(R.id.epnjDate);
 		TextView time = (TextView) v.findViewById(R.id.epnjTime);
@@ -44,6 +53,36 @@ public class Global {
     	return sb;
     	
     }
+	
+	public static class inviteFriendListener implements OnClickListener {
+		LayoutInflater inflater;
+		ViewGroup container;
+		
+		public inviteFriendListener(LayoutInflater li, ViewGroup container) {
+			inflater = li;
+			this.container = container;
+		}
+
+		@Override
+		public void onClick(View v) {
+			Dialog d = new Dialog(v.getContext());
+			List<Integer> friends = Global.userDatabase.getFriends(Global.current_user.getKey());
+			d.setContentView(R.layout.friends_list);
+			
+			if (friends != null) {
+	    		LinearLayout contain = (LinearLayout) d.findViewById(R.id.friendsListContainer);
+	    		for (int i = 0; i < friends.size(); i++) {
+	    			View entry = inflater.inflate(R.layout.select_friend_view, container, false);
+	    			CheckBox cb = (CheckBox) entry.findViewById(R.id.inviteBox);
+	    			cb.setText(""+friends.get(i));
+	    		
+	    			contain.addView(entry);
+	    		}
+	    	}
+			d.show();
+		}
+		
+	}
 	
 	public static class RequestClickListener implements OnClickListener {
 
