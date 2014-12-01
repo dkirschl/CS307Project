@@ -75,7 +75,7 @@
         android:id="@+id/selectLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/selectTime"
+        android:layout_below="@+id/daily"
         android:hint="Set Location"
         android:textSize="30sp"
         android:maxLength="30"
@@ -133,6 +133,32 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/selectSport"
         android:text="Choose Sport" />
+    
+    <TextView 
+        android:id="@+id/reoccurring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectTime"
+        android:padding="5sp"
+        android:textSize="20sp"
+        android:text="Reoccuring"/>
+
+    <CheckBox
+        android:id="@+id/weekly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/daily"
+        android:layout_alignBottom="@+id/daily"
+        android:layout_alignRight="@+id/selectTime"
+        android:text="Weekly" />
+
+    <CheckBox
+        android:id="@id/daily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selectTime"
+        android:layout_toLeftOf="@+id/weekly"
+        android:text="Daily" />
 
 </RelativeLayout>
 </ScrollView>

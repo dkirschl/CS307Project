@@ -16,6 +16,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -31,6 +34,8 @@ public class CreateEventFragment extends Fragment {
 	Button createEvent;
 	int h;
 	int m;
+	public String reoccurringEventDate = "99999999";
+	public int reoccurringEventStatus = 0;
 
 	public static CreateEventFragment newInstance(int sectionNumber) {
         CreateEventFragment fragment = new CreateEventFragment();
@@ -58,6 +63,8 @@ public class CreateEventFragment extends Fragment {
     	final EditText maxPlay = (EditText) rootView.findViewById(R.id.setCapacity);
     	final Button chooseSport = (Button) rootView.findViewById(R.id.chooseSport);
     	final EditText compete = (EditText) rootView.findViewById(R.id.compete);
+    	final CheckBox daily = (CheckBox) rootView.findViewById(R.id.daily);
+    	final CheckBox weekly = (CheckBox) rootView.findViewById(R.id.weekly);
     	compete.setFilters(new InputFilterMinMax[]{ new InputFilterMinMax("1", "3")});
     	chooseSport.setOnClickListener(new OnClickListener() {
 
@@ -123,6 +130,14 @@ public class CreateEventFragment extends Fragment {
 						StringBuilder date = new StringBuilder().append(dp.getYear()).append(strMon).append(strDay);
 						//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
 						tvDate.setText(date);
+						d.cancel();
+					}
+				});
+				Button exit = (Button) d.findViewById(R.id.dateExit);
+				exit.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
 						d.cancel();
 					}
 				});
@@ -206,6 +221,11 @@ public class CreateEventFragment extends Fragment {
 				//String maxPlayersString = ""+event.getMaxPlayers();
 				Global.addSpaces(str, maxPlayerLen - maxPlay.getText().toString().length());
 				str.append("/");
+				str.append(reoccurringEventDate);
+				Global.addSpaces(str, dateLen - reoccurringEventDate.length());
+				str.append("/");
+				str.append(reoccurringEventStatus);
+				str.append("/");
 				str.append("\r\n");
 				Log.d("The Message", str.toString());
 				
@@ -238,12 +258,134 @@ public class CreateEventFragment extends Fragment {
 					sumEdit.setText("");
 					maxPlay.setText("");
 					compete.setText("");
+					daily.setChecked(false);
+					weekly.setChecked(false);
 					Global.userDatabase.addEvent(event);
 					Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
 				}
 			}
     		
     	});
+    	
+    	daily.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+				if (isChecked) {
+					if (weekly.isChecked()) {
+						weekly.setChecked(false);
+					}
+					//Select end date
+					
+					final Dialog d = new Dialog(arg0.getContext());
+					d.setContentView(R.layout.pick_date);
+					d.setTitle("Pick a Date");
+					
+					final DatePicker dp = (DatePicker) d.findViewById(R.id.datePicker);
+					Button done = (Button) d.findViewById(R.id.dateDone);
+					done.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v1) {
+							int month = dp.getMonth() + 1;
+							String strMon;
+							if (month < 10) {
+								strMon = "0"+month;
+							} else {
+								strMon = ""+month;
+							}
+							int day = dp.getDayOfMonth();
+							String strDay;
+							if (day < 10) {
+								strDay = "0"+day;
+							} else {
+								strDay = ""+day;
+							}
+							//StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+							StringBuilder date = new StringBuilder().append(dp.getYear()).append(strMon).append(strDay);
+							//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
+							reoccurringEventDate = date.toString();
+							reoccurringEventStatus = 1;
+							d.cancel();
+						}
+					});
+					Button exit = (Button) d.findViewById(R.id.dateExit);
+					exit.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							reoccurringEventStatus = 0;
+							daily.setChecked(false);
+							d.cancel();
+						}
+					});
+					d.show();
+				} else {
+					reoccurringEventStatus = 0;
+					reoccurringEventDate = "99999999";
+				}
+				
+			}
+		});
+    	weekly.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+				if (isChecked) {
+					if (daily.isChecked()) {
+						daily.setChecked(false);
+					}
+					//Select end date
+					final Dialog d = new Dialog(arg0.getContext());
+					d.setContentView(R.layout.pick_date);
+					d.setTitle("Pick a Date");
+					
+					final DatePicker dp = (DatePicker) d.findViewById(R.id.datePicker);
+					Button done = (Button) d.findViewById(R.id.dateDone);
+					done.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v1) {
+							int month = dp.getMonth() + 1;
+							String strMon;
+							if (month < 10) {
+								strMon = "0"+month;
+							} else {
+								strMon = ""+month;
+							}
+							int day = dp.getDayOfMonth();
+							String strDay;
+							if (day < 10) {
+								strDay = "0"+day;
+							} else {
+								strDay = ""+day;
+							}
+							//StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+							StringBuilder date = new StringBuilder().append(dp.getYear()).append(strMon).append(strDay);
+							//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
+							reoccurringEventDate = date.toString();
+							reoccurringEventStatus = 2;
+							d.cancel();
+						}
+					});
+					Button exit = (Button) d.findViewById(R.id.dateExit);
+					exit.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							weekly.setChecked(false);
+							reoccurringEventStatus = 0;
+							d.cancel();
+						}
+					});
+					d.show();
+				} else {
+					reoccurringEventStatus = 0;
+					reoccurringEventDate = "99999999";
+				}
+			}
+		});
+    	
     	
     	return rootView;
     	
