@@ -35,7 +35,19 @@ public class FrontPageFragment extends Fragment {
         LinearLayout messagesContainer = (LinearLayout) rootView.findViewById(R.id.messagesContainer);
         //Get messages
         
+        MessageBuilder mb = new MessageBuilder(1, "cbrentz");
+        View m1 = mb.generateMessage(inflater, container);
+        messagesContainer.addView(m1);
+        MessageBuilder mb2 = new MessageBuilder(2, "cbrentz");
+        View m2 = mb2.generateMessage(inflater, container);
+        messagesContainer.addView(m2);
+        Event e = new Event();
+        e.setTime("Event Name");
+        MessageBuilder mb3 = new MessageBuilder(3, "cbrentz", e);
+        View m3 = mb3.generateMessage(inflater, container);
+        messagesContainer.addView(m3);
         
+        /*
         //PLACEHOLDER MESSAGE FOR TESTING
         View testMessage = inflater.inflate(R.layout.friend_request, container, false);
         Button yes = (Button) testMessage.findViewById(R.id.acceptRequest);
@@ -44,7 +56,7 @@ public class FrontPageFragment extends Fragment {
         no.setOnClickListener(new RequestClickListener(Global.DECLINE, testMessage));
         messagesContainer.addView(testMessage);
         //////////////////////////////////////
-        
+        */
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
         return rootView;
@@ -57,4 +69,6 @@ public class FrontPageFragment extends Fragment {
         //((MainActivity) activity).onSectionAttached(
                 //getArguments().getInt(ARG_SECTION_NUMBER));
     }
+    
+    
 }

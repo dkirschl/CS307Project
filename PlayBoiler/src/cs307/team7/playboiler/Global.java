@@ -1,9 +1,15 @@
 package cs307.team7.playboiler;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import cs307.team7.playboiler.FriendsListFragment.friendClickListener;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +29,7 @@ public class Global {
 	public static String USER_CREATED_NO = "no";
 	public static final int DECLINE = 0;
 	public static final int ACCEPT = 1;
+	public static final int OK = 2;
 	
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
@@ -105,9 +112,95 @@ public class Global {
 				Toast.makeText(v.getContext(), "Friend Request Accepted!", Toast.LENGTH_SHORT).show();
 				//Global.userDatabase.addFriend(Global.current_user.getKey(), 21);
 				break;
+			case OK:
+				Toast.makeText(v.getContext(), "Message Removed", Toast.LENGTH_SHORT).show();
+				break;
 			}
 			((ViewGroup)message.getParent()).removeView(message);
 		}
 		
 	}
+	
+	public static class eventClickListener implements OnClickListener {
+    	private String t;
+    	private View page;
+    	private Event e;
+    	
+    	public eventClickListener(String title, View page, Event event) {
+    		super();
+    		t = title;
+    		this.page = page;
+    		e = event;
+    	}
+
+		@Override
+		public void onClick(View v) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+			builder.setView(page);
+			final TextView et = new TextView(v.getContext());
+			et.setText(t);
+			et.setGravity(Gravity.CENTER);
+			et.setTextSize(35);
+			builder.setCustomTitle(et);
+			builder.setPositiveButton("Join Event", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					//Code to join event
+					int keyLen = 4;
+					int pasLen = 20;
+					StringBuilder str = new StringBuilder();
+					str.append("/join/");
+					str.append(Global.current_user.getKey());
+					String kyString = "" + Global.current_user.getKey();
+					Global.addSpaces(str, keyLen - kyString.length());
+					str.append("/");
+					str.append(Global.current_user.getPassword());
+					Global.addSpaces(str, pasLen - Global.current_user.getPassword().length());
+					str.append("/");
+					str.append(e.getKey());
+					String keyString = "" + e.getKey();
+					Global.addSpaces(str, keyLen - keyString.length());
+					str.append("/");
+					str.append("\r\n");
+					//Add user to event on external server
+					Log.d("Message", str.toString());
+					String result = null;
+					NetworkHandler nh = new NetworkHandler();
+					try {
+						result = nh.execute(str.toString()).get();
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					} catch (ExecutionException e1) {
+						e1.printStackTrace();
+					}
+					Log.d("Join Result", result);
+					if (result.equals("INVALID")) {
+						Toast.makeText(et.getContext(), "Event Not Joined : Full", Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(et.getContext(), "Event Joined", Toast.LENGTH_LONG).show();
+						//Add event to local database of joined events
+						e.setSpecificUser(Global.current_user.getAlias());
+						Global.userDatabase.joinEvent(e);
+					}
+					
+					
+					
+					
+					
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					((ViewGroup)page.getParent()).removeView(page);
+					
+				}
+			});
+			builder.show();
+		}
+    	
+    	
+    }
 }

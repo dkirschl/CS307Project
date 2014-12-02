@@ -190,7 +190,7 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 		        	//s[i][12] owning user
 		        	e.setAttending_ind(1);
 		        	View page = Global.fillEventPage(e, inflater, container);
-		        	ll.setOnClickListener(new eventClickListener(e.getTitle(), page, e));
+		        	ll.setOnClickListener(new Global.eventClickListener(e.getTitle(), page, e));
 		        	tv.setText("Title : " + e.getTitle());
 		        	tv2.setText("Date : " + e.getDate());
 		        	contain.addView(ll);
@@ -279,86 +279,5 @@ final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDial
 	        return checker;
 	}
     
-    public class eventClickListener implements OnClickListener {
-    	private String t;
-    	private View page;
-    	private Event e;
-    	
-    	public eventClickListener(String title, View page, Event event) {
-    		super();
-    		t = title;
-    		this.page = page;
-    		e = event;
-    	}
-
-		@Override
-		public void onClick(View v) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setView(page);
-			final TextView et = new TextView(getActivity());
-			et.setText(t);
-			et.setGravity(Gravity.CENTER);
-			et.setTextSize(35);
-			builder.setCustomTitle(et);
-			builder.setPositiveButton("Join Event", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-					//Code to join event
-					int keyLen = 4;
-					int pasLen = 20;
-					StringBuilder str = new StringBuilder();
-					str.append("/join/");
-					str.append(Global.current_user.getKey());
-					String kyString = "" + Global.current_user.getKey();
-					Global.addSpaces(str, keyLen - kyString.length());
-					str.append("/");
-					str.append(Global.current_user.getPassword());
-					Global.addSpaces(str, pasLen - Global.current_user.getPassword().length());
-					str.append("/");
-					str.append(e.getKey());
-					String keyString = "" + e.getKey();
-					Global.addSpaces(str, keyLen - keyString.length());
-					str.append("/");
-					str.append("\r\n");
-					//Add user to event on external server
-					Log.d("Message", str.toString());
-					String result = null;
-					NetworkHandler nh = new NetworkHandler();
-					try {
-						result = nh.execute(str.toString()).get();
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					} catch (ExecutionException e1) {
-						e1.printStackTrace();
-					}
-					Log.d("Join Result", result);
-					if (result.equals("INVALID")) {
-						Toast.makeText(getActivity(), "Event Not Joined : Full", Toast.LENGTH_LONG).show();
-					} else {
-						Toast.makeText(getActivity(), "Event Joined", Toast.LENGTH_LONG).show();
-						//Add event to local database of joined events
-						e.setSpecificUser(Global.current_user.getAlias());
-						Global.userDatabase.joinEvent(e);
-					}
-					
-					
-					
-					
-					
-				}
-			});
-			builder.setOnCancelListener(new OnCancelListener() {
-				
-				@Override
-				public void onCancel(DialogInterface arg0) {
-					((ViewGroup)page.getParent()).removeView(page);
-					
-				}
-			});
-			builder.show();
-		}
-    	
-    	
-    }
+    
 }

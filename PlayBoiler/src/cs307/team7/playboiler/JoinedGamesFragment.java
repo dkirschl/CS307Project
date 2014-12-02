@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import cs307.team7.playboiler.SearchFragment.eventClickListener;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
