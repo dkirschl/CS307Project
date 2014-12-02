@@ -34,6 +34,7 @@ const int evKeyL = 5;
 const int competeL = 2;
 const int titleL = 26;
 const int attendL = 4;
+const int paramL = 2;
 
 void work(int);
 
@@ -90,6 +91,10 @@ void getCreatedNumAttending(int, char *);
 
 void dataCheck(int, char *);
 
+void dataAddFriend(int, char *, char *, char *);
+
+void dataDeleteFriend(int, char *, char *, char *);
+
 //Internal uses
 
 //INPUT:	A string key and password.
@@ -118,6 +123,8 @@ bool isCorrectUser(char *, char *);
 
 int stringFindLocation(const char *, char *);
 void getAlias(char *, char *);
+
+void getKeyFromAlias(char *, char *);
 
 char * aliasesFromIDs(char *);
 

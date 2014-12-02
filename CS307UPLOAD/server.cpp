@@ -141,6 +141,8 @@ void * dispatchAuto(void * nothing)
 			tstruct = *localtime(&now);
 			strftime(date,sizeof(date),"%Y%m%d",&tstruct);
 			strftime(timeA,sizeof(timeA), "%H%M", &tstruct);
+
+
 			query = "DELETE FROM EVENTS WHERE date<"+ string(date)+" OR (date="+string(date)+" AND time<"+string(timeA) +");";
 			printf("%s\n",query.c_str());
 

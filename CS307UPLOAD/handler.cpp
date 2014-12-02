@@ -15,6 +15,7 @@ void lgon(int);
 void upts(int);  ///////////////// DYLAN, I ADDED AN UPDATE TOP SPORTS FUNCTION. DON'T PANIC. ///////////
 void crup(int);
 void chck(int);
+void addf(int);
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -135,6 +136,10 @@ void work(int slaveSocket)
 	{
 		chck(slaveSocket);
 	}
+	else if(strcmp(input1,"/addf") == 0)
+	{
+		addf(slaveSocket);
+	}
 	else 										//INVALID INPUT
 	{
 		invl(slaveSocket);
@@ -182,6 +187,36 @@ void chck(int slaveSocket)
 	dataCheck(slaveSocket, input3);
 	close(slaveSocket);
 
+}
+
+void addf(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+	char input4[aliasL];	//ALIAS
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, aliasL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/addf";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataAddFriend(slaveSocket,input2, input3, input4);
+
+	close(slaveSocket);
 }
 
 //CREATE USER
@@ -293,20 +328,24 @@ void crev(int slaveSocket)
 	char input9[competeL];		//compete
 	char input10[titleL];
 	char input11[attendL];
+	char input12[dateL];	//end date
+	char input13[paramL];
 
 
 	//GET INPUT
 
-	 readStuffs(slaveSocket, input2, keyL);
-	 readStuffs(slaveSocket, input3, passL);
-	 readStuffs(slaveSocket, input4, sportL);
-	 readStuffs(slaveSocket, input5, locL);
-	 readStuffs(slaveSocket, input6, dateL);
-	 readStuffs(slaveSocket, input7, timeL);
-	 readStuffs(slaveSocket, input8, summL);
-	 readStuffs(slaveSocket, input9, competeL);
-	 readStuffs(slaveSocket, input10, titleL);
-	 readStuffs(slaveSocket, input11, attendL);
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, sportL);
+	readStuffs(slaveSocket, input5, locL);
+	readStuffs(slaveSocket, input6, dateL);
+	readStuffs(slaveSocket, input7, timeL);
+	readStuffs(slaveSocket, input8, summL);
+	readStuffs(slaveSocket, input9, competeL);
+	readStuffs(slaveSocket, input10, titleL);
+	readStuffs(slaveSocket, input11, attendL);
+	readStuffs(slaveSocket, input12, dateL);
+	readStuffs(slaveSocket, input13, paramL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -316,7 +355,55 @@ void crev(int slaveSocket)
 	char stringA[6] = "/crev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+	
+	time_t now;
+	struct tm tstruct;
+	char date[80], timeA[80];
+
+	now = time(0);
+	tstruct = *localtime(&now);
+	strftime(date,sizeof(date),"%Y%m%d",&tstruct);
+	strftime(timeA,sizeof(timeA), "%H%M", &tstruct);
+
+	struct tm newTM;
+	
+
+	if(atoi(input6) < atoi(date) || (atoi(date) == atoi(input6) && atoi(input7) < atoi(timeA)))
+	{
+		 invl(slaveSocket);
+		return;
+	}
+	
+	int i = 0;
+
+	if(strncmp(input13,"0", 1) == 0)
+	{
+		dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+	}
+	else {
+		while(atoi(input6) < atoi(input12) && i < 31)
+		{
+		
+			dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+			i++;
+		
+			memset(&newTM, 0, sizeof(struct tm));
+			strptime(input6, "%Y%m%d", &newTM);	
+		
+			if(strncmp(input13, "2",1)) // weekly add 1 week
+			{
+				newTM.tm_mday += 7;
+				mktime(&newTM);
+				strftime(input6,sizeof(input6),"%Y%m%d", &newTM);
+			}
+			else 	//daily, add one day
+			{
+				newTM.tm_mday += 1;
+				mktime(&newTM);
+				strftime(input6,sizeof(input6),"%Y%m%d", &newTM);
+			}
+		}
+	}
 
 	close(slaveSocket);
 }

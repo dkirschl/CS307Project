@@ -138,7 +138,7 @@ void dataCreateUser(int slaveSocket,char * password, char * name, char * alias, 
 
 		const char* data = "Callback functioin called";
 
-		query = "INSERT INTO USERS (password, name, alias, age, gender, firstSport, secondSport, thirdSport) VALUES('"+string(password)+"','"+ string(name) + "','" + string(alias) + "','" + string(age) + "','" + string(gender) + "','  ','  ','  ');";
+		query = "INSERT INTO USERS (password, name, alias, age, gender, firstSport, secondSport, thirdSport,friendsList) VALUES('"+string(password)+"','"+ string(name) + "','" + string(alias) + "','" + string(age) + "','" + string(gender) + "','  ','  ','  ','');";
 		query2 = "SELECT seq FROM sqlite_sequence WHERE name='USERS';";
 		//query2 = "SELECT last_row_id();";
 fprintf(stdout, "%s\n", query.c_str());
@@ -246,7 +246,7 @@ void dataJoinEvent(int slaveSocket, char * key, char * password, char * evKey, i
 		std::string query;
 		int results;
 		char* user;
-		char alias[21];
+		//char alias[21];
 		int ret;
 		std::string callSave;
 
@@ -268,9 +268,9 @@ void dataJoinEvent(int slaveSocket, char * key, char * password, char * evKey, i
 
 		printf("Row locked\n");
 
-		getAlias(key, alias);
+		//getAlias(key, alias);
 
-		printf("Alias from key %s = %s\n", key,alias);
+		//printf("Alias from key %s = %s\n", key,alias);
 
 		query = "SELECT attendingUsers FROM EVENTS where id="+string(evKey)+";";
 		
@@ -295,7 +295,7 @@ void dataJoinEvent(int slaveSocket, char * key, char * password, char * evKey, i
 
 		printf("AttendingUsers returned from event %s = %s\n", evKey, callSave.c_str());
 
-		ret = stringFindLocation(callSave.c_str(), alias);
+		ret = stringFindLocation(callSave.c_str(), key);
 
 		fprintf(stdout, "User Id: %s\n", callback_return.c_str());
 
@@ -313,7 +313,7 @@ void dataJoinEvent(int slaveSocket, char * key, char * password, char * evKey, i
 
 		printf("User is not in event to join\n");
 
-		callSave += string(alias) + "*";
+		callSave += string(key) + "*";
 
 		printf("New attendingUser string after appending = %s\n", callSave.c_str());
 		
@@ -378,7 +378,7 @@ char *zErrMsg = 0;
 		std::string query;
 		int results;
 		char* user;
-		char alias[21];
+		//char alias[21];
 		int ret;
 		std::string callSave;
 
@@ -402,8 +402,8 @@ char *zErrMsg = 0;
 		printf("locked event %s\n", evKey);
 
 
-		getAlias(key, alias);
-		printf("Alias from key %s = %s\n", key, alias);
+		//getAlias(key, alias);
+		//printf("Alias from key %s = %s\n", key, alias);
 
 		query = "SELECT attendingUsers FROM EVENTS where id="+string(evKey)+";";
 		
@@ -429,11 +429,11 @@ char *zErrMsg = 0;
 
 		printf("AttendingUsers for event %s = %s\n", evKey, callSave.c_str());
 
-		ret = stringFindLocation(callSave.c_str(), alias);
+		ret = stringFindLocation(callSave.c_str(), key);
 
 		if(ret < 0){
 			// shouldn't unjoin because the alias isn't in
-			printf("UNJOIN ERROR: Alias %s was not attending the event %s\n", alias, evKey);			
+			printf("UNJOIN ERROR: Key %s was not attending the event %s\n", key, evKey);			
 			write(slaveSocket, "INVALID",7);
 			printf("Wrote back INVALID\n");
 			unlockRow(evKey);
@@ -443,9 +443,9 @@ char *zErrMsg = 0;
 		}
 
 		std::string newAttend;
-		newAttend = callSave.substr(0,ret) + callSave.substr(ret+aliasL);
+		newAttend = callSave.substr(0,ret) + callSave.substr(ret+keyL);
 		
-		printf("New attendingUsers after extracting alias %s at index %d = %s\n", alias, ret, newAttend.c_str()); 
+		printf("New attendingUsers after extracting key %s at index %d = %s\n", key, ret, newAttend.c_str()); 
 
 		query = "UPDATE EVENTS SET numAttending = numAttending - 1 WHERE id="+string(evKey)+" AND numAttending < maxNumAttending;";
 		
@@ -1149,8 +1149,216 @@ void getCreatedNumAttending(int slaveSocket, char * userKey){
 	
 }
 
-//Internal uses
+void dataAddFriend(int slaveSocket, char * key, char * password, char * otherUser){
+	
+	if(isValidValue(password) && isGoodPass(key, password) && isValidValue(otherUser))
+	{
+	
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+		char otherUserKey[keyL];
+		int ret;
+		int ret2;
 
+		std::string callSave;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback functioin called";
+		
+		printf("otherUser alias: %s\n",otherUser);
+		//lockRow(evKey,key);
+
+		//printf("Row locked\n");
+
+		getKeyFromAlias(otherUser, otherUserKey);
+
+		printf("Key from alias %s = %s\n", otherUserKey,otherUser);
+
+		query = "SELECT results FROM FRIENDREQUESTS where requestingUser="+string(key)+" AND targetUser="+string(otherUserKey)+";";
+		
+		fprintf(stdout, "%s\n", query.c_str());
+		
+		resetCallback_return();
+		
+		usePipe = false;
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
+		
+				
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "tested if request already exists succesfully\n");
+		}
+
+		
+		if(callback_return.length() > 0){
+			// request already exists
+			printf("User %s requesting User %s already exists in the table\n", key, otherUserKey);
+			write(slaveSocket, "INVALID", 7);
+			sqlite3_close(db);
+			dbOpen = false;
+			return;
+		}
+		
+		query = "SELECT results FROM FRIENDREQUESTS where requestingUser="+string(otherUserKey)+" AND targetUser="+string(key)+";";
+
+		fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+	
+		usePipe = false;
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "tested if opposite request exists succesfully\n");
+		}
+
+		if(callback_return.length() > 0){
+			// opposite request exists
+			query = "UPDATE FRIENDREQUESTS SET results=1 WHERE requestingUser="+string(otherUserKey)+" AND targetUser="+string(key)+";";
+			
+			fprintf(stdout, "%s\n", query.c_str());
+
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "accepted friend request to user %s from user %s succesfully\n", key, otherUserKey);
+			}
+
+			query = "SELECT friendsList FROM USERS where id="+string(key)+";";
+
+			fprintf(stdout, "%s\n", query.c_str());
+
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "extracted friendsList\n");
+			}			
+
+			ret = stringFindLocation(callback_return.c_str(), otherUserKey);
+
+			if(ret >= 0){
+				// user is already in friendsList, which probably means a double accept
+				printf("User attempted to accept a friend request from a current friend\n");
+				write(slaveSocket, "INVALID", 7);
+				sqlite3_close(db);
+				dbOpen = false;
+				return; 
+			}
+
+			callSave = callback_return.c_str();
+
+			callSave += string(key) + "*";
+
+			printf("New friendsList string after appending = %s\n", callSave.c_str());
+
+			query = "UPDATE USERS SET friendsList = '"+ string(callSave.c_str()) +"' where id="+string(key)+";";
+
+			fprintf(stdout, "%s\n", query.c_str());
+		
+			resetCallback_return();
+		
+			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+		
+			fprintf(stdout, "RESULTS IS: %d\n", results);
+		
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "attendingUsers updated succesfully\n");
+			}
+			
+		} else {
+			// opposite request didn't exist
+
+			query = "SELECT friendsList FROM USERS WHERE id = "+string(key)+";";
+
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "extracted friendsList\n");
+			}			
+
+			ret = stringFindLocation(callback_return.c_str(), otherUserKey);
+
+			query = "SELECT friendsList FROM USERS WHERE id = "+string(otherUserKey)+";";
+
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "extracted friendsList\n");
+			}			
+
+			ret2 = stringFindLocation(callback_return.c_str(), key);
+
+			if(ret >= 0 || ret2 >= 0){
+				// already friends
+				printf("User attempted to request a current friend\n");
+				write(slaveSocket, "INVALID", 7);
+				sqlite3_close(db);
+				dbOpen = false;
+				return; 				
+			}		
+
+			query = "INSERT INTO FRIENDREQUESTS (requestingUser, targetUser, results) VALUES("+string(key)+","+string(otherUserKey)+",0);";
+
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "added request to FRIENDREQUESTS\n");
+			}				
+		}
+
+
+		sqlite3_close(db);
+		dbOpen = false;
+				
+		write(slaveSocket,"ISVALID",7);
+		printf("Wrote back ISVALID\n");
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+	}
+	else
+	{
+		write(slaveSocket,"INVALID",7);
+		printf("Wrote back INVALID\n");
+	}
+	
+	
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////   Internal uses   //////////////////////////////////////////////////////////////////////////////
+ 
 //INPUT:	A string key and password.
 //IDEA:		Accept a key and password pair and check if they match.
 //OUTPUT:	NONE
@@ -1435,12 +1643,12 @@ fprintf(stdout, "%s\n", query.c_str());
 		strcpy(returnPlace, callback_return.c_str());
 }
 
-int stringFindLocation(const char * input, char * alias)
+int stringFindLocation(const char * input, char * key)
 {
 		//return 0 =< infinity
 		//-1 if its not in the string
 		char tester[50];
-		strcpy(tester, alias);
+		strcpy(tester, key);
 		strcat(tester, "*");
 		
 		char * result;
@@ -1592,4 +1800,43 @@ char * aliasesFromIDs(char * idList )
 	
 }
 
+void getKeyFromAlias(char * alias, char * returnPlace){
+		
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
 
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback function called";
+
+		resetCallback_return();	
+
+		query = "SELECT id FROM USERS WHERE alias='"+string(alias)+"';";
+		fprintf(stdout, "%s\n", query.c_str());
+
+		resetCallback_return();
+		usePipe = false;
+		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+		usePipe = true;
+
+		if(results != SQLITE_OK){
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		} else {
+			fprintf(stdout, "alias converted from key\n");
+		}
+		
+		strcpy(returnPlace, callback_return.c_str());	
+	
+}
