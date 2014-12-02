@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ public class Global {
 	public static final int DECLINE = 0;
 	public static final int ACCEPT = 1;
 	public static final int OK = 2;
+	public static boolean loggedIn = false;
 	
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
@@ -122,6 +124,7 @@ public class Global {
 	}
 	
 	public static class eventClickListener implements OnClickListener {
+
     	private String t;
     	private View page;
     	private Event e;
@@ -203,4 +206,47 @@ public class Global {
     	
     	
     }
+	
+	public static class dateClickListener implements OnClickListener {
+		TextView tvDate;
+		public dateClickListener(TextView tvDate) {
+			this.tvDate = tvDate;
+		}
+		@Override
+		public void onClick(View v) {
+			final Dialog d = new Dialog(v.getContext());
+			d.setContentView(R.layout.pick_date);
+			d.setTitle("Pick a Date");
+			
+			final DatePicker dp = (DatePicker) d.findViewById(R.id.datePicker);
+			Button done = (Button) d.findViewById(R.id.dateDone);
+			done.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v1) {
+					int month = dp.getMonth() + 1;
+					String strMon;
+					if (month < 10) {
+						strMon = "0"+month;
+					} else {
+						strMon = ""+month;
+					}
+					int day = dp.getDayOfMonth();
+					String strDay;
+					if (day < 10) {
+						strDay = "0"+day;
+					} else {
+						strDay = ""+day;
+					}
+					StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+					//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
+					tvDate.setText(date);
+					d.cancel();
+				}
+			});
+			d.show();
+		}
+	}
 }
+
+

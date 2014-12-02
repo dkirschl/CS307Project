@@ -60,45 +60,9 @@ public class SearchFragment extends Fragment {
     	dates  = new ArrayList<String>();
         
         dateSelect = (Button) rootView.findViewById(R.id.searchSelectDate);
-    	dateSelect.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				final Dialog d = new Dialog(v.getContext());
-				d.setContentView(R.layout.pick_date);
-				d.setTitle("Pick a Date");
-				
-				final DatePicker dp = (DatePicker) d.findViewById(R.id.datePicker);
-				Button done = (Button) d.findViewById(R.id.dateDone);
-				done.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v1) {
-						int month = dp.getMonth() + 1;
-						String strMon;
-						if (month < 10) {
-							strMon = "0"+month;
-						} else {
-							strMon = ""+month;
-						}
-						int day = dp.getDayOfMonth();
-						String strDay;
-						if (day < 10) {
-							strDay = "0"+day;
-						} else {
-							strDay = ""+day;
-						}
-						StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
-						//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
-						tvDate.setText(date);
-						d.cancel();
-					}
-				});
-				d.show();
-			}
-    	});
-    	
-final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        dateSelect.setOnClickListener(new Global.dateClickListener(tvDate));
+        
+        final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 			
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

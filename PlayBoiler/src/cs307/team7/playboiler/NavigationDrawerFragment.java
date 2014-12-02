@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -259,17 +260,27 @@ public class NavigationDrawerFragment extends Fragment {
         	//Build dialog to display preferences
         	Dialog d = new Dialog(getActivity());
         	d.setContentView(R.layout.settings_window);
+        	d.setTitle("Settings");
         	CheckBox cb = (CheckBox) d.findViewById(R.id.accept_messages);
+        	if (Global.current_user.getPreferences() == 0) {
+        		cb.setChecked(true);
+        	}
         	cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				@Override
 				public void onCheckedChanged(CompoundButton arg0, boolean clicked) {
 					if (clicked) {
-						
+						Global.current_user.setPreferences(0);
+						Global.userDatabase.updatePreferences(Global.current_user, 0);
+						Toast.makeText(arg0.getContext(), "Won't See Messages", Toast.LENGTH_SHORT).show();
+					} else {
+						Global.current_user.setPreferences(1);
+						Global.userDatabase.updatePreferences(Global.current_user, 1);
+						Toast.makeText(arg0.getContext(), "Will See Messages", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
-        	
+        	d.show();
             //Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
         	
             return true;

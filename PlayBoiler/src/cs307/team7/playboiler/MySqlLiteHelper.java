@@ -173,7 +173,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 			return_user.setProficiencies(cursor.getString(6));
 			return_user.setPassword(cursor.getString(7));
 			return_user.setFriends(cursor.getString(8));
-			return_user.setPreferences(cursor.getString(9));
+			return_user.setPreferences(cursor.getInt(9));
 		}
 		db.close();
 		return return_user;
@@ -358,7 +358,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		return_user.setDescription(cursor.getString(5));
 		return_user.setProficiencies(cursor.getString(6));
 		return_user.setFriends(cursor.getString(8));
-		return_user.setPreferences(cursor.getString(9));
+		return_user.setPreferences(cursor.getInt(9));
 		Log.d("Database", "Name : " + return_user.getName());
 		db.close();
 		return return_user;
@@ -387,13 +387,11 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		ContentValues = new ContentValues();
+		ContentValues values = new ContentValues();
 		values.put(USER_PREFERENCES, user.getPreferences());
 		
 		db.update(USER_TABLE, values, USER_KEY + "=" + user.getKey(), null);
 		db.close();
-		
-		return user;
 	}
 	public void setPastEvents()
 	{

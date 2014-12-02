@@ -135,6 +135,7 @@ public class MainActivity extends Activity
 					//Global.userDatabase.addSports();
 					Log.d("USER INFO", u.getName() + " " + u.getPassword() + " " + u.getAlias());
 					Global.current_user = u;
+					Global.loggedIn = true;
 					d.cancel();
 				}
 			}
