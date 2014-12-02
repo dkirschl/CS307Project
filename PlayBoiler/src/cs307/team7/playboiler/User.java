@@ -11,7 +11,16 @@ public class User {
 	private String proficiencies;
 	private String password;
 	private String friends;
+	private int preferences;
 	
+	public int getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(int preferences) {
+		this.preferences = preferences;
+	}
+
 	public User()
 	{
 		key = -1;

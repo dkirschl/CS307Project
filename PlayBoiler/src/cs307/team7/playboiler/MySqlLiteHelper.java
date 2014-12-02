@@ -30,7 +30,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		Log.d("Database", "Database being initialized in onCreate()");
 		String CREATE_USER_PROFILE_TABLE = "CREATE TABLE user_profile (" + "id INTEGER PRIMARY KEY, " +
 				"name TEXT, " + "alias TEXT, " + "age INTEGER, " + "gender TEXT, " + "description TEXT, " +
-				"proficiencies TEXT, " + "password TEXT, " + "friends TEXT)";
+				"proficiencies TEXT, " + "password TEXT, " + "friends TEXT, " + "preferences INTEGER)";
 		
 		String CREATE_GAMES_TABLE = "CREATE TABLE past_games (" + "id, " + "sport TEXT, " + "location TEXT, " + 
 				"date TEXT, " + "time TEXT, " + "title TEXT, " + "summary TEXT, " + "creating_user TEXT, " + "attending_ind INTEGER, " + "max_attending INTEGER, " + "created TEXT, "+
@@ -69,9 +69,10 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 	public static final String USER_PROFICIENCIES = "proficiencies";
 	public static final String USER_PASSWORD = "password";
 	public static final String USER_FRIENDS = "friends";
+	public static final String USER_PREFERENCES = "preferences";
 	
 	public static final String[] USER_COLUMNS = {USER_KEY, USER_NAME, USER_ALIAS, USER_GENDER, USER_AGE, USER_DESCRIPTION
-		, USER_PROFICIENCIES, USER_PASSWORD, USER_FRIENDS};
+		, USER_PROFICIENCIES, USER_PASSWORD, USER_FRIENDS, USER_PREFERENCES};
 	
 	public static final String GAMES_TABLE = "past_games";
 	public static final String GAMES_KEY = "id";
@@ -172,6 +173,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 			return_user.setProficiencies(cursor.getString(6));
 			return_user.setPassword(cursor.getString(7));
 			return_user.setFriends(cursor.getString(8));
+			return_user.setPreferences(cursor.getString(9));
 		}
 		db.close();
 		return return_user;
@@ -318,6 +320,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(USER_GENDER, user.getGender());
 		values.put(USER_PASSWORD, user.getPassword());
 		values.put(USER_FRIENDS, user.getFriends());
+		values.put(USER_PREFERENCES, user.getPreferences());
 		
 		db.insert(USER_TABLE, null, values);
 		db.close();
@@ -355,6 +358,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		return_user.setDescription(cursor.getString(5));
 		return_user.setProficiencies(cursor.getString(6));
 		return_user.setFriends(cursor.getString(8));
+		return_user.setPreferences(cursor.getString(9));
 		Log.d("Database", "Name : " + return_user.getName());
 		db.close();
 		return return_user;
@@ -373,6 +377,18 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		values.put(USER_AGE, user.getAge());
 		values.put(USER_DESCRIPTION, user.getDescription());
 		values.put(USER_PROFICIENCIES, user.getProficiencies());
+		
+		db.update(USER_TABLE, values, USER_KEY + "=" + user.getKey(), null);
+		db.close();
+		
+		return user;
+	}
+	public void updatePreferences(User user, int pref)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues = new ContentValues();
+		values.put(USER_PREFERENCES, user.getPreferences());
 		
 		db.update(USER_TABLE, values, USER_KEY + "=" + user.getKey(), null);
 		db.close();
