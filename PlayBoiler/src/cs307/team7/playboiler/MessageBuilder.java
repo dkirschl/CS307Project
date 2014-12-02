@@ -55,7 +55,6 @@ public class MessageBuilder {
 			tv.setText(inviter + " has invited you\n to the event, " + e.getTitle());
 			ok = (Button) view.findViewById(R.id.removeMessage);
 			ok.setOnClickListener(new RequestClickListener(Global.OK, view));
-			
 			View page = Global.fillEventPage(e, inflater, container); 
 			view.setOnClickListener(new Global.eventClickListener(e.getTitle(), page, e));
 			break;

@@ -1,16 +1,17 @@
 package cs307.team7.playboiler;
 
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,8 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -252,8 +255,23 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.preferences) {
+        	//Build dialog to display preferences
+        	Dialog d = new Dialog(getActivity());
+        	d.setContentView(R.layout.settings_window);
+        	CheckBox cb = (CheckBox) d.findViewById(R.id.accept_messages);
+        	cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton arg0, boolean clicked) {
+					if (clicked) {
+						
+					}
+				}
+			});
+        	
+            //Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+        	
             return true;
         }
 
