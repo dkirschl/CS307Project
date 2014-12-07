@@ -197,8 +197,11 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 			friends_list = cursor.getString(0);
 			Log.d("Database", "Frieds List contains: " + friends_list);
 		}
-		
+		if (friends_list == null) {
+			friends_list = "";
+		}
 		String[] remover = friends_list.split("~");
+		
 		StringBuilder s = new StringBuilder();
 		
 		Log.d("Database", "Friends List size: " + remover.length);
@@ -285,6 +288,9 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 		else
 		{
 			friends = cursor.getString(0);
+			if (friends == null) {
+				friends = "";
+			}
 			Log.d("Database", "Friends list is: " + friends);
 			if(friends.equals(""))
 			{

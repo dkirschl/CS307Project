@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 public class MainActivity extends Activity
@@ -61,14 +62,17 @@ public class MainActivity extends Activity
 
 			@Override
 			public void onClick(View v) {
-				final Dialog login = new Dialog(v.getContext());
-				login.setContentView(R.layout.create_user);
-				Button createUser = (Button) login.findViewById(R.id.createButton);
-				final EditText alias = (EditText) login.findViewById(R.id.newAlias);
-				final EditText name = (EditText) login.findViewById(R.id.newName);
-				final EditText password = (EditText) login.findViewById(R.id.newPassword);
-				final EditText age = (EditText) login.findViewById(R.id.newAge);
-				final EditText gender = (EditText) login.findViewById(R.id.newGender);
+				final Dialog createUserDialog = new Dialog(v.getContext());
+				createUserDialog.setContentView(R.layout.create_user);
+				Button createUser = (Button) createUserDialog.findViewById(R.id.createButton);
+				final EditText alias = (EditText) createUserDialog.findViewById(R.id.newAlias);
+				final EditText name = (EditText) createUserDialog.findViewById(R.id.newName);
+				final EditText password = (EditText) createUserDialog.findViewById(R.id.newPassword);
+				final EditText age = (EditText) createUserDialog.findViewById(R.id.newAge);
+				//final EditText gender = (EditText) createUserDialog.findViewById(R.id.newGender);
+				final RadioButton rbMale = (RadioButton) d.findViewById(R.id.male2);
+				final RadioButton rbFemale = (RadioButton) d.findViewById(R.id.female2);
+				
 				createUser.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
@@ -88,16 +92,25 @@ public class MainActivity extends Activity
 						m.append(age.getText());
 						Global.addSpaces(m,2 - age.getText().length());
 						m.append("/");
-						m.append(gender.getText());
-						Global.addSpaces(m,1 - gender.getText().length());
+						/*
+						if (rbMale.isChecked()) {
+							m.append("M");
+						} else {
+							m.append("F");
+						}
+						*/
+						m.append("M");
 						m.append("/");
-						m.append("HTTP/1.0\r\n");
+						m.append("\r\n");
+						Log.d("Create User", m.toString());
 						
 						NetworkHandler nh = new NetworkHandler();
 						//nh.execute(m.toString());
 						String result = null;
 						try {
+							Log.d("result", "About to execute");
 							result = nh.execute(m.toString()).get();
+							Log.d("result", "Done execute");
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						} catch (ExecutionException e1) {
@@ -108,14 +121,22 @@ public class MainActivity extends Activity
 						if (res == -1) {
 							Toast.makeText(v.getContext(), "Alias already exists. Please try again.", Toast.LENGTH_LONG).show();
 						} else {
-							User u = new User(res, name.getText().toString(), alias.getText().toString(), gender.getText().toString(), Integer.parseInt(age.getText().toString()), password.getText().toString());
+							String gender = "M";
+							/*
+							if (rbMale.isChecked()) {
+								gender = "M";
+							} else {
+								gender = "F";
+							}
+							*/
+							User u = new User(res, name.getText().toString(), alias.getText().toString(), gender, Integer.parseInt(age.getText().toString()), password.getText().toString());
 							Global.userDatabase.addUser(u);
 						
-							login.cancel();
+							createUserDialog.cancel();
 						}
 					}
 				});
-				login.show();
+				createUserDialog.show();
 			}
     		
     	});

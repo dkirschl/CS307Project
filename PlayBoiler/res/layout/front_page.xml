@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/darker_gray" >
-    
+    android:layout_height="match_parent" >
+
     <ImageView
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:id="@+id/frontPageImage"
-        android:src="@drawable/purdue_logo"
-        android:contentDescription="Logo" />
-    
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="20dp"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:layout_below="@id/frontPageImage"
+        android:contentDescription="Logo"
+        android:src="@drawable/purdue_logo" />
+
+    <TextView
         android:id="@+id/test"
-        android:text="Welcome to Play Boiler!" />
-    
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/frontPageImage"
+        android:layout_margin="20dp"
         android:background="@android:color/white"
-        android:id="@+id/profileSummary"
         android:gravity="center"
+        android:padding="20dp"
+        android:text="Welcome to Play Boiler!"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/profileSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/test"
-        android:textSize="25sp"
-        android:text="Messages" />
-    
-    <ScrollView 
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:text="Messages"
+        android:textSize="25sp" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/profileSummary"
-        android:background="@android:color/white">
-    <LinearLayout
-        android:id="@+id/messagesContainer"
-        android:layout_width="match_parent"
+        android:layout_below="@+id/refresh"
+        android:background="@android:color/white" >
+
+        <LinearLayout
+            android:id="@+id/messagesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5sp" >
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5sp">
-    </LinearLayout>
-</ScrollView>
+        android:layout_above="@+id/scrollView1"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/profileSummary"
+        android:text="Refresh" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:layout_below="@id/refresh"
+        android:background="@android:color/holo_blue_dark"
+        android:id="@+id/b"/>
     
     
 

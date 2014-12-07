@@ -3,44 +3,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+    <TextView
+        android:id="@+id/in1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alias"
+        android:textSize="20sp"/>
+    
     <EditText 
         android:id="@+id/newAlias"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="alias"/>
+        android:layout_below="@id/in1"/>
+    
+    <TextView
+        android:id="@+id/in2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newAlias"
+        android:text="Name"
+        android:textSize="20sp"/>
     
     <EditText 
         android:id="@+id/newName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/newAlias"
-        android:hint="name"/>
+        android:layout_below="@id/in2"/>
+    
+    <TextView
+        android:id="@+id/in3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newName"
+        android:text="Password"
+        android:textSize="20sp"/>
     
     <EditText 
         android:id="@+id/newPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="password"
-        android:layout_below="@id/newName"/>
+        android:inputType="textPassword"
+        android:layout_below="@id/in3"/>
+    
+    <TextView
+        android:id="@+id/in4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newPassword"
+        android:text="Age"
+        android:textSize="20sp"/>
     
     <EditText 
         android:id="@+id/newAge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="age"
-        android:layout_below="@id/newPassword"/>
-    <EditText 
-        android:id="@+id/newGender"
-        android:layout_width="match_parent"
+        android:inputType="number"
+        android:layout_below="@id/in4"/>
+    
+    <RadioGroup
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="gender"
-        android:layout_below="@id/newAge"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/newAge"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:id="@+id/genderSelectNew" >
+
+        <RadioButton android:id="@+id/male2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"/>
+        <RadioButton android:id="@+id/female2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"/>
+    </RadioGroup>
     
     <Button 
         android:id="@+id/createButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/newGender"
+        android:layout_below="@id/genderSelectNew"
         android:text="Done"/>
     
 

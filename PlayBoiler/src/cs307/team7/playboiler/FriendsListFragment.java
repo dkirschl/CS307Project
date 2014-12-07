@@ -77,7 +77,7 @@ public class FriendsListFragment extends Fragment {
 						String user = name.getText().toString();
 						StringBuilder sb = new StringBuilder();
 						//your id : your pass : alias of friend
-						sb.append("addf/");
+						sb.append("/addf/");
 						sb.append(Global.current_user.getKey());
 						String kyString = "" + Global.current_user.getKey();
 						Global.addSpaces(sb, keyLen - kyString.length());
@@ -104,7 +104,7 @@ public class FriendsListFragment extends Fragment {
 						//Search is either successful or failed
 					}
 				});
-				
+				d.show();
 			}
 		});
     	

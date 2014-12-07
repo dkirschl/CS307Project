@@ -1,6 +1,7 @@
 package cs307.team7.playboiler;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
@@ -20,10 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -36,7 +39,7 @@ public class SearchFragment extends Fragment {
         return fragment;
     }
 	
-	Button dateSelect, timeSelect;
+	Button dateSelect, timeSelect, dateSelectEnd, timeSelectEnd;
 	int m,h;
 	ArrayList<String> titles, dates;
 
@@ -51,16 +54,54 @@ public class SearchFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.search, container, false);
         final Context c = rootView.getContext();
         final LinearLayout contain = (LinearLayout) rootView.findViewById(R.id.searchContainer);
-        final EditText searchSport = (EditText) rootView.findViewById(R.id.searchSport);
+        final TextView searchSport = (TextView) rootView.findViewById(R.id.searchSport);
         final EditText searchLocation = (EditText) rootView.findViewById(R.id.searchLocation);
         final TextView tvDate = (TextView) rootView.findViewById(R.id.searchEventDate);
+        tvDate.setClickable(true);
         final TextView tvTime = (TextView) rootView.findViewById(R.id.searchEventTime);
-        final EditText compete = (EditText) rootView.findViewById(R.id.compSearch);
+        tvTime.setClickable(true);
+        final EditText compete = (EditText) rootView.findViewById(R.id.compEdit);
+        compete.setFilters(new InputFilterMinMax[]{ new InputFilterMinMax("1", "3")});
+        final TextView tvDateEnd = (TextView) rootView.findViewById(R.id.searchEventDateEnd);
+        tvDateEnd.setClickable(true);
+        final TextView tvTimeEnd = (TextView) rootView.findViewById(R.id.endTimeTextField);
+        tvTimeEnd.setClickable(true);
+        searchSport.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Dialog d = new Dialog(arg0.getContext());
+				d.setContentView(R.layout.sport_spinner);
+				d.setTitle("Select Sport");
+				//get list of all sports
+				List<String> allSports = (List<String>) Global.userDatabase.getSports();
+				Log.d("Test", "Ping");
+				for (int i = 0; i < allSports.size(); i++) {
+					Log.d("Sports", allSports.get(i));
+				}
+				final Spinner spinner = (Spinner) d.findViewById(R.id.sportsSpinner);
+				ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(arg0.getContext(), android.R.layout.simple_spinner_dropdown_item, allSports);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spinner.setAdapter(dataAdapter);
+				d.show();
+				//display as clickable text in a dialog
+				d.setOnCancelListener(new OnCancelListener() {
+					
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						searchSport.setText(String.valueOf(spinner.getSelectedItem()));
+					}
+				});
+				//display as clickable text in a dialog
+				//return with selected event
+			}
+    		
+    	});
         titles = new ArrayList<String>();
     	dates  = new ArrayList<String>();
         
-        dateSelect = (Button) rootView.findViewById(R.id.searchSelectDate);
-        dateSelect.setOnClickListener(new Global.dateClickListener(tvDate));
+        
+        tvDate.setOnClickListener(new Global.dateClickListener(tvDate));
         
         final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 			
@@ -71,8 +112,17 @@ public class SearchFragment extends Fragment {
 				tvTime.setText(new StringBuilder().append(timeFix(h)).append(":").append(timeFix(m)));
 			}
 		};
-    	timeSelect = (Button) rootView.findViewById(R.id.searchSelectTime);
-    	timeSelect.setOnClickListener(new OnClickListener() {
+		final TimePickerDialog.OnTimeSetListener timePickerListener2 = new TimePickerDialog.OnTimeSetListener() {
+			
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				h = hourOfDay;
+				m = minute;
+				tvTimeEnd.setText(new StringBuilder().append(timeFix(h)).append(":").append(timeFix(m)));
+			}
+		};
+    	
+    	tvTime.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -80,6 +130,19 @@ public class SearchFragment extends Fragment {
 				tpd.show();
 			}
 		});
+    	
+    	tvDateEnd.setOnClickListener(new Global.dateClickListener(tvDateEnd));
+    	
+       	tvTimeEnd.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				TimePickerDialog tpd2 = new TimePickerDialog(v.getContext(), timePickerListener2, h, m, false);
+				tpd2.show();
+				
+			}
+		});
+    	
         Button search = (Button) rootView.findViewById(R.id.searchButton);
         search.setOnClickListener(new OnClickListener() {
 			

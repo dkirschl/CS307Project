@@ -21,6 +21,7 @@ public class NetworkHandler extends AsyncTask<String, Void, String> {
 		String message = params[0];
 		String message1 = "/simple.html";
 		String url="http://sac01.cs.purdue.edu:39004"+message;
+		Log.d("Network Handler", "In Network Handler");
 		URL obj = null;
 		try {
 			obj = new URL(url);

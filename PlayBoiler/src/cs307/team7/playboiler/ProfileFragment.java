@@ -69,15 +69,6 @@ public class ProfileFragment extends Fragment {
         	currGender.setText(user.getGender());
         	bio.setText(user.getDescription());
         }
-        Button def = (Button) rootView.findViewById(R.id.createDefaultUser);
-        def.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				new NetworkHandler().execute("/crus/Password            /User                                              /Alias               /Ag/M/ \r\n");
-			}
-        	
-        });
         Button edit = (Button) rootView.findViewById(R.id.edit);
         edit.setOnClickListener(new OnClickListener() {
 
@@ -138,7 +129,7 @@ public class ProfileFragment extends Fragment {
 						User temp = new User(Global.current_user.getKey(), etName.getText().toString(), etAlias.getText().toString(), currGender.getText().toString(), Integer.parseInt(etAge.getText().toString()), etBio.getText().toString(), "", "");
 						if (Global.current_user.getKey() != -1) {
 							Global.userDatabase.updateUser(temp);
-							Global.userDatabase.addUser(temp);
+							//Global.userDatabase.addUser(temp);
 							String m = "/crus/"+temp.getName()+"/"+temp.getAlias()+"/"+temp.getAge()+"/"+temp.getGender()+"/"+ temp.getPassword()+"password/ HTTP/1.0\r\n";
 							NetworkHandler nh = new NetworkHandler();
 							//nh.execute(m);

@@ -97,10 +97,21 @@ public class Global {
 
 		int action;
 		View message;
+		String alias;
+		int keyLen = 4;
+		int pasLen = 20;
+		int userLen = 20;
+		String result;
+		NetworkHandler nh;
+		int id;
+		StringBuilder sb;
+		String kyString;
 		
-		public RequestClickListener(int action, View message) {
+		public RequestClickListener(int action, View message, String alias, int id) {
 			this.action = action;
 			this.message = message;
+			this.alias = alias;
+			this.id = id;
 		}
 		
 		@Override
@@ -108,14 +119,93 @@ public class Global {
 			switch (action) {
 			case DECLINE:
 				Toast.makeText(v.getContext(), "Friend Request Declined.", Toast.LENGTH_SHORT).show();
-				//Global.userDatabase.removeFriend(Global.current_user.getKey(),20);
+				sb = new StringBuilder();
+				sb.append("/delf/");
+				//your id : your pass : alias
+				sb.append(Global.current_user.getKey());
+				kyString = "" + Global.current_user.getKey();
+				Global.addSpaces(sb, keyLen - kyString.length());
+				sb.append("/");
+				sb.append(Global.current_user.getPassword());
+				Global.addSpaces(sb, pasLen - Global.current_user.getPassword().length());
+				sb.append("/");
+				sb.append(alias);
+				Global.addSpaces(sb, userLen - alias.length());
+				sb.append("/");
+				sb.append("\r\n");
+				
+				Log.d("Message", sb.toString());
+				result = null;
+				nh = new NetworkHandler();
+				try {
+					result = nh.execute(sb.toString()).get();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					e1.printStackTrace();
+				}
+				Log.d("Friend Denied", result);
 				break;
 			case ACCEPT:
 				Toast.makeText(v.getContext(), "Friend Request Accepted!", Toast.LENGTH_SHORT).show();
-				//Global.userDatabase.addFriend(Global.current_user.getKey(), 21);
+				
+				sb = new StringBuilder();
+				//your id : your pass : alias of friend
+				sb.append("/addf/");
+				sb.append(Global.current_user.getKey());
+				kyString = "" + Global.current_user.getKey();
+				Global.addSpaces(sb, keyLen - kyString.length());
+				sb.append("/");
+				sb.append(Global.current_user.getPassword());
+				Global.addSpaces(sb, pasLen - Global.current_user.getPassword().length());
+				sb.append("/");
+				sb.append(alias);
+				Global.addSpaces(sb, userLen - alias.length());
+				sb.append("/");
+				sb.append("\r\n");
+				
+				Log.d("Message", sb.toString());
+				result = null;
+				nh = new NetworkHandler();
+				try {
+					result = nh.execute(sb.toString()).get();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					e1.printStackTrace();
+				}
+				Log.d("Friend Requested", result);
+				Global.userDatabase.addFriend(Global.current_user.getKey(), id);
 				break;
 			case OK:
 				Toast.makeText(v.getContext(), "Message Removed", Toast.LENGTH_SHORT).show();
+				sb = new StringBuilder();
+				sb.append("/dlfq/");
+				//your id : your pass : id
+				sb.append(Global.current_user.getKey());
+				String kyString2 = "" + Global.current_user.getKey();
+				Global.addSpaces(sb, keyLen - kyString2.length());
+				sb.append("/");
+				sb.append(Global.current_user.getPassword());
+				Global.addSpaces(sb, pasLen - Global.current_user.getPassword().length());
+				sb.append("/");
+				String idString = "" + id;
+				sb.append(id);
+				Global.addSpaces(sb, keyLen - idString.length());
+				sb.append("/");
+				sb.append("\r\n");
+				Log.d("Message", sb.toString());
+				result = null;
+				nh = new NetworkHandler();
+				try {
+					result = nh.execute(sb.toString()).get();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					e1.printStackTrace();
+				}
+				Log.d("Message Removed", result);
+				
 				break;
 			}
 			((ViewGroup)message.getParent()).removeView(message);

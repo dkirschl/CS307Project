@@ -154,14 +154,6 @@
         android:layout_below="@id/topThreeLayout"
         android:text="Edit Profile" />
     
-    <Button
-        android:id="@+id/createDefaultUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topThreeLayout"
-        android:layout_toRightOf="@id/edit"
-        android:text="User" />
-    
     
 
 </RelativeLayout>
