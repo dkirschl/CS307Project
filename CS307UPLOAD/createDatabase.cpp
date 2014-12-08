@@ -25,6 +25,7 @@ int createDatabases()
    char *query;
    char *query2;
    char *query3;
+   char *query4; //comment
    int results;
 
    rc = sqlite3_open("serverDatabase.db", &db);
@@ -36,11 +37,13 @@ int createDatabases()
       fprintf(stderr, "Opened database successfully\n");
    }
 
-   query = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, name CHAR(51) NOT NULL, alias CHAR(21) NOT NULL, age INT NOT NULL, gender CHAR(2) NOT NULL, password CHAR(21), picture BLOB, description CHAR(101), firstSport CHAR(31), secondSport CHAR(31), thirdSport CHAR(31), friendsList CHAR(1001));";
+   query = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, name CHAR(51) NOT NULL, alias CHAR(21) NOT NULL, age INT NOT NULL, gender CHAR(2) NOT NULL, password CHAR(21), picture BLOB, description CHAR(101), firstSport CHAR(31), secondSport CHAR(31), thirdSport CHAR(31), friendsList CHAR(1001), preferences INTEGER);";
 
    query2 = "CREATE TABLE IF NOT EXISTS EVENTS(id INTEGER PRIMARY KEY AUTOINCREMENT, sport CHAR(31) NOT NULL, location CHAR(31) NOT NULL, date INT NOT NULL, time INT NOT NULL, creatingUser INT, summary CHAR(101), desiredSkillLevel INT, attendingUsers CHAR(1001), title CHAR(26), numAttending INT, maxNumAttending INT, owningUser INT);";
 
 	query3 = "CREATE TABLE IF NOT EXISTS FRIENDREQUESTS(requestingUser INTEGER NOT NULL, targetUser INTEGER NOT NULL, results INTEGER NOT NULL);";
+
+	query4 = "CREATE TABLE IF NOT EXISTS GAMEINVITES(requestingUser INTEGER NOT NULL, targetUser INTEGER NOT NULL, inviteGameID INTEGER NOT NULL);";
 
    results = sqlite3_exec(db,query,callback, 0, &zErrMsg);
    if (results != SQLITE_OK){
@@ -62,6 +65,13 @@ int createDatabases()
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);
 	} else {
 		fprintf(stdout, "Friend Requests table created successfully\n");
+	}
+
+	results = sqlite3_exec(db, query4, callback, 0, &zErrMsg);
+	if(results != SQLITE_OK){
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+	} else {
+		fprintf(stdout, "Game Invites table created successfully\n");
 	}
 
    sqlite3_close(db);

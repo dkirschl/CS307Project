@@ -1,21 +1,31 @@
 //Message handler By Dylan Smith
 #include "tbinclude.h"
 
-void crus(int);
-void deus(int);
-void crev(int);//
-void upus(int);
-void upev(int);//
-void deev(int);//
-void gtev(int);//
-void invl(int);
-void join(int);
-void unjn(int); 
-void lgon(int);
-void upts(int);  ///////////////// DYLAN, I ADDED AN UPDATE TOP SPORTS FUNCTION. DON'T PANIC. ///////////
-void crup(int);
-void chck(int);
-void addf(int);
+void crus(int); //create user
+void deus(int); //delete user
+void crev(int);// create event
+void upus(int); //update user
+void upev(int);// //update event
+void deev(int); //delete event
+void gtev(int); //get events
+void invl(int); //invalid
+void join(int);//join event
+void unjn(int); //unjoin event
+void lgon(int); //logon
+void upts(int); //update top 3 sports
+void crup(int);	//
+void chck(int);	//check
+void addf(int);	//add friend
+void delf(int);	//delete Friend
+
+void gtfq(int);	//get friend requests
+void gtgm(int);	//get game
+void gtal(int);	//getall
+void ingm(int); //invite to game
+void dlgi(int); //delete game invite
+void dlfq(int); //delete friend request
+void gail(int);
+
 
 void printStandard(int,char *);
 void readRemainder(int);
@@ -140,11 +150,256 @@ void work(int slaveSocket)
 	{
 		addf(slaveSocket);
 	}
+	else if(strcmp(input1,"/delf") == 0)
+	{
+		delf(slaveSocket);
+	}
+	else if(strcmp(input1,"/gtfq") == 0)
+	{
+		gtfq(slaveSocket);
+	}	
+	else if(strcmp(input1,"/gtgm") == 0)
+	{
+		gtgm(slaveSocket);
+	}	
+	else if(strcmp(input1,"/gtal") == 0)
+	{
+		gtal(slaveSocket);
+	}
+	else if(strcmp(input1,"/ingm") == 0)
+	{
+		ingm(slaveSocket);
+	}
+	else if(strcmp(input1,"/dlgi") == 0)
+	{
+		dlgi(slaveSocket);
+	}
+	else if(strcmp(input1,"/dlfq") == 0)
+	{
+		dlfq(slaveSocket);
+	}
+	else if(strcmp(input1,"/gail") == 0)
+	{
+		dlfq(slaveSocket);
+	}
 	else 										//INVALID INPUT
 	{
 		invl(slaveSocket);
 	}
 }
+
+
+////////////////////////////////
+
+void gail(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[1001];	//my key 
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, 1001);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/gail";
+	printStandard(slaveSocket,stringA);
+	//database code
+	getAliases(slaveSocket,input2);
+
+	close(slaveSocket);
+}
+
+void dlfq(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//my key
+	char input3[passL];	//pass 
+	char input4[keyL];	//thier key
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, keyL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/dlfq";
+	printStandard(slaveSocket,stringA);
+	//database code
+	deleteFriendRequest(slaveSocket,input2, input3, input4);
+
+	close(slaveSocket);
+}
+
+void dlgi(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+	char input4[evKeyL];
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, evKeyL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/dlgi";
+	printStandard(slaveSocket,stringA);
+	//database code
+	deleteGameInvite(slaveSocket,input2, input3, input4);
+
+	close(slaveSocket);
+}
+
+void ingm(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+	char input4[keyL];
+	char input5[evKeyL];
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, keyL);
+	readStuffs(slaveSocket, input5, evKeyL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/ingm";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataInviteGame(slaveSocket,input2, input3, input4, input5);
+
+	close(slaveSocket);
+}
+
+void gtfq(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/gtfq";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataGetFR(slaveSocket,input2, input3);
+
+	close(slaveSocket);
+}
+
+
+
+void gtgm(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/gtgm";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataGetG(slaveSocket,input2, input3);
+
+	close(slaveSocket);
+}
+
+
+void gtal(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/gtal";
+	printStandard(slaveSocket,stringA);
+	//database code
+
+	dataGetFR(slaveSocket,input2, input3);	
+	dataGetG(slaveSocket,input2, input3);
+	
+
+	close(slaveSocket);
+}
+
+/////////////////////////////////
 
 void chck(int slaveSocket)
 {
@@ -212,9 +467,40 @@ void addf(int slaveSocket)
 
 	//OTHER
 	char stringA[6] = "/addf";
+
 	printStandard(slaveSocket,stringA);
 	//database code
 	dataAddFriend(slaveSocket,input2, input3, input4);
+
+	close(slaveSocket);
+}
+
+void delf(int slaveSocket)
+{
+	unsigned char next;
+	int counter;
+	//INPUT AREAS
+	char input2[keyL];	//PASS
+	char input3[passL];	//NAME
+	char input4[aliasL];	//ALIAS
+
+
+	//GET INPUT
+	printf("Hey");
+
+	readStuffs(slaveSocket, input2, keyL);
+	readStuffs(slaveSocket, input3, passL);
+	readStuffs(slaveSocket, input4, aliasL);
+	
+	read(slaveSocket, &next, sizeof(next));
+	printf("My hands are typing words lsdf;laksdjf;l.\n");
+	readRemainder(slaveSocket);
+
+	//OTHER
+	char stringA[6] = "/addf";
+	printStandard(slaveSocket,stringA);
+	//database code
+	dataDeleteFriend(slaveSocket,input2, input3, input4);
 
 	close(slaveSocket);
 }
@@ -253,6 +539,7 @@ void crus(int slaveSocket)
 
 	close(slaveSocket);
 }
+
 
 
 void crup(int slaveSocket)
@@ -423,6 +710,7 @@ void upus(int slaveSocket)
 	char input7[genderL];		//GENDER
 	char input8[descL];		//DESC
 	char input9[passL];		//new pass
+	char input10[genderL];  // new pref
 
 	
 	//GET INPUT
@@ -435,6 +723,7 @@ void upus(int slaveSocket)
 	 readStuffs(slaveSocket, input7, genderL);
 	 readStuffs(slaveSocket, input8, descL);
 	 readStuffs(slaveSocket, input9, passL);
+	 readStuffs(slaveSocket, input10, genderL);
 	
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -442,7 +731,7 @@ void upus(int slaveSocket)
 	char stringA[6] = "/upus";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataUpdateUser(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9);
+	dataUpdateUser(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9, input10);
 
 	close(slaveSocket);
 }
@@ -535,6 +824,8 @@ void gtev(int slaveSocket)
 	char input5[timeL];		//TIME
 	char input6[competeL];		//competeL
 	char input7[titleL];
+	char input8[dateL];
+	char input9[timeL];
 
 
 	//GET INPUT
@@ -545,6 +836,8 @@ void gtev(int slaveSocket)
 	 readStuffs(slaveSocket, input5, timeL);
 	 readStuffs(slaveSocket, input6, competeL);
 	 readStuffs(slaveSocket, input7, titleL);
+	 readStuffs(slaveSocket, input8, dateL);
+	 readStuffs(slaveSocket, input9, timeL);
 
 	read(slaveSocket, &next, sizeof(next));
 	readRemainder(slaveSocket);
@@ -553,7 +846,7 @@ void gtev(int slaveSocket)
 	char stringA[6] = "/gtev";
 	printStandard(slaveSocket,stringA);
 	//database code
-	dataGetEvent(slaveSocket,input2,input3,input4,input5,input6,input7);
+	dataGetEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8, input9);
 
 	close(slaveSocket);
 }
