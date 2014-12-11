@@ -105,6 +105,8 @@ void deleteGameInvite(int, char *, char *, char *);
 
 void removeFriend(char *, char *);
 
+void appendFriend(char *, char *);
+
 void deleteFriendRequest(int, char *, char *, char *);
 
 void getAliases(int, char *);

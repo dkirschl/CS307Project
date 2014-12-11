@@ -25,6 +25,7 @@ void ingm(int); //invite to game
 void dlgi(int); //delete game invite
 void dlfq(int); //delete friend request
 void gail(int);
+void trns(int);
 
 
 void printStandard(int,char *);
@@ -180,7 +181,7 @@ void work(int slaveSocket)
 	}
 	else if(strcmp(input1,"/gail") == 0)
 	{
-		dlfq(slaveSocket);
+		gail(slaveSocket);
 	}
 	else 										//INVALID INPUT
 	{
@@ -190,6 +191,7 @@ void work(int slaveSocket)
 
 
 ////////////////////////////////
+
 
 void gail(int slaveSocket)
 {
@@ -391,6 +393,8 @@ void gtal(int slaveSocket)
 	char stringA[6] = "/gtal";
 	printStandard(slaveSocket,stringA);
 	//database code
+
+
 
 	dataGetFR(slaveSocket,input2, input3);	
 	dataGetG(slaveSocket,input2, input3);
@@ -635,12 +639,13 @@ void crev(int slaveSocket)
 	readStuffs(slaveSocket, input13, paramL);
 	
 	read(slaveSocket, &next, sizeof(next));
-	readRemainder(slaveSocket);
+	
 	printf("HEYOH\n");
 
 	//OTHER
 	char stringA[6] = "/crev";
-	printStandard(slaveSocket,stringA);
+	
+	printf("??\n");
 	//database code
 	
 	time_t now;
@@ -654,30 +659,44 @@ void crev(int slaveSocket)
 
 	struct tm newTM;
 	
-
+	printf("yo\n");
 	if(atoi(input6) < atoi(date) || (atoi(date) == atoi(input6) && atoi(input7) < atoi(timeA)))
 	{
-		 invl(slaveSocket);
+		printf("???\n");
+		invl(slaveSocket);
+		printf("what?\n");
 		return;
 	}
+	readRemainder(slaveSocket);
+	printStandard(slaveSocket,stringA);
 	
 	int i = 0;
+	std::string temp;
 
 	if(strncmp(input13,"0", 1) == 0)
 	{
+		printf("yo2\n");
 		dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+		
+		temp = "~" + std::string(input6) + "~";		
+		write(slaveSocket,temp.c_str(),dateL);
 	}
 	else {
 		while(atoi(input6) < atoi(input12) && i < 31)
 		{
 		
 			dataCreateEvent(slaveSocket,input2,input3,input4,input5,input6,input7,input8,input9,input10,input11);
+
+			temp = "~" + std::string(input6) + "~";		
+			write(slaveSocket,temp.c_str(),dateL);
+			
+
 			i++;
 		
 			memset(&newTM, 0, sizeof(struct tm));
 			strptime(input6, "%Y%m%d", &newTM);	
 		
-			if(strncmp(input13, "2",1)) // weekly add 1 week
+			if(strncmp(input13, "1",1)) // weekly add 1 week
 			{
 				newTM.tm_mday += 7;
 				mktime(&newTM);
@@ -970,7 +989,7 @@ void upts(int slaveSocket)
 void invl(int slaveSocket)
 {
 	readRemainder(slaveSocket);
-	printf("INVALID INPUT");
+	printf("INVALID INPUT\n");
 	char stringA[6] = "/invl";
 	printStandard(slaveSocket,stringA);
 	write(slaveSocket,"INVALID",7);
@@ -979,6 +998,7 @@ void invl(int slaveSocket)
 
 void printStandard(int slaveSocket,char * input1)
 {
+	printf("?\n");
 	write(slaveSocket,"HTTP/1.1",8);
 	write(slaveSocket," ",1);
 	write(slaveSocket,"200",3);

@@ -12,6 +12,7 @@ bool dbOpen = false;
 bool usePipe = true;
 bool gameInvite = false;
 bool translateIDs = true;
+bool friendaccept = false;
 
 char currentKey[keyL];
 char lastKey[keyL];
@@ -22,7 +23,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 	fprintf(stdout, "%d\n", argc);
 	for(i = 0; i<argc; i++){
 
-		printf("column name = %s\ncallback starts as %s\n", azColName[i], callback_return.c_str());
+		//printf("column name = %s\ncallback starts as %s\n", azColName[i], callback_return.c_str());
 
 		if(gameInvite && i == 0){
 			callback_return += "2~";
@@ -30,8 +31,20 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 
 		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
 
-		if(strcmp(azColName[i],"requestingUser") == 0){
-			strcpy(lastKey, argv[i]);
+		if(strcmp(azColName[i],"requestingUser") == 0 || strcmp(azColName[i],"targetUser") == 0){
+			printf("ARGV =:%s:\n\n",argv[i]);
+			strncpy(lastKey, argv[i],4);
+			int k = 0;			
+			bool j = false;			
+			for(k = 0; k < 4; k++){
+				if(j == true || lastKey[k] == '\0')
+				{
+					j = true;
+					lastKey[k] = ' ';
+				}
+			}
+			lastKey[4] = '\0';
+			printf("LAST KEY IS NOW=:%s:\n\n\n",lastKey);
 		}
 
 		if(translateIDs && (strcmp(azColName[i],"attendingUsers") == 0 || strcmp(azColName[i],"friendsList") == 0)){
@@ -46,7 +59,7 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 
 			getAlias(argv[i], alias);
 			alias[20] = '\0';
-			printf("You're not crazy. It gets here.\n");
+			//printf("You're not crazy. It gets here.\n");
 			printf("alias = %s\n", alias);
 			printf("key = %s\n", argv[i]);
 
@@ -54,13 +67,15 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 			callback_return += "~";
 			callback_return += string(alias);
 
-			printf("callback_return is now %s\n", callback_return.c_str());
+			//printf("callback_return is now %s\n", callback_return.c_str());
 
 		} else if(strcmp(azColName[i],"inviteGameID") == 0){
 			// get game info from id
 			getGameDataFromKey(argv[i]);
 		} else if(strcmp(azColName[i],"results") == 0 && atoi(argv[i]) == -2){
 			removeFriend(currentKey,lastKey);
+		} else if(friendaccept && strcmp(azColName[i],"results") == 0 && atoi(argv[i]) == 1){
+			appendFriend(currentKey,lastKey);		
 		} else {
 			callback_return += string(argv[i]);
 		}
@@ -69,14 +84,14 @@ static int callback(void *data, int argc, char **argv, char **azColName){
 			callback_return += "~";
 		}
 
-		printf("callback changes into %s\n", callback_return.c_str());
+		//printf("callback changes into %s\n", callback_return.c_str());
 	}
-	printf("DoneLine\n");
+	//printf("DoneLine\n");
 	if(usePipe == true){
 		callback_return += "|";
 	}
 	
-	printf("\n");
+	//printf("\n");
 	return 0;
 }
 /*
@@ -245,22 +260,24 @@ void removeFriend(char * key, char * otherUserKey)
 		
 		printf("must extract id %s from the current user %s's friends list\n", otherUserKey, key);
 	// extract	
-		query = "SELECT friendsList USERS WHERE id="+string(otherUserKey)+";";
+		query = "SELECT friendsList FROM USERS WHERE id="+string(otherUserKey)+";";
 		
 		fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
 
+		translateIDs = false;
 		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
 		usePipe = true;
+		translateIDs = true;
 						
 		fprintf(stdout, "RESULTS IS: %d\n", results);
 		
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);
 		} else {
-			fprintf(stdout, "extracted friendsList succesfully\n");
+			fprintf(stdout, "extracted friendsList1 succesfully\n");
 		}
 
 ////////
@@ -270,10 +287,10 @@ void removeFriend(char * key, char * otherUserKey)
 		printf("friendsList for user %s = %s\n", key, callSave.c_str());
 
 		ret = stringFindLocation(callSave.c_str(), otherUserKey);
-
+		
 		if(ret < 0){
 			// shouldn't unjoin because the alias isn't in
-			printf("DELETE FRIEND ERROR: Key %s was not friends with user %s\n", otherUserKey, key);			
+			printf("2 ret = %d : DELETE FRIEND ERROR: Key %s was not friends with user %s\n", ret, otherUserKey, key);			
 			return;
 		}
 
@@ -310,6 +327,89 @@ void removeFriend(char * key, char * otherUserKey)
 }
 
 
+void appendFriend(char * key, char * otherUserKey)
+{
+
+		char *zErrMsg = 0;
+		int rc;
+		std::string query;
+		int results;
+		char* user;
+		int ret;
+		int ret2;
+
+		std::string callSave;
+
+		if(!dbOpen){
+			rc = sqlite3_open("serverDatabase.db", &db);
+			dbOpen = true;
+
+			if(rc){
+				fprintf(stderr, "Unable to open database: %s\n", sqlite3_errmsg(db));
+			} else {
+				fprintf(stderr, "Opened database succesfully\n");
+			}
+		}
+
+		const char* data = "Callback functioin called";
+
+			resetCallback_return();
+
+			query = "SELECT friendsList FROM USERS where id="+string(key)+";";
+
+			fprintf(stdout, "%s\n", query.c_str());
+			
+			resetCallback_return();
+
+			translateIDs = false;
+			usePipe = false;
+			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+			usePipe = true;
+			translateIDs = true;
+
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "extracted friendsList2\n");
+				printf("friendsList = %s\n", callback_return.c_str());
+			}			
+
+			ret = stringFindLocation(callback_return.c_str(), otherUserKey);
+
+			if(ret >= 0){
+				// user is already in friendsList, which probably means a double accept
+				printf("ret = %d\n", ret);
+				printf("User attempted to accept a friend request from a current friend\n");
+				return; 
+			}
+
+			callSave = callback_return.c_str();
+
+			printf("\n\nHERE IS WHERE YOU WANT TO LOOK! IN APPENDFRIEND otherUserKey = %s and key = %s\n\n\n", otherUserKey, key);
+
+			callSave += string(otherUserKey) + "*";
+
+			printf("New friendsList string after appending = %s\n", callSave.c_str());
+
+			query = "UPDATE USERS SET friendsList = '"+ string(callSave.c_str()) +"' where id="+string(key)+" AND friendsList NOT LIKE '%"+string(otherUserKey)+"%';";
+
+			fprintf(stdout, "%s\n", query.c_str());
+		
+			resetCallback_return();
+		
+			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
+		
+			fprintf(stdout, "RESULTS IS: %d\n", results);
+		
+			if(results != SQLITE_OK){
+				fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			} else {
+				fprintf(stdout, "friendsList updated succesfully\n");
+			}
+	
+	
+}
+
 void dataGetFR(int slaveSocket, char * key, char * password)
 {
 	string query;	
@@ -330,7 +430,10 @@ void dataGetFR(int slaveSocket, char * key, char * password)
 
 	const char* data = "Callback function called";
 	
-	strcpy(currentKey,key);
+	printf("KEY =:%s:\n\n\n",key);
+	strncpy(currentKey,key,4);
+	currentKey[4] = '\0';
+	printf("CURRENT KEY IS NOW=:%s:\n\n\n",currentKey);
 
 	query = "SELECT requestingUser, results FROM FRIENDREQUESTS WHERE targetUser="+string(key)+" AND results=-2;";
 	
@@ -340,6 +443,20 @@ void dataGetFR(int slaveSocket, char * key, char * password)
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);
 	} else {
 		fprintf(stdout, "Delete friends handled succesfully hopefully\n");
+	}
+
+	resetCallback_return();
+
+	query = "SELECT targetUser, results FROM FRIENDREQUESTS WHERE requestingUser="+string(key)+" AND results=1;";
+
+	friendaccept = true;
+	results = sqlite3_exec(db, query.c_str(), callback, (void*) data, &zErrMsg);
+	friendaccept = false;
+
+	if(results != SQLITE_OK){
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+	} else {
+		fprintf(stdout, "accepted friend requests searched succesfully\n");
 	}
 		
 	resetCallback_return();
@@ -417,12 +534,16 @@ void dataGetG(int slaveSocket, char * key, char * password)
 	}
 
 	fprintf(stdout, "callback_return: %s\n", callback_return.c_str());
-			
+	
+	if(callback_return.length() <= 1){
+		resetCallback_return();
+	}
+		
 	sqlite3_close(db);
 	dbOpen = false;
 
 	write(slaveSocket, callback_return.c_str(), callback_return.length());
-	fprintf(stdout, "Wrote back\n");
+	//fprintf(stdout, "Wrote back\n");
 		
 	
 
@@ -1166,7 +1287,7 @@ void dataUpdateEvent(int slaveSocket,char * key,char * password,char * evKey,cha
 
 			const char* data = "Callback functioin called";
 
-			query = "UPDATE EVENTS SET sport='"+string(sport)+"' location='"+string(location)+"' date="+string(date)+" time="+string(time)+" summary='"+string(summary)+"' skill='"+ string(skill) +"' title='"+string(title)+ +"' maxNumAttending="+string(attendM) +" WHERE id="+string(evKey)+";"; 
+			query = "UPDATE EVENTS SET sport='"+string(sport)+"' location='"+string(location)+"' date="+string(date)+" time="+string(time)+" summary='"+string(summary)+"' desiredSkillLevel='"+ string(skill) +"' title='"+string(title)+ +"' maxNumAttending="+string(attendM) +" WHERE id="+string(evKey)+";"; 
 			
 			fprintf(stdout, "%s\n", query.c_str());
 			results = sqlite3_exec(db, query.c_str(), callback, 0, &zErrMsg);
@@ -1304,7 +1425,7 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 		{
 			query += " AND ";
 		}	
-		query += " date =>" + string(date) + " ";
+		query += " date >=" + string(date) + " ";
 		flag = 1;
 	}
 
@@ -1318,7 +1439,7 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 		{
 			query += " AND ";
 		}	
-		query += " time =>" + string(time) + " ";
+		query += " time >=" + string(time) + " ";
 		flag = 1;
 	}
 
@@ -1374,7 +1495,7 @@ void dataGetEvent(int slaveSocket,char * sport,char * location,char * date,char 
 		{
 			query += " AND ";
 		}	
-		query += " skill ='" + string(skill) + "' ";
+		query += " desiredSkillLevel ='" + string(skill) + "' ";
 		flag = 1;
 	}
 
@@ -1737,14 +1858,18 @@ void dataAddFriend(int slaveSocket, char * key, char * password, char * otherUse
 
 			fprintf(stdout, "%s\n", query.c_str());
 			
+			resetCallback_return();
+
+			translateIDs = false;
 			usePipe = false;
 			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
 			usePipe = true;
+			translateIDs = true;
 
 			if(results != SQLITE_OK){
 				fprintf(stderr, "SQL error: %s\n", zErrMsg);
 			} else {
-				fprintf(stdout, "extracted friendsList\n");
+				fprintf(stdout, "extracted friendsList3\n");
 				printf("friendsList = %s\n", callback_return.c_str());
 			}			
 
@@ -1762,12 +1887,30 @@ void dataAddFriend(int slaveSocket, char * key, char * password, char * otherUse
 			}
 
 			callSave = callback_return.c_str();
+			
+			char otherUserKey2[keyL];
+			strncpy(otherUserKey2, otherUserKey,4);
 
-			callSave += string(key) + "*";
+
+			int k = 0;			
+			bool j = false;			
+			for(k = 0; k < 4; k++){
+				if(j == true || otherUserKey2[k] == '\0')
+				{
+					j = true;
+					otherUserKey2[k] = ' ';
+				}
+			}
+
+			otherUserKey2[4] = '\0';
+
+			printf("\n\nHERE IS WHERE YOU WANT TO LOOK! IN ADDFRIEND otherUserKey = %s and key = %s\n\n\n", otherUserKey2, key);
+
+			callSave += string(otherUserKey2) + "*";
 
 			printf("New friendsList string after appending = %s\n", callSave.c_str());
 
-			query = "UPDATE USERS SET friendsList = '"+ string(callSave.c_str()) +"' where id="+string(key)+";";
+			query = "UPDATE USERS SET friendsList = '"+ string(callSave.c_str()) +"' where id="+string(key)+"AND friendsList NOT LIKE '%"+string(otherUserKey2)+"%';";
 
 			fprintf(stdout, "%s\n", query.c_str());
 		
@@ -1788,12 +1931,17 @@ void dataAddFriend(int slaveSocket, char * key, char * password, char * otherUse
 
 			query = "SELECT friendsList FROM USERS WHERE id = "+string(key)+";";
 
+
+			translateIDs = false;
+			usePipe = false;
 			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+			usePipe = true;
+			translateIDs = true;
 
 			if(results != SQLITE_OK){
 				fprintf(stderr, "SQL error: %s\n", zErrMsg);
 			} else {
-				fprintf(stdout, "extracted friendsList\n");
+				fprintf(stdout, "extracted friendsList4\n");
 				printf("requesting User's friendsList = %s\n", callback_return.c_str());
 			}			
 
@@ -1803,12 +1951,17 @@ void dataAddFriend(int slaveSocket, char * key, char * password, char * otherUse
 
 			query = "SELECT friendsList FROM USERS WHERE id = "+string(otherUserKey)+";";
 
+			translateIDs = false;
+			usePipe = false;
 			results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
+			translateIDs = true;
+			usePipe = true;
+
 
 			if(results != SQLITE_OK){
 				fprintf(stderr, "SQL error: %s\n", zErrMsg);
 			} else {
-				fprintf(stdout, "extracted friendsList\n");
+				fprintf(stdout, "extracted friendsList5\n");
 				printf("target user's friendsList %s\n", callback_return.c_str());
 			}			
 
@@ -1865,7 +2018,7 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 		int results;
 		char* user;
 		//char alias[21];
-		char otherUserKey[keyL];
+		char otherUserKey[keyL + 1];
 		int ret;
 		std::string callSave;
 
@@ -1884,7 +2037,21 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 
 
 		getKeyFromAlias(otherUser, otherUserKey);
+		int myT;
+		bool myB = false;
+		for(myT = 0; myT < 4; myT++)
+		{
+			if(otherUserKey[myT] == '\0' || myB == true)
+			{
+				myB = true;
+				otherUserKey[myT] = ' ';	
+			}
+		}
+		otherUserKey[4] = '\0';
+		//otherUserKey[5] = '\0';
+
 		printf("key from alias %s = %s\n", otherUserKey, otherUser);
+
 
 		query = "SELECT results FROM FRIENDREQUESTS where requestingUser="+string(key)+" AND targetUser="+string(otherUserKey)+";";
 		
@@ -1918,7 +2085,7 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 				
 				
 			// add to FRIENDREQUESTS	
-				query = "INSERT INTO FROM FRIENDREQUESTS (requestingUser, targetUser, results) VALUES("+string(key)+","+string(otherUserKey)+",-2);";
+				query = "INSERT INTO FRIENDREQUESTS (requestingUser, targetUser, results) VALUES("+string(key)+","+string(otherUserKey)+",-2);";
 		
 				fprintf(stdout, "%s\n", query.c_str());
 
@@ -1995,22 +2162,24 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 				
 				printf("must extract id %s from the current user's friends list\n", otherUserKey);
 			// extract	
-				query = "SELECT friendsList USERS WHERE id="+string(key)+";";
+				query = "SELECT friendsList FROM USERS WHERE id="+string(key)+";";
 		
 				fprintf(stdout, "%s\n", query.c_str());
 
 				resetCallback_return();
 
+				translateIDs = false;
 				usePipe = false;
 				results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
 				usePipe = true;
+				translateIDs = true;
 						
 				fprintf(stdout, "RESULTS IS: %d\n", results);
 		
 				if(results != SQLITE_OK){
 					fprintf(stderr, "SQL error: %s\n", zErrMsg);
 				} else {
-					fprintf(stdout, "extracted friendsList succesfully\n");
+					fprintf(stdout, "extracted friendsList6 succesfully\n");
 				}
 
 ////////
@@ -2023,7 +2192,7 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 
 				if(ret < 0){
 					// shouldn't unjoin because the alias isn't in
-					printf("DELETE FRIEND ERROR: Key %s was not friends with user %s\n", otherUserKey, key);			
+					printf("1 ret = %d : DELETE FRIEND ERROR: Key %s was not friends with user %s\n", ret ,otherUserKey, key);			
 					write(slaveSocket, "INVALID",7);
 					printf("Wrote back INVALID\n");
 					sqlite3_close(db);
@@ -2080,22 +2249,24 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 
 		printf("must extract id %s from the current user's friends list\n", otherUserKey);
 	// extract	
-		query = "SELECT friendsList USERS WHERE id="+string(key)+";";
+		query = "SELECT friendsList FROM USERS WHERE id="+string(key)+";";
 		
 		fprintf(stdout, "%s\n", query.c_str());
 
 		resetCallback_return();
 
+		translateIDs = false;
 		usePipe = false;
 		results = sqlite3_exec(db, query.c_str(), callback, (void *) data, &zErrMsg);
 		usePipe = true;
+		translateIDs = true;
 						
 		fprintf(stdout, "RESULTS IS: %d\n", results);
 		
 		if(results != SQLITE_OK){
 			fprintf(stderr, "SQL error: %s\n", zErrMsg);
 		} else {
-			fprintf(stdout, "extracted friendsList succesfully\n");
+			fprintf(stdout, "extracted friendsList7 succesfully\n");
 		}
 
 ////////
@@ -2103,18 +2274,22 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 		callSave = callback_return.c_str();
 
 		printf("friendsList for user %s = %s\n", key, callSave.c_str());
+	
+		printf("otherUserKey = %s\n", otherUserKey);
 
 		ret = stringFindLocation(callSave.c_str(), otherUserKey);
 
 		if(ret < 0){
 			// shouldn't unjoin because the alias isn't in
-			printf("DELETE FRIEND ERROR: Key %s was not friends with user %s\n", otherUserKey, key);			
+			printf("3 ret = %d : DELETE FRIEND ERROR: Key %s was not friends with user %s\n",ret, otherUserKey, key);			
 			write(slaveSocket, "INVALID",7);
 			printf("Wrote back INVALID\n");
 			sqlite3_close(db);
 			dbOpen = false;
 			return;
 		}
+
+		printf("ret = %d\ncallsave Length = %d", ret, (int) callSave.length());
 
 		std::string newFriendsList;
 		newFriendsList = callSave.substr(0,ret) + callSave.substr(ret+keyL);
@@ -2134,7 +2309,7 @@ void dataDeleteFriend(int slaveSocket, char * key, char * password, char * other
 
 		// now also need to add a delete request to the FRIENDREQUESTS table
 
-		query = "INSERT INTO FROM FRIENDREQUESTS (requestingUser, targetUser, results) VALUES("+string(key)+","+string(otherUserKey)+",-2);";
+		query = "INSERT INTO FRIENDREQUESTS (requestingUser, targetUser, results) VALUES("+string(key)+","+string(otherUserKey)+",-2);";
 		
 		fprintf(stdout, "%s\n", query.c_str());
 
@@ -2603,6 +2778,7 @@ void getAliases(int slaveSocket, char * idList)
 {
 	aliasesFromIDs(idList);
 	write(slaveSocket,callback_return.c_str(), callback_return.length());
+	printf("returned %s\n", callback_return.c_str());
 }
 
 char * aliasesFromIDs(char * idList )
