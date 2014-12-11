@@ -42,7 +42,6 @@ public class FrontPageFragment extends Fragment {
         
         
         messagesContainer = (LinearLayout) rootView.findViewById(R.id.messagesContainer);
-        final getMessages gm = new getMessages(inflater, container, getActivity(), messagesContainer);
         Button refresh = (Button) rootView.findViewById(R.id.refresh);
         refresh.setOnClickListener(new msgRefreshListener(inflater, container));
         
@@ -71,78 +70,7 @@ public class FrontPageFragment extends Fragment {
                 //getArguments().getInt(ARG_SECTION_NUMBER));
     }
     
-    public class getMessages extends AsyncTask<String, Void, String> {
-    	
-    	LayoutInflater inflater;
-    	ViewGroup container;
-    	Activity a;
-    	LinearLayout mContainer;
-    	
-    	public getMessages(LayoutInflater inflater, ViewGroup container, Activity a, LinearLayout mContainer) {
-    		this.inflater = inflater;
-    		this.container = container;
-    		this.a = a;
-    		this.mContainer = mContainer;
-    	}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			Log.d("ASYNC TASK", "RUnning");
-			
-			
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(String thing) {
-			a.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					if (Global.current_user.getPreferences() == 1) {
-						
-						StringBuilder sb = new StringBuilder();
-				        sb.append("/gtal/");
-				        sb.append(Global.current_user.getKey());
-				        Global.addSpaces(sb, 4-(String.valueOf(Global.current_user.getKey()).length()));
-						sb.append("/");
-						sb.append(Global.current_user.getPassword());
-						Global.addSpaces(sb, 20 - Global.current_user.getPassword().length());
-						sb.append("/");
-						sb.append("\r\n");
-						Log.d("Message", sb.toString());
-						NetworkHandler nh = new NetworkHandler();
-						String result = null;
-						try {
-							result = nh.execute(sb.toString()).get();
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						} catch (ExecutionException e1) {
-							e1.printStackTrace();
-						}
-						Log.d("Get Messages", result);
-						
-						/*
-				        MessageBuilder mb = new MessageBuilder(1, "cbrentz");
-				        View m1 = mb.generateMessage(inflater, container);
-				        mContainer.addView(m1);
-				        MessageBuilder mb2 = new MessageBuilder(2, "cbrentz");
-				        View m2 = mb2.generateMessage(inflater, container);
-				        mContainer.addView(m2);
-				        Event e = new Event();
-				        e.setTitle("Event Name");
-				        MessageBuilder mb3 = new MessageBuilder(3, "cbrentz", e);
-				        View m3 = mb3.generateMessage(inflater, container);
-				        mContainer.addView(m3);
-				        */
-			        }
-				}
-				
-			});
-		}
-    	
-    }
-    
+     
     public String[][] split(String result) {
     	//int pipe = result.indexOf('|');
     	//int tilde = result.indexOf('~');
@@ -188,6 +116,7 @@ public class FrontPageFragment extends Fragment {
     	}
 		@Override
 		public void onClick(View v) {
+			messagesContainer.removeAllViews();
 			StringBuilder sb = new StringBuilder();
 	        sb.append("/gtal/");
 	        sb.append(Global.current_user.getKey());
@@ -208,9 +137,13 @@ public class FrontPageFragment extends Fragment {
 				e1.printStackTrace();
 			}
 			Log.d("Get Messages", result);
-			if (!result.equals("||")) {
+			if (!result.equals("||") && !result.equals("|")) {
 				String[][] msgs = split(result);
 				for (int i = 0; i < msgs.length; i++) {
+					for (int j = 0; j < msgs[i].length; j++) {
+						Log.d("PART", "" + i + "," + j + ":" +msgs[i][j] +":");
+					
+					}
 					int type = Integer.parseInt(msgs[i][0]);
 					Log.d("Type", ""+type);
 					if (type == 0) {
@@ -227,11 +160,24 @@ public class FrontPageFragment extends Fragment {
 						messagesContainer.addView(v);
 					} else if (type == 2) {
 						//game invite
+						Event e = new Event();
+						e.setKey(Integer.parseInt(msgs[i][4]));
+				        e.setTitle(msgs[i][13]);
+				        e.setSport(msgs[i][5]);
+				        e.setLocation(msgs[i][6]);
+				        e.setCompetitivness(Integer.parseInt(msgs[i][11]));
+				        e.setSummary(msgs[i][10]);
+				        e.setCurrentNumberAttending(Integer.parseInt(msgs[i][14]));
+				        e.setMaxPlayers(Integer.parseInt(msgs[i][15]));
+				        e.setTime(msgs[i][8]);
+				        e.setDate(msgs[i][7]);
+				        e.setAttending_ind(1);
+				        mb = new MessageBuilder(2, msgs[i][3], e);
+				        v = mb.generateMessage(inflater, container);
+				        messagesContainer.addView(v);
+						
 					}
-					for (int j = 0; j < msgs[i].length; j++) {
-						Log.d("PART", "" + i + "," + j + ":" +msgs[i][j] +":");
 					
-					}
 				}
 			}
 		}

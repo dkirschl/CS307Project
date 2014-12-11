@@ -127,7 +127,7 @@ public class CreateEventFragment extends Fragment {
 							strDay = ""+day;
 						}
 						//StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
-						StringBuilder date = new StringBuilder().append(dp.getYear()).append(strMon).append(strDay);
+						StringBuilder date = new StringBuilder().append(dp.getYear()).append("-").append(strMon).append("-").append(strDay);
 						//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
 						tvDate.setText(date);
 						d.cancel();
@@ -168,6 +168,10 @@ public class CreateEventFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				if (sportEdit.getText().equals("") || locEdit.getText().equals("") || tvDate.getText().equals("") || tvTime.getText().equals("") || titleEdit.getText().equals("") || sumEdit.getText().equals("") || maxPlay.getText().equals("") || compete.getText().equals("")) {
+					Toast.makeText(v.getContext(), "Incorrect Information", Toast.LENGTH_LONG).show();
+					return;
+				}
 				String edittedDate = tvDate.getText().toString();
 				String edittedTime = tvTime.getText().toString();
 				edittedTime = edittedTime.replace(":", "");
@@ -244,12 +248,25 @@ public class CreateEventFragment extends Fragment {
 					Toast.makeText(v.getContext(), "Event Not Created", Toast.LENGTH_LONG).show();
 					
 				} else {
+					String[][] result_array = split(result);
+					for (int i =0; i < result_array.length; i++) {
+						
+						event = new Event(Integer.parseInt(result_array[i][0]),sportEdit.getText().toString(), locEdit.getText().toString(), result_array[i][1], edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE, Global.USER_CREATED_YES);
+						event.setSpecificUser(Global.current_user.getAlias());
+						Global.userDatabase.addEvent(event);
+						
+						for (int j = 0; j < result_array[i].length; j++) {
+							Log.d("RESULTS", result_array[i][j]);
+						}
+					}
+					/*
 					result = result.replace("|", "");
 					int res = Integer.parseInt(result.substring(7));
 					Log.d("Create", ""+res);
+					*/
 					//event.setKey(res);
-					event = new Event(res,sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE, Global.USER_CREATED_YES);
-					event.setSpecificUser(Global.current_user.getAlias());
+					//event = new Event(res,sportEdit.getText().toString(), locEdit.getText().toString(), edittedDate, edittedTime, titleEdit.getText().toString(), ""+Global.current_user.getKey(), sumEdit.getText().toString(),Integer.parseInt(maxPlay.getText().toString()), Global.USER_CREATED_EVENT_CODE, Global.USER_CREATED_YES);
+					//event.setSpecificUser(Global.current_user.getAlias());
 					sportEdit.setText("");
 					locEdit.setText("");
 					tvDate.setText("");
@@ -260,7 +277,6 @@ public class CreateEventFragment extends Fragment {
 					compete.setText("");
 					daily.setChecked(false);
 					weekly.setChecked(false);
-					Global.userDatabase.addEvent(event);
 					Toast.makeText(v.getContext(), "Event successfully created. Check the \"View Events\" page to see the event.",Toast.LENGTH_LONG).show();
 				}
 			}
@@ -398,6 +414,38 @@ public class CreateEventFragment extends Fragment {
     	} else {
     		return "0" + String.valueOf(c);
     	}
+    }
+    
+    public String[][] split(String result) {
+    	//int pipe = result.indexOf('|');
+    	//int tilde = result.indexOf('~');
+    	String[] parts = result.split("ISVALID");
+    	String[][] allParts = new String[parts.length-1][];
+    	for (int i = 1; i < parts.length; i++) {
+    		allParts[i-1] = parts[i].split("~");
+    	}
+    	
+    	String[] tempString;
+    	String tempString2;
+    	for (int i = 0; i < allParts.length; i++) {
+    		for (int j = 0; j < allParts[i].length; j++) {
+    			tempString = allParts[i][j].split(" ");
+    			tempString2 = "";
+    			for (int k = 0; k < tempString.length; k++){
+    				if(k != 0){
+    					tempString2 = tempString2 + " ";
+    				}
+    				tempString2 = tempString2 + tempString[k];
+    			}
+    			allParts[i][j] = tempString2;
+    		}
+    	}
+    	
+    	
+    	
+    	return allParts;
+    	
+    	
     }
     
 }

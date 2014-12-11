@@ -30,22 +30,13 @@
         android:layout_below="@id/searchLocation"
         android:layout_margin="5sp"
         android:layout_toLeftOf="@+id/searchLocation"
-        android:hint="Date"
+        android:hint="Start Date"
         android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/compSearch"
-        android:textSize="20sp"
-        android:text="Search" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchEventTime" >
+        android:layout_below="@+id/searchButton" >
 
     <LinearLayout
         android:id="@+id/searchContainer"
@@ -63,7 +54,7 @@
         android:layout_alignRight="@+id/searchEventDate"
         android:layout_below="@+id/searchEventDateEnd"
         android:layout_margin="5sp"
-        android:hint="Time"
+        android:hint="Start Time"
         android:textSize="20sp" />
 
     <TextView
@@ -118,5 +109,14 @@
         android:layout_alignParentLeft="true"
         android:hint="Choose sport"
         android:textSize="20sp" />
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/compSearch"
+        android:textSize="20sp"
+        android:text="Search" />
+    
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package cs307.team7.playboiler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -36,7 +37,8 @@ public class Global {
 	public static View fillEventPage(Event e, LayoutInflater inflater, ViewGroup container) {
 		View v = inflater.inflate(R.layout.event_page_no_join, container, false);
 		Button invite = (Button) v.findViewById(R.id.inviteFriend);
-		invite.setOnClickListener(new inviteFriendListener(inflater, container));
+		Log.d("EVENT KEY", ""+e.getKey());
+		invite.setOnClickListener(new inviteFriendListener(inflater, container, e.getKey()));
 		//TextView title = (TextView) v.findViewById(R.id.epnjTitle);
 		TextView date = (TextView) v.findViewById(R.id.epnjDate);
 		TextView time = (TextView) v.findViewById(R.id.epnjTime);
@@ -49,8 +51,8 @@ public class Global {
 		time.setText(e.getTime());
 		loc.setText(e.getLocation());
 		sport.setText(e.getSport());
-		currAttending.setText(String.valueOf(e.getCurrentNumberAttending()));
-		maxPlayers.setText(String.valueOf(e.getMaxPlayers()));
+		//currAttending.setText(""+String.valueOf(e.getCurrentNumberAttending() + " / " + String.valueOf(e.getMaxPlayers())));
+		maxPlayers.setText(""+String.valueOf(e.getCurrentNumberAttending() + " / " + String.valueOf(e.getMaxPlayers())));
 		
     	return v;
     }
@@ -66,17 +68,23 @@ public class Global {
 	public static class inviteFriendListener implements OnClickListener {
 		LayoutInflater inflater;
 		ViewGroup container;
+		ArrayList<CheckBox> checkBoxList;
+		int invite_key;
+		int event_key;
 		
-		public inviteFriendListener(LayoutInflater li, ViewGroup container) {
+		public inviteFriendListener(LayoutInflater li, ViewGroup container, int event_key) {
 			inflater = li;
 			this.container = container;
+			checkBoxList = new ArrayList<CheckBox>();
+			this.event_key = event_key;
 		}
 
 		@Override
 		public void onClick(View v) {
-			Dialog d = new Dialog(v.getContext());
+			final Dialog d = new Dialog(v.getContext());
 			List<Integer> friends = Global.userDatabase.getFriends(Global.current_user.getKey());
 			d.setContentView(R.layout.friends_list);
+			
 			
 			if (friends != null) {
 	    		LinearLayout contain = (LinearLayout) d.findViewById(R.id.friendsListContainer);
@@ -84,10 +92,57 @@ public class Global {
 	    			View entry = inflater.inflate(R.layout.select_friend_view, container, false);
 	    			CheckBox cb = (CheckBox) entry.findViewById(R.id.inviteBox);
 	    			cb.setText(""+friends.get(i));
-	    		
+	    			checkBoxList.add(cb);
 	    			contain.addView(entry);
 	    		}
 	    	}
+			Button invite = (Button) d.findViewById(R.id.addFriend);
+			invite.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					for (int i = 0; i < checkBoxList.size(); i++) {
+						if (checkBoxList.get(i).isChecked()) {
+							int keyLen = 4;
+							int pasLen = 20;
+							int userLen = 20;
+							StringBuilder sb = new StringBuilder();
+							sb.append("/ingm/");
+							//your key : password : invitee key : event_key
+							sb.append(Global.current_user.getKey());
+							String kyString = "" + Global.current_user.getKey();
+							Global.addSpaces(sb, keyLen - kyString.length());
+							sb.append("/");
+							sb.append(Global.current_user.getPassword());
+							Global.addSpaces(sb, pasLen - Global.current_user.getPassword().length());
+							sb.append("/");
+							kyString = "" + checkBoxList.get(i).getText();
+							sb.append(kyString);
+							Global.addSpaces(sb, keyLen - kyString.length());
+							sb.append("/");
+							kyString = "" + event_key;
+							Log.d("ingm", kyString);
+							sb.append(kyString);
+							Global.addSpaces(sb, keyLen - kyString.length());
+							sb.append("/");
+							sb.append("\r\n");
+							
+							Log.d("Message", sb.toString());
+							String result = null;
+							NetworkHandler nh = new NetworkHandler();
+							try {
+								result = nh.execute(sb.toString()).get();
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							} catch (ExecutionException e1) {
+								e1.printStackTrace();
+							}
+							Log.d("Invite", result);
+							d.cancel();
+						}
+					}
+				}
+			});
 			d.show();
 		}
 		
@@ -328,7 +383,8 @@ public class Global {
 					} else {
 						strDay = ""+day;
 					}
-					StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
+					StringBuilder date = new StringBuilder().append(dp.getYear()).append("-").append(strMon).append("-").append(strDay);
+					//StringBuilder date = new StringBuilder().append((strMon)).append("-").append(strDay).append("-").append(dp.getYear());
 					//StringBuilder date = new StringBuilder().append((dp.getMonth() + 1)).append("-").append(dp.getDayOfMonth()).append("-").append(dp.getYear());
 					tvDate.setText(date);
 					d.cancel();

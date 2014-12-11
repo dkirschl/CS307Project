@@ -590,7 +590,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper
 				event.setAttending(cursor.getInt(11));
 				events.add(event);
 				x++;
-			}while(x < 5 && cursor.moveToNext());
+			}while(cursor.moveToNext());
 		}
 		db.close();
 		return events;

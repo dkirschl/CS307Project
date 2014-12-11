@@ -144,14 +144,18 @@ public class SearchFragment extends Fragment {
 		});
     	
         Button search = (Button) rootView.findViewById(R.id.searchButton);
+        search.setClickable(true);
         search.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				Log.d("Search Button", "CLICKED");
 				String sport = searchSport.getText().toString();
 				String location = searchLocation.getText().toString();
 				String date = tvDate.getText().toString();
+				String dateEnd = tvDateEnd.getText().toString();
 				String time = tvTime.getText().toString();
+				String timeEnd = tvTimeEnd.getText().toString();
 				String comp = compete.getText().toString();
 				
 				StringBuilder str = new StringBuilder();
@@ -175,6 +179,14 @@ public class SearchFragment extends Fragment {
 				str.append("/");
 				str.append("                         ");
 				str.append("/");
+				dateEnd = dateEnd.replace("-", "");
+				str.append(dateEnd);
+				Global.addSpaces(str, 8-date.length());
+				str.append("/");
+				timeEnd=timeEnd.replace(":", "");
+				str.append(timeEnd);
+				Global.addSpaces(str, 4-time.length());
+				str.append("/");
 				str.append("\r\n");
 				Log.d("Message", str.toString());
 				NetworkHandler nh = new NetworkHandler();
@@ -194,6 +206,7 @@ public class SearchFragment extends Fragment {
 					}
 				}
 				Log.d("Len", ""+s.length);
+				contain.removeAllViews();
 				for (int i = 0; i < s.length; i++) {
 					View ll = inflater.inflate(R.layout.event_view, container, false);
 		        	TextView tv = (TextView) ll.findViewById(R.id.searchEventTitle);

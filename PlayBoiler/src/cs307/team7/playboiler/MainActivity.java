@@ -117,10 +117,11 @@ public class MainActivity extends Activity
 							e1.printStackTrace();
 						}
 						result = result.replace("|", "");
-						int res = Integer.parseInt(result.substring(7));
-						if (res == -1) {
-							Toast.makeText(v.getContext(), "Alias already exists. Please try again.", Toast.LENGTH_LONG).show();
+						
+						if (result.equals("INVALID")) {
+							Toast.makeText(v.getContext(), "User Creation Failed", Toast.LENGTH_SHORT).show();
 						} else {
+							int res = Integer.parseInt(result.substring(7));
 							String gender = "M";
 							/*
 							if (rbMale.isChecked()) {
